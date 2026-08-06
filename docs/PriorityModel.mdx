@@ -19,10 +19,10 @@ e = priority(p.eft) || deny
 
 ## Explicit priority (numeric field)
 
-Add a **priority** field to the policy; **lower** number = **higher** priority. Non-numeric values are treated as lowest priority. See [casbin#550](https://github.com/casbin/casbin/issues/550).
+Add a **priority** field to the policy; **lower** number = **higher** priority. Non-numeric values are treated as lowest priority. See [casbin#550](https://github.com/apache/casbin/issues/550).
 
 :::info Custom priority field
-The default priority field name is `priority`. For another name (e.g. `customized_priority`), call `e.SetFieldIndex("p", constant.PriorityIndex, index)` after init and reload policy. Example: [TestCustomizedFieldIndex](https://github.com/casbin/casbin/pull/1044).
+The default priority field name is `priority`. For another name (e.g. `customized_priority`), call `e.SetFieldIndex("p", constant.PriorityIndex, index)` after init and reload policy. Example: [TestCustomizedFieldIndex](https://github.com/apache/casbin/pull/1044).
 :::
 
 Example with explicit priority in policy:
@@ -98,7 +98,7 @@ bob, data2, write --> true // because bob has the role of `data2_allow_group` wh
 
 ## Subject priority (role/user hierarchy)
 
-Use `subjectPriority(p.eft)` so that priority comes from the **role hierarchy**: leaves (e.g. end users) have higher priority than inner roles. The hierarchy must be **trees**, not graphs; if a user has multiple roles, they should be at the same depth in each tree. Same-level ties are broken by policy order. See [casbin#833](https://github.com/casbin/casbin/pull/833), [casbin#831](https://github.com/casbin/casbin/issues/831).
+Use `subjectPriority(p.eft)` so that priority comes from the **role hierarchy**: leaves (e.g. end users) have higher priority than inner roles. The hierarchy must be **trees**, not graphs; if a user has multiple roles, they should be at the same depth in each tree. Same-level ties are broken by policy order. See [casbin#833](https://github.com/apache/casbin/pull/833), [casbin#831](https://github.com/apache/casbin/issues/831).
 
 Model:
 

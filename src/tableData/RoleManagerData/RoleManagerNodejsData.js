@@ -1,7 +1,7 @@
 export const RoleManagerNodejsData = [
   {
     title:
-      "[Default Role Manager (built-in)](https://github.com/casbin/node-casbin/blob/master/src/rbac/defaultRoleManager.ts)",
+      "[Default Role Manager (built-in)](https://github.com/apache/casbin-node-casbin/blob/master/src/rbac/defaultRoleManager.ts)",
     author: "Casbin",
     description: "Supports role hierarchy stored in the Casbin policy",
   },

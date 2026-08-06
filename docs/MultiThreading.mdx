@@ -6,6 +6,6 @@ keywords: [multi-threading]
 authors: [hsluoyz]
 ---
 
-In **multi-threaded** code, use Casbin’s **synchronized enforcer** so one enforcer can be shared safely across threads: [SyncedEnforcer](https://github.com/casbin/casbin/blob/master/enforcer_synced.go) (Go), [enforcer_synced.cpp](https://github.com/casbin/casbin-cpp/blob/master/casbin/enforcer_synced.cpp) (C++).
+In **multi-threaded** code, use Casbin’s **synchronized enforcer** so one enforcer can be shared safely across threads: [SyncedEnforcer](https://github.com/apache/casbin/blob/master/enforcer_synced.go) (Go), [enforcer_synced.cpp](https://github.com/apache/casbin-cpp/blob/master/casbin/enforcer_synced.cpp) (C++).
 
 The synced enforcer can also **auto-reload** policy: call `StartAutoLoadPolicy()` to poll the policy source and reload when it changes; call `StopAutoLoadPolicy()` to stop.

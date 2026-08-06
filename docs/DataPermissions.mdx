@@ -10,7 +10,7 @@ This page describes two ways to work with data-level permissions in Casbin: usin
 
 ### 1. Implicit roles and permissions
 
-When users get roles or permissions through the RBAC hierarchy (not only by direct policy rules), those are **implicit**. Use `GetImplicitRolesForUser()` and `GetImplicitPermissionsForUser()` to include them; `GetRolesForUser()` and `GetPermissionsForUser()` return only direct assignments. See [GitHub #137](https://github.com/casbin/casbin/issues/137).
+When users get roles or permissions through the RBAC hierarchy (not only by direct policy rules), those are **implicit**. Use `GetImplicitRolesForUser()` and `GetImplicitPermissionsForUser()` to include them; `GetRolesForUser()` and `GetPermissionsForUser()` return only direct assignments. See [GitHub #137](https://github.com/apache/casbin/issues/137).
 
 ### 2. BatchEnforce()
 

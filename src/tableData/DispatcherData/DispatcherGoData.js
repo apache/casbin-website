@@ -1,7 +1,7 @@
 export const DispatcherGoData = [
   {
     title:
-      "[Hashicorp Raft Dispatcher](https://github.com/casbin/hraft-dispatcher)",
+      "[Hashicorp Raft Dispatcher](https://github.com/apache/casbin-hraft-dispatcher)",
     type: "Raft",
     author: "Casbin",
     description:

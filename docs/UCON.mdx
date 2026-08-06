@@ -9,11 +9,11 @@ authors: [nodece]
 
 ## Overview
 
-**UCON (Usage Control)** extends access control with **authorizations (A)**, **obligations (B)**, and **conditions (C)**. It supports **continuous** enforcement during use (not only at access time) and **mutable** attributes. Casbin does not implement UCON in the core; use the [casbin-ucon](https://github.com/casbin/casbin-ucon) extension for session-based usage control.
+**UCON (Usage Control)** extends access control with **authorizations (A)**, **obligations (B)**, and **conditions (C)**. It supports **continuous** enforcement during use (not only at access time) and **mutable** attributes. Casbin does not implement UCON in the core; use the [casbin-ucon](https://github.com/apache/casbin-ucon) extension for session-based usage control.
 
 ## Model & Policy
 
-> **Note**: Casbin does not support UCON directly in its core library. Instead, UCON functionality is provided through the extension library [casbin-ucon](https://github.com/casbin/casbin-ucon), which adds session-based access control with conditions, obligations, and continuous monitoring capabilities. The extension can use the same models and policies supported by the Casbin core.
+> **Note**: Casbin does not support UCON directly in its core library. Instead, UCON functionality is provided through the extension library [casbin-ucon](https://github.com/apache/casbin-ucon), which adds session-based access control with conditions, obligations, and continuous monitoring capabilities. The extension can use the same models and policies supported by the Casbin core.
 
 ### model
 
@@ -64,7 +64,7 @@ The UCON model is particularly valuable in:
 
 ## Implementation with casbin-ucon
 
-To implement UCON in your Casbin-based application, use the [casbin-ucon](https://github.com/casbin/casbin-ucon) extension library:
+To implement UCON in your Casbin-based application, use the [casbin-ucon](https://github.com/apache/casbin-ucon) extension library:
 
 ```bash
 go get github.com/casbin/casbin-ucon
@@ -165,4 +165,4 @@ func main() {
 
 ## References
 
-For complete API documentation, detailed usage, and latest updates about casbin-ucon, refer to [casbin-ucon](https://github.com/casbin/casbin-ucon).
+For complete API documentation, detailed usage, and latest updates about casbin-ucon, refer to [casbin-ucon](https://github.com/apache/casbin-ucon).

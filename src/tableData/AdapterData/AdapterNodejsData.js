@@ -19,7 +19,7 @@ export const AdapterNodejsData = [
   },
   {
     title:
-      "[String Adapter (built-in)](https://github.com/casbin/node-casbin/blob/master/src/persist/stringAdapter.ts)",
+      "[String Adapter (built-in)](https://github.com/apache/casbin-node-casbin/blob/master/src/persist/stringAdapter.ts)",
     type: "String",
     author: "[@calebfaruki](https://github.com/calebfaruki)",
     autoSave: "❌",

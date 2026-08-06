@@ -18,7 +18,7 @@ g = _, _
 g2 = _, _
 ```
 
-Here `g` and `g2` are two role systems; `_, _` means each has two sides (e.g. user and role). Use only `g` for user roles; add `g2` when resources have roles too. Examples: [rbac_model.conf](https://github.com/casbin/casbin/blob/master/examples/rbac_model.conf), [rbac_with_resource_roles_model.conf](https://github.com/casbin/casbin/blob/master/examples/rbac_with_resource_roles_model.conf).
+Here `g` and `g2` are two role systems; `_, _` means each has two sides (e.g. user and role). Use only `g` for user roles; add `g2` when resources have roles too. Examples: [rbac_model.conf](https://github.com/apache/casbin/blob/master/examples/rbac_model.conf), [rbac_with_resource_roles_model.conf](https://github.com/apache/casbin/blob/master/examples/rbac_with_resource_roles_model.conf).
 
 User–role (and resource–role) mappings are stored in the policy, for example:
 
@@ -87,7 +87,7 @@ In Casbin, users and roles are both strings. In flat RBAC (no role hierarchy), `
 
 ## Implicit roles and permissions
 
-Roles and permissions inherited through the hierarchy (not only direct assignments) are called **implicit**. Use `GetImplicitRolesForUser()` and `GetImplicitPermissionsForUser()` to include them; `GetRolesForUser()` and `GetPermissionsForUser()` return only direct assignments. See [GitHub #137](https://github.com/casbin/casbin/issues/137).
+Roles and permissions inherited through the hierarchy (not only direct assignments) are called **implicit**. Use `GetImplicitRolesForUser()` and `GetImplicitPermissionsForUser()` to include them; `GetRolesForUser()` and `GetPermissionsForUser()` return only direct assignments. See [GitHub #137](https://github.com/apache/casbin/issues/137).
 
 ## Pattern matching in RBAC
 

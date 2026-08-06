@@ -38,7 +38,7 @@
     {
         "caption": "Verizon",
         "image": "users/verizon.png",
-        "infolink": "https://github.com/casbin/casbin/pull/56",
+        "infolink": "https://github.com/apache/casbin/pull/56",
         "pinned": true
     },
     {
@@ -80,13 +80,13 @@
     {
         "caption": "F5",
         "image": "users/f5.png",
-        "infolink": "https://github.com/casbin/casbin/issues/299",
+        "infolink": "https://github.com/apache/casbin/issues/299",
         "pinned": true
     },
     {
         "caption": "Bose",
         "image": "users/bose.png",
-        "infolink": "https://github.com/casbin/casbin/issues/302",
+        "infolink": "https://github.com/apache/casbin/issues/302",
         "pinned": true
     },
     {

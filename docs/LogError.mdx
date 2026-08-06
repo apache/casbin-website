@@ -19,7 +19,7 @@ Casbin can log requests, model load, and policy changes. **Logging is off by def
 :::
 
 :::note
-**Python:** PyCasbin uses the standard `logging` module. Configure your app’s logging as usual; PyCasbin uses `logging.getLogger()`. Optional `logging_config` is documented in [pycasbin/util/log.py](https://github.com/casbin/pycasbin/blob/master/casbin/util/log.py). See [Python logging](https://docs.python.org/3/library/logging.config.html) and [Django logging](https://docs.djangoproject.com/en/4.2/topics/logging/) for setup.
+**Python:** PyCasbin uses the standard `logging` module. Configure your app’s logging as usual; PyCasbin uses `logging.getLogger()`. Optional `logging_config` is documented in [pycasbin/util/log.py](https://github.com/apache/casbin-pycasbin/blob/master/casbin/util/log.py). See [Python logging](https://docs.python.org/3/library/logging.config.html) and [Django logging](https://docs.djangoproject.com/en/4.2/topics/logging/) for setup.
 :::
 
 ### Configure Separate Loggers for Different Enforcers
@@ -51,8 +51,8 @@ Casbin provides several logger implementations:
 
 | Logger                                                                                              | Author | Description                                                                                                                    |
 |-----------------------------------------------------------------------------------------------------|--------|--------------------------------------------------------------------------------------------------------------------------------|
-| [Default logger (built-in)](https://github.com/casbin/casbin/blob/master/log/default_logger.go)    | Casbin | The default logger using Go's standard log package.                                                                            |
-| [Zap logger](https://github.com/casbin/zap-logger)                                                    | Casbin | Uses [zap](https://github.com/uber-go/zap) for JSON-encoded logs with additional customization options via zap-logger.        |
+| [Default logger (built-in)](https://github.com/apache/casbin/blob/master/log/default_logger.go)    | Casbin | The default logger using Go's standard log package.                                                                            |
+| [Zap logger](https://github.com/apache/casbin-zap-logger)                                                    | Casbin | Uses [zap](https://github.com/uber-go/zap) for JSON-encoded logs with additional customization options via zap-logger.        |
 
 ```mdx-code-block
 </TabItem>
@@ -70,7 +70,7 @@ Casbin provides several logger implementations:
 
 #### Implementing Custom Loggers
 
-Custom loggers must implement the [Logger](https://github.com/casbin/casbin/blob/master/log/logger.go#L20) interface.
+Custom loggers must implement the [Logger](https://github.com/apache/casbin/blob/master/log/logger.go#L20) interface.
 
 | Method       | Type      | Description                                      |
 |--------------|-----------|--------------------------------------------------|

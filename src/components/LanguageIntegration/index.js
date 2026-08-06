@@ -11,22 +11,22 @@ const languages = [
   {
     name: "Java",
     icon: "/img/langs/jee-3.svg",
-    url: "https://github.com/casbin/jcasbin",
+    url: "https://github.com/apache/casbin-jcasbin",
   },
   {
     name: "C/C++",
     icon: "/img/langs/c.svg",
-    url: "https://github.com/casbin/casbin-cpp",
+    url: "https://github.com/apache/casbin-cpp",
   },
   {
     name: "Node.js",
     icon: "/img/langs/nodejs-1.svg",
-    url: "https://github.com/casbin/node-casbin",
+    url: "https://github.com/apache/casbin-node-casbin",
   },
   {
     name: "Front-end JavaScript",
     icon: "/img/langs/logo-javascript.svg",
-    url: "https://github.com/casbin/casbin.js",
+    url: "https://github.com/apache/casbin-casbin.js",
   },
   {
     name: "PHP",
@@ -41,12 +41,12 @@ const languages = [
   {
     name: "Python",
     icon: "/img/langs/python-5.svg",
-    url: "https://github.com/casbin/pycasbin",
+    url: "https://github.com/apache/casbin-pycasbin",
   },
   {
     name: ".NET (C#)",
     icon: "/img/langs/dotnet-logo.svg",
-    url: "https://github.com/casbin/Casbin.NET",
+    url: "https://github.com/apache/casbin-Casbin.NET",
   },
   {
     name: "Delphi",
@@ -56,7 +56,7 @@ const languages = [
   {
     name: "Rust",
     icon: "/img/langs/rust.svg",
-    url: "https://github.com/casbin/casbin-rs",
+    url: "https://github.com/apache/casbin-rs",
   },
   {
     name: "Ruby",
@@ -66,22 +66,22 @@ const languages = [
   {
     name: "Swift (Objective-C)",
     icon: "/img/langs/swift-15.svg",
-    url: "https://github.com/casbin/SwiftCasbin",
+    url: "https://github.com/apache/casbin-SwiftCasbin",
   },
   {
     name: "Lua (OpenResty, Kong, APISIX)",
     icon: "/img/langs/lua-5.svg",
-    url: "https://github.com/casbin/lua-casbin",
+    url: "https://github.com/apache/casbin-lua-casbin",
   },
   {
     name: "Dart (Flutter)",
     icon: "/img/langs/dart.svg",
-    url: "https://github.com/casbin/dart-casbin",
+    url: "https://github.com/apache/casbin-dart-casbin",
   },
   {
     name: "Elixir",
     icon: "/img/langs/elixir-lang-icon.svg",
-    url: "https://github.com/casbin/casbin-ex",
+    url: "https://github.com/apache/casbin-ex",
   },
   {
     name: "Cloud Native",

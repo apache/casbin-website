@@ -11,7 +11,7 @@ const fallbackUrl = `https://github.com/apache/casbin/releases/tag/${fallbackTag
 
 async function fetchLatestRelease() {
   const data = await fetchGitHubJson(
-    "https://api.github.com/repos/casbin/casbin/releases/latest",
+    "https://api.github.com/repos/apache/casbin/releases/latest",
     "casbin-website-homepage-release",
     "latest homepage release"
   );

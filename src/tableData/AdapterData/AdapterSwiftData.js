@@ -10,7 +10,7 @@ export const AdapterSwiftData = [
   },
   {
     title:
-      "[Memory Adapter (built-in)](https://github.com/casbin/SwiftCasbin/blob/master/Sources/Casbin/Adapter/MemoryAdapter.swift)",
+      "[Memory Adapter (built-in)](https://github.com/apache/casbin-SwiftCasbin/blob/master/Sources/Casbin/Adapter/MemoryAdapter.swift)",
     type: "Memory",
     author: "Casbin",
     autoSave: "❌",

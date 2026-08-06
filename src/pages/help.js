@@ -34,17 +34,17 @@ function Hello() {
             <Translate
               values={{
                 repoLink: (
-                  <a href="https://github.com/casbin/casbin">
+                  <a href="https://github.com/apache/casbin">
                     <Translate>GitHub repo</Translate>
                   </a>
                 ),
                 issueLink: (
-                  <a href="https://github.com/casbin/casbin/issues">
+                  <a href="https://github.com/apache/casbin/issues">
                     <Translate>issues</Translate>
                   </a>
                 ),
                 prLink: (
-                  <a href="https://github.com/casbin/casbin/pulls">
+                  <a href="https://github.com/apache/casbin/pulls">
                     <Translate>pull requests</Translate>
                   </a>
                 ),

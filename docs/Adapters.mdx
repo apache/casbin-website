@@ -200,7 +200,7 @@ let e = Enforcer::new("examples/basic_model.conf", a).await?;
 </Tabs>
 ```
 
-### [MySQL adapter](https://github.com/casbin/mysql-adapter)
+### [MySQL adapter](https://github.com/apache/casbin-mysql-adapter)
 
 Initialize an enforcer using a MySQL database connection at 127.0.0.1:3306 with root user and no password:
 
@@ -377,11 +377,11 @@ e.AddPolicy(...)
 e.RemovePolicy(...)
 ```
 
-Additional examples: [https://github.com/casbin/xorm-adapter/blob/master/adapter_test.go](https://github.com/casbin/xorm-adapter/blob/master/adapter_test.go)
+Additional examples: [https://github.com/apache/casbin-xorm-adapter/blob/master/adapter_test.go](https://github.com/apache/casbin-xorm-adapter/blob/master/adapter_test.go)
 
 ### How to write an adapter
 
-Implement the [Adapter](https://github.com/casbin/casbin/blob/master/persist/adapter.go) interface with at least two required methods: `LoadPolicy(model model.Model) error` and `SavePolicy(model model.Model) error`.
+Implement the [Adapter](https://github.com/apache/casbin/blob/master/persist/adapter.go) interface with at least two required methods: `LoadPolicy(model model.Model) error` and `SavePolicy(model model.Model) error`.
 
 Three optional methods enable Auto-Save support.
 
@@ -437,7 +437,7 @@ Adapter implementation requirements:
 
 ### Who is responsible to create the DB?
 
-By convention, adapters should automatically create a `casbin` database if it doesn't exist and use it for policy storage. Reference implementation: [https://github.com/casbin/xorm-adapter](https://github.com/casbin/xorm-adapter)
+By convention, adapters should automatically create a `casbin` database if it doesn't exist and use it for policy storage. Reference implementation: [https://github.com/apache/casbin-xorm-adapter](https://github.com/apache/casbin-xorm-adapter)
 
 ## Update Adapter
 
@@ -522,13 +522,13 @@ Without `UpdateAdapter` support, Casbin automatically falls back to combining `R
 
 ## Context Adapter
 
-[ContextAdapter](https://github.com/casbin/casbin/blob/master/persist/adapter_context.go) provides context-aware operations for Casbin adapters.
+[ContextAdapter](https://github.com/apache/casbin/blob/master/persist/adapter_context.go) provides context-aware operations for Casbin adapters.
 
 Context enables features like timeout control for adapter API calls.
 
 ### Example
 
-[gormadapter](https://github.com/casbin/gorm-adapter) supports context. Below is timeout control using context:
+[gormadapter](https://github.com/apache/casbin-gorm-adapter) supports context. Below is timeout control using context:
 
 ```go
 ca, _ := NewContextAdapter("mysql", "root:@tcp(127.0.0.1:3306)/", "casbin")
@@ -546,7 +546,7 @@ if err != nil {
 
 `ContextAdapter` API adds a context processing layer on top of standard `Adapter` API. After implementing the standard Adapter API, wrap your logic with context handling.
 
-Reference implementation: [adapter.go](https://github.com/casbin/gorm-adapter/blob/master/adapter.go)
+Reference implementation: [adapter.go](https://github.com/apache/casbin-gorm-adapter/blob/master/adapter.go)
 
 ## Transaction
 
@@ -575,6 +575,6 @@ if err := tx.Commit(); err != nil {
 }
 ```
 
-Implement `TransactionalAdapter` and `TransactionContext` from [persist/transaction.go](https://github.com/casbin/casbin/blob/master/persist/transaction.go) to add transaction support.
+Implement `TransactionalAdapter` and `TransactionContext` from [persist/transaction.go](https://github.com/apache/casbin/blob/master/persist/transaction.go) to add transaction support.
 
-Reference: [adapter.go](https://github.com/casbin/gorm-adapter/blob/master/adapter.go)
+Reference: [adapter.go](https://github.com/apache/casbin-gorm-adapter/blob/master/adapter.go)

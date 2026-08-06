@@ -27,7 +27,7 @@ export const AdapterGoData = [
     image: "/img/ecosystem/SQL.png",
   },
   {
-    title: "[Xorm Adapter](https://github.com/casbin/xorm-adapter)",
+    title: "[Xorm Adapter](https://github.com/apache/casbin-xorm-adapter)",
     type: "ORM",
     author: "Casbin",
     autoSave: "✅",
@@ -36,7 +36,7 @@ export const AdapterGoData = [
     image: "/img/ecosystem/SQL.png",
   },
   {
-    title: "[GORM Adapter](https://github.com/casbin/gorm-adapter)",
+    title: "[GORM Adapter](https://github.com/apache/casbin-gorm-adapter)",
     type: "ORM",
     author: "Casbin",
     autoSave: "✅",
@@ -45,7 +45,7 @@ export const AdapterGoData = [
     image: "/img/ecosystem/SQL.png",
   },
   {
-    title: "[GORM Adapter Ex](https://github.com/casbin/gorm-adapter-ex)",
+    title: "[GORM Adapter Ex](https://github.com/apache/casbin-gorm-adapter-ex)",
     type: "ORM",
     author: "Casbin",
     autoSave: "✅",
@@ -55,7 +55,7 @@ export const AdapterGoData = [
 
   },
   {
-    title: "[Ent Adapter](https://github.com/casbin/ent-adapter)",
+    title: "[Ent Adapter](https://github.com/apache/casbin-ent-adapter)",
     type: "ORM",
     author: "Casbin",
     autoSave: "✅",
@@ -64,7 +64,7 @@ export const AdapterGoData = [
     image: "/img/ecosystem/SQL.png",
   },
   {
-    title: "[Beego ORM Adapter](https://github.com/casbin/beego-orm-adapter)",
+    title: "[Beego ORM Adapter](https://github.com/apache/casbin-beego-orm-adapter)",
     type: "ORM",
     author: "Casbin",
     autoSave: "✅",
@@ -146,7 +146,7 @@ export const AdapterGoData = [
   },
   {
     title:
-      "[Filtered PostgreSQL Adapter](https://github.com/casbin/casbin-pg-adapter)",
+      "[Filtered PostgreSQL Adapter](https://github.com/apache/casbin-pg-adapter)",
     type: "SQL",
     author: "Casbin",
     autoSave: "✅",
@@ -197,7 +197,7 @@ export const AdapterGoData = [
     image: "/img/ecosystem/rqlite.png",
   },
   {
-    title: "[MongoDB Adapter](https://github.com/casbin/mongodb-adapter)",
+    title: "[MongoDB Adapter](https://github.com/apache/casbin-mongodb-adapter)",
     type: "NoSQL",
     author: "Casbin",
     autoSave: "✅",
@@ -215,7 +215,7 @@ export const AdapterGoData = [
     image: "/img/ecosystem/rethinkDB.png",
   },
   {
-    title: "[Cassandra Adapter](https://github.com/casbin/cassandra-adapter)",
+    title: "[Cassandra Adapter](https://github.com/apache/casbin-cassandra-adapter)",
     type: "NoSQL",
     author: "Casbin",
     autoSave: "❌",
@@ -315,7 +315,7 @@ export const AdapterGoData = [
     image: "/img/ecosystem/firestore.jpeg",
   },
   {
-    title: "[Redis Adapter (Redigo)](https://github.com/casbin/redis-adapter)",
+    title: "[Redis Adapter (Redigo)](https://github.com/apache/casbin-redis-adapter)",
     type: "KV store",
     author: "Casbin",
     autoSave: "✅",
@@ -365,7 +365,7 @@ export const AdapterGoData = [
     image: "/img/ecosystem/badger.png",
   },
   {
-    title: "[Protobuf Adapter](https://github.com/casbin/protobuf-adapter)",
+    title: "[Protobuf Adapter](https://github.com/apache/casbin-protobuf-adapter)",
     type: "Stream",
     author: "Casbin",
     autoSave: "❌",
@@ -374,7 +374,7 @@ export const AdapterGoData = [
     image: "/img/ecosystem/protobuf.png",
   },
   {
-    title: "[JSON Adapter](https://github.com/casbin/json-adapter)",
+    title: "[JSON Adapter](https://github.com/apache/casbin-json-adapter)",
     type: "String",
     author: "Casbin",
     autoSave: "❌",

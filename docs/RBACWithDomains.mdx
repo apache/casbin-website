@@ -61,7 +61,7 @@ With pattern matching (e.g. `keyMatch`) for domains, Casbin infers the domain to
 m = g(r.sub, p.sub, r.tenant) && keyMatch(r.tenant, p.tenant) && r.obj == p.obj && r.act == p.act
 ```
 
-For domain APIs (e.g. `GetAllUsersByDomain()`) with a **custom** domain token name or position, set the index after creating the enforcer. Full example: [rbac_with_domains_model.conf](https://github.com/casbin/casbin/blob/master/examples/rbac_with_domains_model.conf).
+For domain APIs (e.g. `GetAllUsersByDomain()`) with a **custom** domain token name or position, set the index after creating the enforcer. Full example: [rbac_with_domains_model.conf](https://github.com/apache/casbin/blob/master/examples/rbac_with_domains_model.conf).
 
 :::info Token name and position
 The domain is usually named `dom` and placed second (`sub, dom, obj, act`). In Go Casbin you can use another name or position; then call `e.SetFieldIndex("p", constant.DomainIndex, index)` after init so APIs like `GetAllUsersByDomain()` work correctly.

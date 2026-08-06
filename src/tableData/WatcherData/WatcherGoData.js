@@ -8,7 +8,7 @@ export const WatcherGoData = [
     image: "/img/ecosystem/postgreSQL.png",
   },
   {
-    title: "[Redis WatcherEx](https://github.com/casbin/redis-watcher)",
+    title: "[Redis WatcherEx](https://github.com/apache/casbin-redis-watcher)",
     type: "KV store",
     author: "Casbin",
     description: "WatcherEx for [Redis](http://redis.io/)",
@@ -23,14 +23,14 @@ export const WatcherGoData = [
     image: "/img/ecosystem/redis.png",
   },
   {
-    title: "[Etcd Watcher](https://github.com/casbin/etcd-watcher)",
+    title: "[Etcd Watcher](https://github.com/apache/casbin-etcd-watcher)",
     type: "KV store",
     author: "Casbin",
     description: "Watcher for [etcd](https://github.com/coreos/etcd)",
     image: "/img/ecosystem/etcd.png",
   },
   {
-    title: "[TiKV Watcher](https://github.com/casbin/tikv-watcher)",
+    title: "[TiKV Watcher](https://github.com/apache/casbin-tikv-watcher)",
     type: "KV store",
     author: "Casbin",
     description: "Watcher for [TiKV](https://github.com/tikv/tikv)",

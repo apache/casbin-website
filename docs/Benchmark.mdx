@@ -13,7 +13,7 @@ This page reports **enforcement overhead** (time and memory per `Enforce()` call
 <TabItem value="Go" label="Go" default>
 ```
 
-Go benchmarks: [model_b_test.go](https://github.com/casbin/casbin/blob/master/model_b_test.go). Environment:
+Go benchmarks: [model_b_test.go](https://github.com/apache/casbin/blob/master/model_b_test.go). Environment:
 
 ```text
 Intel(R) Core(TM) i7-6700HQ CPU @ 2.60GHz, 2601 Mhz, 4 Core(s), 8 Logical Processor(s)
@@ -40,7 +40,7 @@ Results from `go test -bench=. -benchmem` (op = one `Enforce()` call, ms = milli
 <TabItem value="Python" label="Python">
 ```
 
-Policy enforcement overhead in [Pycasbin](https://github.com/casbin/pycasbin) is benchmarked in [`tests/benchmarks`](https://github.com/casbin/pycasbin/tree/master/tests/benchmarks). Testing environment:
+Policy enforcement overhead in [Pycasbin](https://github.com/apache/casbin-pycasbin) is benchmarked in [`tests/benchmarks`](https://github.com/apache/casbin-pycasbin/tree/master/tests/benchmarks). Testing environment:
 
 ```text
 Intel(R) Xeon(R) CPU E5-2673 v4 @ 2.30GHz (Run by Github actions)
@@ -68,7 +68,7 @@ Results from executing `casbin_benchmark` (op = one `enforce()` call, ms = milli
 <TabItem value="C++" label="C++">
 ```
 
-Policy enforcement overhead in [Casbin CPP](https://github.com/casbin/casbin-cpp) is benchmarked in [`tests/benchmarks`](https://github.com/casbin/casbin-cpp/tree/master/tests/benchmarks) using [Google's benchmarking tool](https://github.com/google/benchmark). Testing environment:
+Policy enforcement overhead in [Casbin CPP](https://github.com/apache/casbin-cpp) is benchmarked in [`tests/benchmarks`](https://github.com/apache/casbin-cpp/tree/master/tests/benchmarks) using [Google's benchmarking tool](https://github.com/google/benchmark). Testing environment:
 
 ```text
 Intel(R) Core(TM) i5-6300HQ CPU @ 2.30GHz, 4 cores, 4 threads
@@ -95,7 +95,7 @@ Results from executing the `casbin_benchmark` target built in `Release` configur
 <TabItem value="Lua (JIT)" label="Lua (JIT)">
 ```
 
-Policy enforcement overhead in [Lua Casbin](https://github.com/casbin/lua-casbin) is benchmarked in [bench.lua](https://github.com/casbin/lua-casbin/blob/master/bench.lua). Testing environment:
+Policy enforcement overhead in [Lua Casbin](https://github.com/apache/casbin-lua-casbin) is benchmarked in [bench.lua](https://github.com/apache/casbin-lua-casbin/blob/master/bench.lua). Testing environment:
 
 ```text
 AMD Ryzen(TM) 5 4600H CPU @ 3.0GHz, 6 Cores, 12 Threads

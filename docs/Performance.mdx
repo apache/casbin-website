@@ -19,7 +19,7 @@ If one enforcer cannot keep up (e.g. 10k+ req/s):
 
 With millions of rules, enforcement and load time can suffer:
 
-1. **Model and policy design** — Prefer RBAC and shared defaults so most tenants use a small rule set (e.g. &lt; 100 rules); override only where needed. See [GitHub #681](https://github.com/casbin/casbin/issues/681#issuecomment-763801583) for discussion.
+1. **Model and policy design** — Prefer RBAC and shared defaults so most tenants use a small rule set (e.g. &lt; 100 rules); override only where needed. See [GitHub #681](https://github.com/apache/casbin/issues/681#issuecomment-763801583) for discussion.
 2. **Policy sharding** — Load only the rules each enforcer needs (e.g. per tenant or per domain) via [Policy subset loading](/docs/policy-subset-loading).
 3. **RBAC over direct user permissions** — Assign permissions to roles; Casbin caches the role tree for O(1) role lookups and fewer policy rules.
 

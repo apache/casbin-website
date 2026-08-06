@@ -16,8 +16,8 @@ module.exports = {
     },
   },
   favicon: "img/favicon.png",
-  organizationName: "casbin", // Usually your GitHub org/user name.
-  projectName: "casbin.io", // Usually your repo name.
+  organizationName: "apache", // Usually your GitHub org/user name.
+  projectName: "casbin-website", // Usually your repo name.
   themeConfig: {
     metadata: [
       {
@@ -158,7 +158,7 @@ module.exports = {
           ],
         },
         {
-          href: "https://github.com/casbin/casbin",
+          href: "https://github.com/apache/casbin",
           position: "right",
           className: "header-github-link",
           "aria-label": "GitHub repository",

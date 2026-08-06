@@ -14,7 +14,7 @@ export const MiddlewareGoData = [
   {
     title: "[Caddy](https://github.com/caddyserver/caddy)",
     description:
-      "Fast, cross-platform HTTP/2 web server with automatic HTTPS, via plugin: [caddy-authz](https://github.com/casbin/caddy-authz)",
+      "Fast, cross-platform HTTP/2 web server with automatic HTTPS, via plugin: [caddy-authz](https://github.com/apache/casbin-caddy-authz)",
     image: "/img/ecosystem/caddy.jpeg",
   },
   {
@@ -44,7 +44,7 @@ export const MiddlewareGoData = [
   {
     title: "[FastHTTP](https://github.com/valyala/fasthttp)",
     description:
-      "Fast HTTP package for Go. Tuned for high performance. Zero memory allocations in hot paths. Up to 10x faster than net/http, via plugin: [fasthttp-auth](https://github.com/casbin/fasthttp-auth)",
+      "Fast HTTP package for Go. Tuned for high performance. Zero memory allocations in hot paths. Up to 10x faster than net/http, via plugin: [fasthttp-auth](https://github.com/apache/casbin-fasthttp-auth)",
   },
   {
     title: "[Revel](https://github.com/revel/revel)",
@@ -79,13 +79,13 @@ export const MiddlewareGoData = [
   {
     title: "[Negroni](https://github.com/urfave/negroni)",
     description:
-      "Idiomatic HTTP Middleware for Golang, via plugin: [negroni-authz](https://github.com/casbin/negroni-authz)",
+      "Idiomatic HTTP Middleware for Golang, via plugin: [negroni-authz](https://github.com/apache/casbin-negroni-authz)",
     image: null,
   },
   {
     title: "[Chi](https://github.com/pressly/chi)",
     description:
-      "A lightweight, idiomatic and composable router for building HTTP services, via plugin: [chi-authz](https://github.com/casbin/chi-authz)",
+      "A lightweight, idiomatic and composable router for building HTTP services, via plugin: [chi-authz](https://github.com/apache/casbin-chi-authz)",
     image: "/img/ecosystem/chi.png",
   },
   {
@@ -118,7 +118,7 @@ export const MiddlewareGoData = [
   {
     title: "[Tyk](https://github.com/TykTechnologies/tyk)",
     description:
-      "An open source Enterprise API Gateway, supporting REST, GraphQL, TCP and gRPC protocols, via plugin: [tyk-authz](https://github.com/casbin/tyk-authz)",
+      "An open source Enterprise API Gateway, supporting REST, GraphQL, TCP and gRPC protocols, via plugin: [tyk-authz](https://github.com/apache/casbin-tyk-authz)",
   },
   {
     title: "[Hertz](https://github.com/cloudwego/hertz)",

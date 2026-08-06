@@ -12,7 +12,7 @@ Policy storage in Casbin is handled by [adapters](/docs/adapters). The enforcer 
 
 Using a CSV file is the simplest option and works well for development and examples.
 
-Example: [examples/rbac_policy.csv](https://github.com/casbin/casbin/blob/master/examples/rbac_policy.csv)
+Example: [examples/rbac_policy.csv](https://github.com/apache/casbin/blob/master/examples/rbac_policy.csv)
 
 ```csv
 p, alice, data1, read
@@ -37,7 +37,7 @@ p, alice, data, "r.act in (""get"", ""post"")"        --correct
 p, alice, data, "r.act in ("get", "post")"            --incorrect (you should use "" to escape "")
 ```
 
-See [casbin#886](https://github.com/casbin/casbin/issues/886).
+See [casbin#886](https://github.com/apache/casbin/issues/886).
 :::
 
 ## Adapter API

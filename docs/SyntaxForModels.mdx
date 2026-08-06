@@ -48,7 +48,7 @@ Each line in the policy file is one rule. The first token is the policy type (`p
 ```
 
 :::tip
-Policy rule elements are always treated as strings. See [casbin/casbin#113](https://github.com/casbin/casbin/issues/113) for discussion.
+Policy rule elements are always treated as strings. See [casbin/casbin#113](https://github.com/apache/casbin/issues/113) for discussion.
 :::
 
 ## Policy Effect
@@ -322,7 +322,7 @@ public class EnforceContext {
 </Tabs>
 ```
 
-Example usage (see the [model](https://github.com/casbin/casbin/blob/master/examples/multiple_policy_definitions_model.conf) and [policy](https://github.com/casbin/casbin/blob/master/examples/multiple_policy_definitions_policy.csv) examples):
+Example usage (see the [model](https://github.com/apache/casbin/blob/master/examples/multiple_policy_definitions_model.conf) and [policy](https://github.com/apache/casbin/blob/master/examples/multiple_policy_definitions_policy.csv) examples):
 
 ```mdx-code-block
 <Tabs groupId="langs">
@@ -374,7 +374,7 @@ enforceContext.seteType("e");
 // Don't pass in EnforceContext; the default is r, p, e, m
 e.enforce("alice", "data2", "read");  // true
 // Pass in EnforceContext
-// TestEvalRule is located in https://github.com/casbin/jcasbin/blob/master/src/test/java/org/casbin/jcasbin/main/AbacAPIUnitTest.java#L56
+// TestEvalRule is located in https://github.com/apache/casbin-jcasbin/blob/master/src/test/java/org/casbin/jcasbin/main/AbacAPIUnitTest.java#L56
 e.enforce(enforceContext, new AbacAPIUnitTest.TestEvalRule("alice", 70), "/data1", "read"); // false
 e.enforce(enforceContext, new AbacAPIUnitTest.TestEvalRule("alice", 30), "/data1", "read"); // true
 ```
@@ -388,7 +388,7 @@ e.enforce(enforceContext, new AbacAPIUnitTest.TestEvalRule("alice", 30), "/data1
 
 The `in` operator checks whether the right-hand array contains the left-hand value (using `==` equality, no type coercion). The left side can be any value; the right side must be an array of the same type. In Go, arrays must be `[]interface{}`.
 
-Reference examples: [rbac_model_matcher_using_in_op](https://github.com/casbin/casbin/blob/277c1a2b85698272f764d71a94d2595a8d425915/examples/rbac_model_matcher_using_in_op.conf), [keyget2_model](https://github.com/casbin/casbin/blob/277c1a2b85698272f764d71a94d2595a8d425915/examples/keyget2_model.conf), and [keyget_model](https://github.com/casbin/casbin/blob/277c1a2b85698272f764d71a94d2595a8d425915/examples/keyget_model.conf).
+Reference examples: [rbac_model_matcher_using_in_op](https://github.com/apache/casbin/blob/277c1a2b85698272f764d71a94d2595a8d425915/examples/rbac_model_matcher_using_in_op.conf), [keyget2_model](https://github.com/apache/casbin/blob/277c1a2b85698272f764d71a94d2595a8d425915/examples/keyget2_model.conf), and [keyget_model](https://github.com/apache/casbin/blob/277c1a2b85698272f764d71a94d2595a8d425915/examples/keyget_model.conf).
 
 Example:
 
@@ -412,7 +412,7 @@ Expression evaluators by implementation:
 
 | Implementation | Language | Expression Evaluator                                                                                                                                                                                     |
 |----------------|----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Casbin         | Golang   | [https://github.com/casbin/govaluate](https://github.com/casbin/govaluate)                                                                                                                               |
+| Casbin         | Golang   | [https://github.com/apache/casbin-govaluate](https://github.com/apache/casbin-govaluate)                                                                                                                               |
 | jCasbin        | Java     | [https://github.com/killme2008/aviatorscript](https://github.com/killme2008/aviatorscript)                                                                                                               |
 | Node-Casbin    | Node.js  | [https://github.com/donmccurdy/expression-eval](https://github.com/donmccurdy/expression-eval)                                                                                                           |
 | PHP-Casbin     | PHP      | [https://github.com/symfony/expression-language](https://github.com/symfony/expression-language)                                                                                                         |

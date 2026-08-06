@@ -7,7 +7,7 @@ authors: [rushitote]
 
 [APISIX](https://apisix.apache.org/) is a high-performance, scalable, cloud-native API gateway built on Nginx and etcd, and an Apache Software Foundation project. It ships with many plugins for authentication, monitoring, routing, and more. Plugins are hot-reloaded without restarts, so you can change behavior on the fly.
 
-When you need **authorization** beyond simple checks, the **authz-casbin** plugin can help. It is an APISIX plugin built on [Lua Casbin](https://github.com/casbin/lua-casbin/) that enforces flexible authorization using models such as ACL, RBAC, and ABAC. [Casbin](/) is an authorization library (originally in Go, now ported to many languages); Lua Casbin is the Lua port. We proposed the plugin in the APISIX repo ([#4674](https://github.com/apache/apisix/issues/4674)); after review and improvements, it was merged ([#4710](https://github.com/apache/apisix/pull/4710)).
+When you need **authorization** beyond simple checks, the **authz-casbin** plugin can help. It is an APISIX plugin built on [Lua Casbin](https://github.com/apache/casbin-lua-casbin/) that enforces flexible authorization using models such as ACL, RBAC, and ABAC. [Casbin](/) is an authorization library (originally in Go, now ported to many languages); Lua Casbin is the Lua port. We proposed the plugin in the APISIX repo ([#4674](https://github.com/apache/apisix/issues/4674)); after review and improvements, it was merged ([#4710](https://github.com/apache/apisix/pull/4710)).
 
 <!-- truncate -->
 
@@ -55,7 +55,7 @@ g, bob, admin
 
 The matcher means:
 
-1. **`(g(r.sub, p.sub) || keyMatch(r.sub, p.sub))`** — The request subject either has the policy subject as a role or matches it via `keyMatch`. For `keyMatch` and other built-ins, see [Lua Casbin BuiltInFunctions](https://github.com/casbin/lua-casbin/blob/master/src/util/BuiltInFunctions.lua).
+1. **`(g(r.sub, p.sub) || keyMatch(r.sub, p.sub))`** — The request subject either has the policy subject as a role or matches it via `keyMatch`. For `keyMatch` and other built-ins, see [Lua Casbin BuiltInFunctions](https://github.com/apache/casbin-lua-casbin/blob/master/src/util/BuiltInFunctions.lua).
 2. **`keyMatch(r.obj, p.obj)`** — The request path matches the policy object.
 3. **`keyMatch(r.act, p.act)`** — The request method matches the policy action.
 
