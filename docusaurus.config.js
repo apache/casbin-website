@@ -272,14 +272,14 @@ module.exports = {
           sidebarPath: require.resolve("./sidebars.js"),
           sidebarCollapsed: false,
           editUrl: ({docPath}) => {
-            return `https://github.com/casbin/casbin-website-v2/edit/master/docs/${docPath}`;
+            return `https://github.com/apache/casbin-website/edit/master/docs/${docPath}`;
           },
         },
         blog: {
           showReadingTime: true,
           onUntruncatedBlogPosts: "ignore",
           editUrl: ({blogDirPath, blogPath}) => {
-            return `https://github.com/casbin/casbin-website-v2/edit/master/${blogDirPath}/${blogPath}`;
+            return `https://github.com/apache/casbin-website/edit/master/${blogDirPath}/${blogPath}`;
           },
         },
         theme: {

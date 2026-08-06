@@ -28,7 +28,7 @@ export default function Users() {
         <h2>
           <Translate>Is your project using Apache Casbin?</Translate>
         </h2>
-        <a className="button button--lg button--outline button--primary" href="https://github.com/casbin/casbin-website-v2/edit/master/static/data/users.json">
+        <a className="button button--lg button--outline button--primary" href="https://github.com/apache/casbin-website/edit/master/static/data/users.json">
           <Translate>Add your company</Translate>
         </a>
       </div>

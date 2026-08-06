@@ -7,6 +7,6 @@ We have moved Casbin’s documentation from GitHub Wiki to the **Docs** section 
 
 <!-- truncate -->
 
-The docs are still being improved. The site source is on GitHub: https://github.com/casbin/casbin-website-v2
+The docs are still being improved. The site source is on GitHub: https://github.com/apache/casbin-website
 
 Contributions and suggestions are welcome.
