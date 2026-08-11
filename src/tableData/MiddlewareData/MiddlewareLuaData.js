@@ -12,9 +12,9 @@ export const MiddlewareLuaData = [
     image: "/img/ecosystem/openResty.png",
   },
   {
-    title: "[APISIX](https://github.com/apache/apisix)",
+    title: "[Apache APISIX](https://github.com/apache/apisix)",
     description:
-      "A dynamic, real-time, high-performance API gateway, via plugin: [authz-casbin](https://github.com/apache/apisix/blob/master/docs/en/latest/plugins/authz-casbin.md)",
+      "An Apache API gateway with a built-in [authz-casbin](https://apisix.apache.org/docs/apisix/plugins/authz-casbin/) plugin for route-level authorization.",
     image: "/img/ecosystem/apisix.png",
   },
 ].map((item) => {
