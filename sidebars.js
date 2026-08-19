@@ -16,6 +16,7 @@ module.exports = {
   // But you can create a sidebar manually
 
   docs: [
+    "downloads",
     {
       type: "category",
       label: "Basics",
