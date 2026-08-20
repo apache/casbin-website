@@ -51,6 +51,10 @@ module.exports = {
           to: "/docs/overview",
           items: [
             {
+              label: "Download",
+              to: "/docs/downloads",
+            },
+            {
               label: "Get Started",
               to: "/docs/get-started",
             },
