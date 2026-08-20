@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkcasbin_website=globalThis.webpackChunkcasbin_website||[]).push([[5958],{2824(e){e.exports=JSON.parse('{"metadata":{"permalink":"/ko/blog","page":1,"postsPerPage":10,"totalPages":1,"totalCount":7,"blogDescription":"\ube14\ub85c\uadf8","blogTitle":"\ube14\ub85c\uadf8"}}')}}]);
