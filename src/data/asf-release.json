@@ -1,0 +1,8 @@
+{
+  "generatedAt": "2026-08-20T16:55:02.560Z",
+  "version": "3.11.0-incubating",
+  "sourceUrl": "https://www.apache.org/dyn/closer.lua/incubator/casbin/3.11.0-incubating/apache-casbin-3.11.0-incubating-src.tar.gz",
+  "signatureUrl": "https://downloads.apache.org/incubator/casbin/3.11.0-incubating/apache-casbin-3.11.0-incubating-src.tar.gz.asc",
+  "checksumUrl": "https://downloads.apache.org/incubator/casbin/3.11.0-incubating/apache-casbin-3.11.0-incubating-src.tar.gz.sha512",
+  "keysUrl": "https://downloads.apache.org/incubator/casbin/KEYS"
+}

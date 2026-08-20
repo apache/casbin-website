@@ -54,6 +54,9 @@ jobs:
       - name: Generate homepage release
         run: yarn generate:homepage-release
 
+      - name: Generate ASF release
+        run: yarn generate:asf-release
+
       - name: Build
         run: yarn build
 

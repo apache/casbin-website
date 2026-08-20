@@ -7,6 +7,7 @@
     "docusaurus": "docusaurus",
     "generate:footer-stars": "node scripts/generate-footer-stars.js",
     "generate:homepage-release": "node scripts/generate-homepage-release.js",
+    "generate:asf-release": "node scripts/generate-asf-release.js",
     "start": "node scripts/start.js",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",

@@ -85,6 +85,11 @@ module.exports = {
           ],
         },
         {
+          to: "/docs/download",
+          label: "Download",
+          position: "left",
+        },
+        {
           to: "/ecosystem",
           label: "Plugins",
           position: "left",
@@ -183,6 +188,10 @@ module.exports = {
         {
           title: "Docs",
           items: [
+            {
+              label: "Download",
+              to: "/docs/download",
+            },
             {
               label: "Getting Started",
               to: "/docs/get-started",
