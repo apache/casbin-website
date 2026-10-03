@@ -7,8 +7,9 @@ module.exports = {
   title: "Apache Casbin (Incubating)",
   tagline:
     "An authorization library that supports access control models like ACL, RBAC, ABAC, ReBAC, PBAC, OrBAC, BLP, Biba, LBAC, UCON for Golang, Java, C/C++, Node.js, Javascript, PHP, Laravel, Python, .NET (C#), Delphi, Rust, Ruby, Swift (Objective-C), Lua (OpenResty), Dart (Flutter) and Elixir",
-  url: "https://casbin.org",
+  url: "https://casbin.apache.org",
   baseUrl: "/",
+  trailingSlash: true,
   onBrokenLinks: "throw",
   markdown: {
     hooks: {
