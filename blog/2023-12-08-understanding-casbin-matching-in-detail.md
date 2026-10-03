@@ -3,7 +3,7 @@ title: Understanding How Casbin Matching Works in Detail
 authors: [aravindarc]
 ---
 
-This post explains how to design and implement RBAC with the [Casbin](https://casbin.org/) library. For SaaS platforms with resource hierarchies and roles that inherit permissions, Casbin is a performant option.
+This post explains how to design and implement RBAC with the [Casbin](https://casbin.apache.org/) library. For SaaS platforms with resource hierarchies and roles that inherit permissions, Casbin is a performant option.
 
 <!-- truncate -->
 
