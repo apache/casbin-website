@@ -1,0 +1,73 @@
+---
+id: casbin-vs-openfga
+title: Casbin vs. OpenFGA
+description: Apache Casbin and OpenFGA compared - embedded library versus Zanzibar-style service, RBAC and ReBAC modeling, storage, performance characteristics, and when to choose each.
+keywords: [casbin vs openfga, openfga alternatives, openfga vs casbin, zanzibar alternative, rebac library, fine-grained authorization]
+authors: [hsluoyz]
+---
+
+OpenFGA and Casbin both answer the question "may this user do this to that object?". They are built very differently. OpenFGA is a server modeled on Google's Zanzibar paper. Casbin is a library that runs inside your application.
+
+## Summary
+
+| | Casbin | OpenFGA |
+|---|---|---|
+| Form | Library in your process | Separate server, called over HTTP or gRPC |
+| Core idea | PERM model: request, policy, effect, matchers | Relationship tuples and an authorization model |
+| Access control styles | ACL, RBAC, RBAC with domains, ABAC, ReBAC, and more | ReBAC; roles and attributes are expressed through relations and conditions |
+| Rule storage | Your own database through an adapter | OpenFGA's datastore (PostgreSQL, MySQL, or SQLite) |
+| A check costs | A function call | A network round trip, plus graph resolution on the server |
+| Languages | Native implementations in Go, Java, Node.js, Python, .NET, PHP, Rust, C++, and more | SDKs for several languages that call the server |
+| Listing what a user can access | `GetImplicitPermissionsForUser`, `BatchEnforce`, and related APIs | `ListObjects` and `ListUsers` APIs |
+| Governance | Apache Software Foundation (Incubating) | Cloud Native Computing Foundation |
+
+## Library versus service
+
+With OpenFGA you run and operate another service: a server, its database, upgrades, and monitoring. In return, every application in your company can ask the same service the same question, whatever language it is written in, and the relationship data lives in one place.
+
+With Casbin there is nothing extra to deploy. You add a dependency, load a model and a policy, and call `Enforce()`. Each check runs in memory, so there is no network latency and no new failure mode. If you later want a central service, you can put Casbin behind an API yourself or use [Casbin Server](/docs/service).
+
+## Modeling
+
+OpenFGA starts from relationships. You declare types and relations such as "a document has an owner, an editor, and a viewer, and editors of the parent folder are editors of the document", then write tuples such as `user:alice` is `editor` of `document:budget`. This is a natural fit for sharing features, nested folders, and organization hierarchies.
+
+Casbin starts from a model that you configure. The usual starting point is RBAC:
+
+```ini
+[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = sub, obj, act
+
+[role_definition]
+g = _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act
+```
+
+From there the same engine covers tenants ([RBAC with domains](/docs/rbac-with-domains)), resource hierarchies and per-resource roles ([ReBAC](/docs/rebac)), and attribute rules such as `r.sub == r.obj.Owner` ([ABAC](/docs/abac)). Matchers can also call [built-in or custom functions](/docs/function) for path and IP matching.
+
+If most of your rules are "role X may do Y on resource type Z", Casbin's model is shorter and easier to read. If most of your rules are "users related to this object through a chain of relationships may access it", OpenFGA's model expresses that more directly.
+
+## Scale
+
+Casbin loads policy into memory. That is what makes checks fast, and it means the policy set of one application should fit in memory. For large or multi-tenant data sets, load only what a process needs with [policy subset loading](/docs/policy-subset-loading), and keep instances in step with [watchers](/docs/watchers).
+
+OpenFGA keeps tuples in its database and resolves each check on the server. It is designed for very large numbers of tuples shared by many applications, at the cost of a network call and server-side evaluation for each check.
+
+## When to choose which
+
+Choose **OpenFGA** if authorization is a shared platform service in your organization, your rules are mostly relationship chains, or your tuple count is too large to hold in application memory.
+
+Choose **Casbin** if you want authorization inside your application without new infrastructure, your rules are role, tenant, or attribute based, you want policies in your existing database, or you need native support in a language OpenFGA only reaches through a remote call.
+
+## Try Casbin
+
+Paste the model above into the [online editor](/docs/online-editor), or follow the tutorial for [Go](/docs/go-rbac-tutorial), [Node.js](/docs/nodejs-rbac-tutorial), [Python](/docs/python-rbac-tutorial), or [Java](/docs/java-rbac-tutorial).
+
+See also the [comparison overview](/docs/comparison).

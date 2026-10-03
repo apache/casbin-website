@@ -1,0 +1,81 @@
+---
+id: casbin-vs-cedar
+title: Casbin vs. Cedar
+description: Apache Casbin and Cedar compared - configurable PERM model versus the Cedar policy language, validation and analysis, language support, policy storage, and when to choose each.
+keywords: [casbin vs cedar, cedar alternatives, cedar policy language, amazon verified permissions alternative, authorization library comparison]
+authors: [hsluoyz]
+---
+
+Cedar is an open-source policy language and evaluation engine created at AWS; it is the language behind Amazon Verified Permissions. Casbin is an authorization library under the Apache Software Foundation with a configurable model and implementations in many languages. Both evaluate requests inside your application; they differ in how rules are expressed and in what surrounds the engine.
+
+## Summary
+
+| | Casbin | Cedar |
+|---|---|---|
+| How rules are written | A model file plus policy rules as rows | `permit` and `forbid` statements in the Cedar language |
+| Access control styles | ACL, RBAC, RBAC with domains, ABAC, ReBAC, and more, chosen in the model | RBAC through entity groups, ABAC through conditions |
+| Semantics | Defined by the model's policy effect; allow-override, deny-override, and priority are available | Fixed: deny by default, `forbid` overrides `permit` |
+| Validation | Model syntax is checked on load; test with the online editor | Policies are validated against a schema; automated analysis tools exist |
+| Native implementations | Go, Java, Node.js, Python, .NET, PHP, Rust, C++, and more | Rust, with Java, Go, and WebAssembly options |
+| Storage and distribution | Database adapters and watchers | You provide storage, or use the managed AWS service |
+| Managed service | None required; runs in your process | Amazon Verified Permissions |
+| Governance | Apache Software Foundation (Incubating) | Open source from AWS, Apache-2.0 |
+
+## Policy language versus configurable model
+
+A Cedar policy reads like a sentence:
+
+```cedar
+permit (
+    principal in Role::"editor",
+    action == Action::"update",
+    resource in Folder::"articles"
+)
+when { resource.owner == principal };
+```
+
+The language has a fixed meaning: everything is denied unless a `permit` matches, and any matching `forbid` wins. Policies can be checked against a schema before they are deployed, and the design allows automated reasoning about what a policy set permits.
+
+Casbin splits the same rule into a model and data. Here the request object is an article with `Folder` and `Owner` fields ([ABAC](/docs/abac)):
+
+```ini
+[matchers]
+m = g(r.sub, p.sub) && r.obj.Folder == p.obj && r.act == p.act && r.obj.Owner == r.sub
+```
+
+```csv
+p, editor, articles, update
+g, alice, editor
+```
+
+The model decides how requests and policy rules are compared and how results combine. That flexibility is the point of Casbin's PERM design: the same engine can behave as a simple ACL, as RBAC with tenants, as deny-override, or as an ordered firewall-style list. See [How it works](/docs/how-it-works) and [Supported models](/docs/supported-models).
+
+## What surrounds the engine
+
+Cedar gives you an evaluator. Loading entities, storing policies, and distributing changes are left to your application, or to Amazon Verified Permissions if you use AWS.
+
+Casbin includes those pieces:
+
+- [Adapters](/docs/adapters) persist policy in SQL and NoSQL databases, files, and cloud stores.
+- [Watchers](/docs/watchers) keep multiple instances synchronized.
+- [Role managers](/docs/role-managers) resolve role hierarchies, including from external sources such as LDAP or an identity provider.
+- The [Management API](/docs/management-api) and [RBAC API](/docs/rbac-api) let administrators change permissions at runtime.
+- [Middleware](/docs/middlewares) exists for most web frameworks.
+
+## Languages
+
+Cedar's reference implementation is in Rust, with bindings and ports for a few other languages.
+
+Casbin has maintained native implementations for Go, Java, Node.js, Python, .NET, PHP, Rust, C++, and more, and a model and policy written once work in all of them.
+
+## When to choose which
+
+Choose **Cedar** if you want a readable policy language with schema validation and formal analysis, or you plan to use Amazon Verified Permissions.
+
+Choose **Casbin** if you need to choose or customize the access control model, want storage, synchronization, and management APIs included, need a native library in your language, or prefer a project under Apache Software Foundation governance that does not depend on one cloud provider.
+
+## Try Casbin
+
+Test a model and policy in the [online editor](/docs/online-editor), or follow the tutorial for [Go](/docs/go-rbac-tutorial), [Node.js](/docs/nodejs-rbac-tutorial), [Python](/docs/python-rbac-tutorial), or [Java](/docs/java-rbac-tutorial).
+
+See also the [comparison overview](/docs/comparison).

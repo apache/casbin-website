@@ -1,0 +1,147 @@
+---
+id: nodejs-rbac-tutorial
+title: RBAC in Node.js with Express
+description: Step-by-step Node.js RBAC tutorial - add role-based access control to an Express REST API with Casbin, including the model, policy, middleware, and runtime role management.
+keywords: [nodejs rbac, express rbac, node casbin, express authorization middleware, role-based access control nodejs]
+authors: [hsluoyz]
+---
+
+This tutorial adds role-based access control (RBAC) to a REST API built with [Express](https://expressjs.com). At the end, three roles (`admin`, `editor`, `viewer`) are allowed different HTTP methods on different routes, and the rules live in a policy file that you can change without touching the route handlers.
+
+The same model and policy work in every Casbin implementation, so you can reuse them in the [Go](/docs/go-rbac-tutorial), [Python](/docs/python-rbac-tutorial), and [Java](/docs/java-rbac-tutorial) versions of this tutorial.
+
+## 1. Install
+
+```bash
+npm init -y
+npm install express casbin
+```
+
+## 2. Write the model
+
+The model says what a request looks like and how it is matched against the policy. Save this as `model.conf`:
+
+```ini
+[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = sub, obj, act
+
+[role_definition]
+g = _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = g(r.sub, p.sub) && keyMatch2(r.obj, p.obj) && regexMatch(r.act, p.act)
+```
+
+- `r = sub, obj, act`: each request is a user, a URL path, and an HTTP method.
+- `g = _, _`: users can be assigned to roles.
+- `g(r.sub, p.sub)`: the request's user must have the role named in the policy rule.
+- `keyMatch2` matches paths such as `/api/articles/:id`, and `regexMatch` lets one rule list several methods. See [Functions](/docs/function) for the other built-in matchers.
+
+## 3. Write the policy
+
+Save this as `policy.csv`:
+
+```csv
+p, admin, /api/*, (GET)|(POST)|(PUT)|(DELETE)
+p, editor, /api/articles, (GET)|(POST)
+p, editor, /api/articles/:id, (GET)|(PUT)
+p, viewer, /api/articles, GET
+p, viewer, /api/articles/:id, GET
+
+g, alice, admin
+g, bob, editor
+g, carol, viewer
+```
+
+Lines starting with `p` grant a role access to a path and a set of methods. Lines starting with `g` assign users to roles.
+
+## 4. Add the middleware
+
+The middleware calls `enforce` with the user, the path, and the method, and responds with `403 Forbidden` when Casbin says no.
+
+```js title="server.js"
+const express = require("express");
+const { newEnforcer } = require("casbin");
+
+// authorize asks Casbin whether the current user may call this route.
+function authorize(enforcer) {
+  return async (req, res, next) => {
+    // Replace this with the user from your session or JWT.
+    const user = req.get("X-User") || "";
+
+    try {
+      const allowed = await enforcer.enforce(user, req.baseUrl + req.path, req.method);
+      if (!allowed) {
+        return res.status(403).json({ error: "forbidden" });
+      }
+      next();
+    } catch (err) {
+      next(err);
+    }
+  };
+}
+
+async function main() {
+  const enforcer = await newEnforcer("model.conf", "policy.csv");
+
+  const app = express();
+  const api = express.Router();
+  api.get("/articles", (req, res) => res.json({ articles: [] }));
+  api.post("/articles", (req, res) => res.status(201).json({ created: true }));
+  api.put("/articles/:id", (req, res) => res.json({ updated: req.params.id }));
+  api.delete("/articles/:id", (req, res) => res.json({ deleted: req.params.id }));
+
+  app.use("/api", authorize(enforcer), api);
+  app.listen(8080, () => console.log("listening on :8080"));
+}
+
+main();
+```
+
+:::note
+Inside a mounted router, `req.path` does not include the mount point. `req.baseUrl + req.path` gives the full path (`/api/articles`) that the policy refers to.
+
+The `X-User` header keeps the example short. Casbin handles authorization only; in a real application the user name comes from your authentication layer, such as a verified JWT or a session.
+:::
+
+## 5. Try it
+
+```bash
+node server.js
+```
+
+```bash
+curl -i -X POST   -H "X-User: bob"   http://localhost:8080/api/articles     # 201, editors can create
+curl -i -X DELETE -H "X-User: bob"   http://localhost:8080/api/articles/1   # 403, editors cannot delete
+curl -i -X DELETE -H "X-User: alice" http://localhost:8080/api/articles/1   # 200, admins can
+curl -i -X POST   -H "X-User: carol" http://localhost:8080/api/articles     # 403, viewers are read-only
+```
+
+## 6. Change roles at runtime
+
+Roles and permissions are data, so you can change them while the server is running:
+
+```js
+await enforcer.addRoleForUser("dave", "editor");            // dave becomes an editor
+await enforcer.deleteRoleForUser("bob", "editor");          // bob is no longer an editor
+await enforcer.addPolicy("editor", "/api/comments", "POST"); // editors may now post comments
+
+const roles = await enforcer.getRolesForUser("alice");      // ["admin"]
+```
+
+The full list is in the [RBAC API](/docs/rbac-api) and the [Management API](/docs/management-api).
+
+## Next steps
+
+- **Store the policy in a database.** Replace `policy.csv` with an [adapter](/docs/adapters) for Sequelize, TypeORM, Prisma, Mongoose, and others. Policy changes made through the API are then saved automatically.
+- **Run more than one instance.** Use a [watcher](/docs/watchers) so every instance reloads the policy when one of them changes it.
+- **Show or hide UI elements.** [Frontend usage](/docs/frontend) explains how to send a user's permissions to the browser with `casbin.js`.
+- **Multi-tenant applications.** [RBAC with domains](/docs/rbac-with-domains) gives a user different roles in different tenants.
+- **Rules based on attributes.** Combine roles with [ABAC](/docs/abac), for example "editors may update only their own articles".
+- **Ready-made middleware.** The [middleware list](/docs/middlewares) has plugins for Express, Koa, NestJS, Fastify, and other frameworks.

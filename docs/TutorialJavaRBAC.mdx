@@ -1,0 +1,209 @@
+---
+id: java-rbac-tutorial
+title: RBAC in Java with Spring Boot
+description: Step-by-step Java RBAC tutorial - add role-based access control to a Spring Boot REST API with jCasbin, including the model, policy, interceptor, and runtime role management.
+keywords: [spring boot rbac, java rbac, jcasbin, spring boot authorization, role-based access control java]
+authors: [hsluoyz]
+---
+
+This tutorial adds role-based access control (RBAC) to a REST API built with [Spring Boot](https://spring.io/projects/spring-boot) and jCasbin. At the end, three roles (`admin`, `editor`, `viewer`) are allowed different HTTP methods on different routes, and the rules live in a policy file that you can change without touching the controllers.
+
+The same model and policy work in every Casbin implementation, so you can reuse them in the [Go](/docs/go-rbac-tutorial), [Node.js](/docs/nodejs-rbac-tutorial), and [Python](/docs/python-rbac-tutorial) versions of this tutorial.
+
+## 1. Add the dependency
+
+In a Spring Boot 3 project that already has `spring-boot-starter-web`, add jCasbin to `pom.xml`. Use the latest version from [Maven Central](https://mvnrepository.com/artifact/org.casbin/jcasbin).
+
+```xml
+<dependency>
+    <groupId>org.casbin</groupId>
+    <artifactId>jcasbin</artifactId>
+    <version>1.81.0</version>
+</dependency>
+```
+
+## 2. Write the model
+
+The model says what a request looks like and how it is matched against the policy. Save this as `model.conf` in the directory you start the application from:
+
+```ini
+[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = sub, obj, act
+
+[role_definition]
+g = _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = g(r.sub, p.sub) && keyMatch2(r.obj, p.obj) && regexMatch(r.act, p.act)
+```
+
+- `r = sub, obj, act`: each request is a user, a URL path, and an HTTP method.
+- `g = _, _`: users can be assigned to roles.
+- `g(r.sub, p.sub)`: the request's user must have the role named in the policy rule.
+- `keyMatch2` matches paths such as `/api/articles/:id`, and `regexMatch` lets one rule list several methods. See [Functions](/docs/function) for the other built-in matchers.
+
+## 3. Write the policy
+
+Save this as `policy.csv` next to `model.conf`:
+
+```csv
+p, admin, /api/*, (GET)|(POST)|(PUT)|(DELETE)
+p, editor, /api/articles, (GET)|(POST)
+p, editor, /api/articles/:id, (GET)|(PUT)
+p, viewer, /api/articles, GET
+p, viewer, /api/articles/:id, GET
+
+g, alice, admin
+g, bob, editor
+g, carol, viewer
+```
+
+Lines starting with `p` grant a role access to a path and a set of methods. Lines starting with `g` assign users to roles.
+
+## 4. Add the interceptor
+
+The interceptor calls `enforce` with the user, the path, and the method, and responds with `403 Forbidden` when Casbin says no.
+
+```java title="AuthorizationInterceptor.java"
+package com.example.rbac;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.casbin.jcasbin.main.Enforcer;
+import org.springframework.web.servlet.HandlerInterceptor;
+
+public class AuthorizationInterceptor implements HandlerInterceptor {
+
+    private final Enforcer enforcer;
+
+    public AuthorizationInterceptor(Enforcer enforcer) {
+        this.enforcer = enforcer;
+    }
+
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        // Replace this with the user from your session or JWT.
+        String user = request.getHeader("X-User");
+        if (user == null) {
+            user = "";
+        }
+
+        if (enforcer.enforce(user, request.getRequestURI(), request.getMethod())) {
+            return true;
+        }
+        response.sendError(HttpServletResponse.SC_FORBIDDEN, "forbidden");
+        return false;
+    }
+}
+```
+
+Create the `Enforcer` as a bean and register the interceptor for the API routes:
+
+```java title="CasbinConfig.java"
+package com.example.rbac;
+
+import org.casbin.jcasbin.main.Enforcer;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+@Configuration
+public class CasbinConfig implements WebMvcConfigurer {
+
+    @Bean
+    public Enforcer enforcer() {
+        return new Enforcer("model.conf", "policy.csv");
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new AuthorizationInterceptor(enforcer())).addPathPatterns("/api/**");
+    }
+}
+```
+
+A controller to protect:
+
+```java title="ArticleController.java"
+package com.example.rbac;
+
+import java.util.List;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/articles")
+public class ArticleController {
+
+    @GetMapping
+    public Map<String, Object> list() {
+        return Map.of("articles", List.of());
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String, Object> create() {
+        return Map.of("created", true);
+    }
+
+    @PutMapping("/{id}")
+    public Map<String, Object> update(@PathVariable long id) {
+        return Map.of("updated", id);
+    }
+
+    @DeleteMapping("/{id}")
+    public Map<String, Object> delete(@PathVariable long id) {
+        return Map.of("deleted", id);
+    }
+}
+```
+
+:::note
+`new Enforcer("model.conf", "policy.csv")` reads the two files from the working directory. Files packaged inside the application JAR under `src/main/resources` cannot be opened as file paths; keep the files outside the JAR, or load the policy from a database with an [adapter](/docs/adapters).
+
+The `X-User` header keeps the example short. Casbin handles authorization only; in a real application the user name comes from your authentication layer, such as Spring Security, a verified JWT, or a session.
+:::
+
+## 5. Try it
+
+```bash
+mvn spring-boot:run
+```
+
+```bash
+curl -i -X POST   -H "X-User: bob"   http://localhost:8080/api/articles     # 201, editors can create
+curl -i -X DELETE -H "X-User: bob"   http://localhost:8080/api/articles/1   # 403, editors cannot delete
+curl -i -X DELETE -H "X-User: alice" http://localhost:8080/api/articles/1   # 200, admins can
+curl -i -X POST   -H "X-User: carol" http://localhost:8080/api/articles     # 403, viewers are read-only
+```
+
+## 6. Change roles at runtime
+
+Roles and permissions are data, so you can change them while the server is running. Inject the `Enforcer` bean wherever you manage users:
+
+```java
+enforcer.addRoleForUser("dave", "editor");            // dave becomes an editor
+enforcer.deleteRoleForUser("bob", "editor");          // bob is no longer an editor
+enforcer.addPolicy("editor", "/api/comments", "POST"); // editors may now post comments
+
+List<String> roles = enforcer.getRolesForUser("alice"); // [admin]
+```
+
+The full list is in the [RBAC API](/docs/rbac-api) and the [Management API](/docs/management-api).
+
+## Next steps
+
+- **Store the policy in a database.** Replace `policy.csv` with an [adapter](/docs/adapters) for JDBC, MyBatis, Hibernate, MongoDB, and others. Policy changes made through the API are then saved automatically.
+- **Use the Spring Boot starter.** [casbin-spring-boot-starter](https://github.com/jcasbin/casbin-spring-boot-starter) creates the `Enforcer` and a JDBC adapter from `application.yml`.
+- **Run more than one instance.** Use a [watcher](/docs/watchers) so every instance reloads the policy when one of them changes it.
+- **Multi-tenant applications.** [RBAC with domains](/docs/rbac-with-domains) gives a user different roles in different tenants.
+- **Rules based on attributes.** Combine roles with [ABAC](/docs/abac), for example "editors may update only their own articles".
+- **Other frameworks.** The [middleware list](/docs/middlewares) has plugins for Spring Boot, Apache Shiro, JFinal, Nutz, and other frameworks.

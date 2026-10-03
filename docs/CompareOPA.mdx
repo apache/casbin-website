@@ -1,0 +1,90 @@
+---
+id: casbin-vs-opa
+title: Casbin vs. Open Policy Agent (OPA)
+description: Apache Casbin and Open Policy Agent compared - model and policy data versus Rego, embedded library versus policy agent, runtime policy management, language support, and when to choose each.
+keywords: [casbin vs opa, opa vs casbin, open policy agent alternative, rego alternative, policy engine comparison, authorization library]
+authors: [hsluoyz]
+---
+
+Open Policy Agent (OPA) and Casbin are both open-source policy engines, and they are often shortlisted together. OPA is a general-purpose engine: one language, Rego, for decisions across Kubernetes, infrastructure, and services. Casbin concentrates on access control inside applications, with rules stored as data that can be changed at runtime.
+
+## Summary
+
+| | Casbin | OPA |
+|---|---|---|
+| Scope | Application access control | General-purpose policy for any JSON input |
+| How rules are written | A short model file plus policy rules as rows | Programs in the Rego language |
+| Typical deployment | Library in your process | Sidecar or daemon queried over HTTP; also a Go library and WebAssembly |
+| Native implementations | Go, Java, Node.js, Python, .NET, PHP, Rust, C++, and more | Go |
+| Where rules and data live | Your database, through adapters | Bundles and data documents loaded into OPA's memory |
+| Changing permissions | Add or remove a policy row through the Management API | Change the data or publish a new policy bundle |
+| Who usually edits rules | Application administrators, through a UI or API | Engineers, through code review |
+| Governance | Apache Software Foundation (Incubating) | Cloud Native Computing Foundation |
+
+## Rego versus model and policy
+
+In OPA you write the decision logic itself in Rego:
+
+```rego
+package app.authz
+
+default allow := false
+
+allow if {
+    some role in data.user_roles[input.user]
+    some grant in data.role_grants[role]
+    grant.action == input.action
+    grant.resource == input.resource
+}
+```
+
+Rego is expressive. It can inspect arbitrary nested JSON, which is why OPA is used for Kubernetes admission control and configuration checks as well as for API authorization. It is also a language your team has to learn, test, and review.
+
+In Casbin the logic is one line in a model file and the grants are rows:
+
+```ini
+[matchers]
+m = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act
+```
+
+```csv
+p, editor, article, write
+g, alice, editor
+```
+
+Most access control requirements (roles, role hierarchies, tenants, resource ownership, path patterns) fit this shape; see [Supported models](/docs/supported-models). For logic the built-in operators do not cover, a matcher can call a [custom function](/docs/function) written in your application's language.
+
+## Managing permissions at runtime
+
+Applications usually need an administration screen where someone assigns roles and grants permissions. With Casbin this is a direct API call:
+
+```go
+e.AddRoleForUser("bob", "editor")
+e.AddPolicy("editor", "comment", "write")
+```
+
+The change is enforced immediately, saved through the [adapter](/docs/adapters) to your database, and propagated to other instances by a [watcher](/docs/watchers). The [Management API](/docs/management-api) and [RBAC API](/docs/rbac-api) cover listing and querying as well.
+
+With OPA, the equivalent is a data document that your own service maintains and ships to every OPA instance, through bundles or the data API. That works well, and the storage, distribution, and admin API are yours to build.
+
+## Deployment and languages
+
+OPA is written in Go. Go programs can embed it; other languages normally query an OPA process over HTTP or run policies compiled to WebAssembly.
+
+Casbin has native implementations for Go, Java, Node.js, Python, .NET, PHP, Rust, C++, and others. A check is an in-process function call with no serialization or network hop. The same model and policy files work unchanged across languages.
+
+## Infrastructure policy
+
+For Kubernetes admission control and cloud configuration, OPA with Gatekeeper is the established choice and has a large library of ready-made policies. Casbin can also be used there, with [K8s-Gatekeeper](/docs/k8s-gatekeeper) and [Envoy](/docs/envoy) integrations, but its strength is application authorization.
+
+## When to choose which
+
+Choose **OPA** if you want one policy language across infrastructure and services, your decisions depend on complex structured input, or policies should be authored and versioned as code by engineers.
+
+Choose **Casbin** if you are adding roles and permissions to an application, permissions must be editable at runtime by administrators, you want rules stored in your existing database, or you want a native library in your language with no extra process.
+
+## Try Casbin
+
+Test a model and policy in the [online editor](/docs/online-editor), or follow the tutorial for [Go](/docs/go-rbac-tutorial), [Node.js](/docs/nodejs-rbac-tutorial), [Python](/docs/python-rbac-tutorial), or [Java](/docs/java-rbac-tutorial).
+
+See also the [comparison overview](/docs/comparison).

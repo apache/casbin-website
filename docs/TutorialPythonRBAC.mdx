@@ -1,0 +1,144 @@
+---
+id: python-rbac-tutorial
+title: RBAC in Python with FastAPI
+description: Step-by-step Python RBAC tutorial - add role-based access control to a FastAPI REST API with PyCasbin, including the model, policy, dependency, and runtime role management.
+keywords: [python rbac, fastapi rbac, pycasbin, python rbac library, fastapi authorization, role-based access control python]
+authors: [hsluoyz]
+---
+
+This tutorial adds role-based access control (RBAC) to a REST API built with [FastAPI](https://fastapi.tiangolo.com) and PyCasbin. At the end, three roles (`admin`, `editor`, `viewer`) are allowed different HTTP methods on different routes, and the rules live in a policy file that you can change without touching the route functions.
+
+The same model and policy work in every Casbin implementation, so you can reuse them in the [Go](/docs/go-rbac-tutorial), [Node.js](/docs/nodejs-rbac-tutorial), and [Java](/docs/java-rbac-tutorial) versions of this tutorial.
+
+## 1. Install
+
+```bash
+pip install casbin fastapi uvicorn
+```
+
+## 2. Write the model
+
+The model says what a request looks like and how it is matched against the policy. Save this as `model.conf`:
+
+```ini
+[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = sub, obj, act
+
+[role_definition]
+g = _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = g(r.sub, p.sub) && keyMatch2(r.obj, p.obj) && regexMatch(r.act, p.act)
+```
+
+- `r = sub, obj, act`: each request is a user, a URL path, and an HTTP method.
+- `g = _, _`: users can be assigned to roles.
+- `g(r.sub, p.sub)`: the request's user must have the role named in the policy rule.
+- `keyMatch2` matches paths such as `/api/articles/:id`, and `regexMatch` lets one rule list several methods. See [Functions](/docs/function) for the other built-in matchers.
+
+## 3. Write the policy
+
+Save this as `policy.csv`:
+
+```csv
+p, admin, /api/*, (GET)|(POST)|(PUT)|(DELETE)
+p, editor, /api/articles, (GET)|(POST)
+p, editor, /api/articles/:id, (GET)|(PUT)
+p, viewer, /api/articles, GET
+p, viewer, /api/articles/:id, GET
+
+g, alice, admin
+g, bob, editor
+g, carol, viewer
+```
+
+Lines starting with `p` grant a role access to a path and a set of methods. Lines starting with `g` assign users to roles.
+
+## 4. Add the dependency
+
+A FastAPI dependency calls `enforce` with the user, the path, and the method, and raises `403 Forbidden` when Casbin says no. Registering it on the application applies it to every route.
+
+```python title="main.py"
+import casbin
+from fastapi import Depends, FastAPI, HTTPException, Request
+
+enforcer = casbin.Enforcer("model.conf", "policy.csv")
+
+
+def authorize(request: Request) -> None:
+    """Ask Casbin whether the current user may call this route."""
+    # Replace this with the user from your session or JWT.
+    user = request.headers.get("X-User", "")
+
+    if not enforcer.enforce(user, request.url.path, request.method):
+        raise HTTPException(status_code=403, detail="forbidden")
+
+
+app = FastAPI(dependencies=[Depends(authorize)])
+
+
+@app.get("/api/articles")
+def list_articles():
+    return {"articles": []}
+
+
+@app.post("/api/articles", status_code=201)
+def create_article():
+    return {"created": True}
+
+
+@app.put("/api/articles/{article_id}")
+def update_article(article_id: int):
+    return {"updated": article_id}
+
+
+@app.delete("/api/articles/{article_id}")
+def delete_article(article_id: int):
+    return {"deleted": article_id}
+```
+
+:::note
+The `X-User` header keeps the example short. Casbin handles authorization only; in a real application the user name comes from your authentication layer, such as a verified JWT or a session.
+:::
+
+## 5. Try it
+
+```bash
+uvicorn main:app --port 8080
+```
+
+```bash
+curl -i -X POST   -H "X-User: bob"   http://localhost:8080/api/articles     # 201, editors can create
+curl -i -X DELETE -H "X-User: bob"   http://localhost:8080/api/articles/1   # 403, editors cannot delete
+curl -i -X DELETE -H "X-User: alice" http://localhost:8080/api/articles/1   # 200, admins can
+curl -i -X POST   -H "X-User: carol" http://localhost:8080/api/articles     # 403, viewers are read-only
+```
+
+## 6. Change roles at runtime
+
+Roles and permissions are data, so you can change them while the server is running:
+
+```python
+enforcer.add_role_for_user("dave", "editor")            # dave becomes an editor
+enforcer.delete_role_for_user("bob", "editor")          # bob is no longer an editor
+enforcer.add_policy("editor", "/api/comments", "POST")  # editors may now post comments
+
+enforcer.get_roles_for_user("alice")                    # ['admin']
+```
+
+The full list is in the [RBAC API](/docs/rbac-api) and the [Management API](/docs/management-api).
+
+## Next steps
+
+- **Store the policy in a database.** Replace `policy.csv` with an [adapter](/docs/adapters) for SQLAlchemy, Django ORM, MongoDB, Redis, and others. Policy changes made through the API are then saved automatically.
+- **Run more than one worker.** Use a [watcher](/docs/watchers) so every process reloads the policy when one of them changes it.
+- **Multi-tenant applications.** [RBAC with domains](/docs/rbac-with-domains) gives a user different roles in different tenants.
+- **Rules based on attributes.** Combine roles with [ABAC](/docs/abac), for example "editors may update only their own articles".
+- **Ready-made middleware.** The [middleware list](/docs/middlewares) has plugins for FastAPI, Django, Flask, and other frameworks.
+- **Experiment in the browser.** Paste the model and policy into the [online editor](/docs/online-editor) to test requests without running any code.

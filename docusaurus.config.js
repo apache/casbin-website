@@ -307,6 +307,17 @@ module.exports = {
     ],
   ],
   plugins: [
+    [
+      require.resolve("./src/plugins/llms-txt"),
+      {
+        title: "Apache Casbin",
+        summary: "Apache Casbin (Incubating) is an open-source authorization library that supports access control models like ACL, RBAC, ABAC, ReBAC, PBAC, BLP, Biba and more. A model file (PERM: policy, effect, request, matchers) and policy rules decide every request, and the same model works in Go, Java, Node.js, Python, .NET, PHP, Rust, C++ and other languages.",
+        links: [
+          {title: "Source code", url: "https://github.com/apache/casbin", description: "Go implementation and examples (Apache-2.0)"},
+          {title: "Online editor", url: "https://editor.casbin.org", description: "Write and test a model and policy in the browser"},
+        ],
+      },
+    ],
   ],
   i18n: {
     defaultLocale: "en",

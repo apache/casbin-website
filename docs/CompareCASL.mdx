@@ -1,0 +1,82 @@
+---
+id: casbin-vs-casl
+title: Casbin vs. CASL
+description: Apache Casbin and CASL compared for JavaScript and TypeScript applications - rules as data versus abilities in code, frontend and backend use, multi-language services, and when to choose each.
+keywords: [casbin vs casl, casl alternatives, casl vs casbin, nodejs authorization library, javascript rbac, typescript permissions]
+authors: [hsluoyz]
+---
+
+CASL and Casbin are the two authorization libraries JavaScript developers compare most often. CASL is written for JavaScript and TypeScript and defines permissions in code. Casbin keeps permissions outside the code as a model and policy rules, and the same rules run in Node.js, the browser, and other languages.
+
+## Summary
+
+| | Casbin | CASL |
+|---|---|---|
+| Languages | Node.js and browser, plus Go, Java, Python, .NET, PHP, Rust, C++, and more | JavaScript and TypeScript |
+| How rules are written | A model file plus policy rules as rows | `can` and `cannot` calls in code, or rule objects in JSON |
+| Typical rule | `p, editor, article, write` | `can('update', 'Article', { authorId: user.id })` |
+| Roles | Built in: role assignment, hierarchies, per-tenant roles | You map roles to abilities in your own code |
+| Rule storage | Database adapters (Sequelize, TypeORM, Prisma, Mongoose, and others) | You store and load rules yourself |
+| Frontend | [casbin.js](/docs/frontend) receives the user's permissions from the backend | Packages for React, Vue, and Angular |
+| Database query filtering | Through the policy and your own queries | Helpers that turn conditions into Prisma or Mongoose queries |
+| Governance and license | Apache Software Foundation (Incubating), Apache-2.0 | Community project, MIT |
+
+## Rules in code versus rules as data
+
+A CASL ability is built in code for the current user:
+
+```js
+import { AbilityBuilder, createMongoAbility } from "@casl/ability";
+
+function defineAbilityFor(user) {
+  const { can, build } = new AbilityBuilder(createMongoAbility);
+  can("read", "Article");
+  if (user.role === "editor") {
+    can("update", "Article", { authorId: user.id });
+  }
+  return build();
+}
+```
+
+This is easy to read, type-safe in TypeScript, and convenient when the rules are fixed and known to developers. Changing who may do what means changing and redeploying code, unless you build your own storage for rule objects.
+
+Casbin separates the two parts. The model describes the shape of a rule and is written once:
+
+```ini
+[matchers]
+m = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act
+```
+
+The rules are data:
+
+```csv
+p, reader, article, read
+p, editor, article, update
+g, alice, editor
+```
+
+An administrator can add a role or a permission at runtime through the [Management API](/docs/management-api), and the change is saved to your database by an [adapter](/docs/adapters). Ownership rules such as "editors update only their own articles" are written in the matcher with [ABAC](/docs/abac): `r.sub == r.obj.authorId`.
+
+## Frontend
+
+CASL is strong in the browser. Its React, Vue, and Angular packages make it simple to show or hide buttons, and the same ability object can be used on both sides.
+
+With Casbin, the server remains the source of truth. It sends the current user's permissions to the browser, where [casbin.js](/docs/frontend) answers `can` questions for UI components. The frontend never holds other users' rules.
+
+## More than one language
+
+CASL covers JavaScript. If part of your backend is written in Go, Java, or Python, those services need a different authorization library and a second copy of the rules.
+
+A Casbin model and policy are language-neutral. A Node.js API, a Go worker, and a Python service can load the same policy from the same database and reach the same decisions.
+
+## When to choose which
+
+Choose **CASL** if your stack is entirely JavaScript or TypeScript, permissions are defined by developers and rarely change at runtime, and you want tight integration with UI frameworks and with Prisma or Mongoose queries.
+
+Choose **Casbin** if administrators manage roles and permissions at runtime, you need role hierarchies or multi-tenant roles out of the box, your rules should live in a database, or several services in different languages must enforce the same policy.
+
+## Try Casbin
+
+Follow the [Node.js and Express tutorial](/docs/nodejs-rbac-tutorial), or test a model and policy in the [online editor](/docs/online-editor).
+
+See also the [comparison overview](/docs/comparison).

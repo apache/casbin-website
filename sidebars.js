@@ -30,6 +30,17 @@ module.exports = {
     },
     {
       type: "category",
+      label: "Guides",
+      link: {type: "generated-index"},
+      items: [
+        "go-rbac-tutorial",
+        "nodejs-rbac-tutorial",
+        "python-rbac-tutorial",
+        "java-rbac-tutorial",
+      ],
+    },
+    {
+      type: "category",
       label: "Access Control Models",
       link: {type: "generated-index"},
       items: [
@@ -153,6 +164,17 @@ module.exports = {
       items: [
         "online-editor",
         "ide-plugins",
+      ],
+    },
+    {
+      type: "category",
+      label: "Comparisons",
+      link: {type: "doc", id: "comparison"},
+      items: [
+        "casbin-vs-openfga",
+        "casbin-vs-opa",
+        "casbin-vs-casl",
+        "casbin-vs-cedar",
       ],
     },
     {
