@@ -1,6 +1,7 @@
 import React, {useEffect, useRef} from "react";
 import clsx from "clsx";
 import Layout from "@theme/Layout";
+import Head from "@docusaurus/Head";
 import Link from "@docusaurus/Link";
 import styles from "./index.module.css";
 import HomepageFeatures from "../components/HomepageFeatures";
@@ -210,7 +211,7 @@ function Showcase() {
   return (
     <div className="hero text--center showcase">
       <div className="container">
-        <h1><Translate>Who&apos;s using Apache Casbin?</Translate></h1>
+        <h2><Translate>Who&apos;s using Apache Casbin?</Translate></h2>
         <p style={{
           width: "50vw",
           margin: "auto",
@@ -232,11 +233,43 @@ function Showcase() {
   );
 }
 
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://casbin.apache.org/#website",
+      "name": "Apache Casbin",
+      "url": "https://casbin.apache.org/",
+      "publisher": {"@id": "https://www.apache.org/#organization"},
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://www.apache.org/#organization",
+      "name": "The Apache Software Foundation",
+      "url": "https://www.apache.org/",
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "Apache Casbin",
+      "url": "https://casbin.apache.org/",
+      "description": "Open-source authorization library that supports access control models such as ACL, RBAC, ABAC and ReBAC, with implementations for Go, Java, Node.js, Python, .NET, PHP, Rust, C++ and other languages.",
+      "codeRepository": "https://github.com/apache/casbin",
+      "programmingLanguage": ["Go", "Java", "JavaScript", "TypeScript", "Python", "C#", "PHP", "Rust", "C++"],
+      "license": "https://www.apache.org/licenses/LICENSE-2.0",
+      "publisher": {"@id": "https://www.apache.org/#organization"},
+    },
+  ],
+};
+
 export default function Home() {
   return (
     <Layout
-      title="Apache Casbin · An authorization library"
-      description="An authorization library that supports access control models like ACL, RBAC, ABAC, ReBAC, PBAC, OrBAC, BLP, Biba, LBAC, UCON, Priority, RESTful for Golang, Java, C/C++, Node.js, Javascript, PHP, Laravel, Python, .NET (C#), Delphi, Rust, Ruby, Swift (Objective-C), Lua (OpenResty), Dart (Flutter) and Elixir">
+      title="Open-Source Authorization Library for ACL, RBAC and ABAC"
+      description="Apache Casbin is an open-source authorization library that supports ACL, RBAC, ABAC, ReBAC and more, with one model for Go, Java, Node.js, Python, .NET, PHP, Rust and C++.">
+      <Head>
+        <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
+      </Head>
       <main>
         <HomepageHeader />
         <LanguageIntegration />

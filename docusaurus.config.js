@@ -20,6 +20,7 @@ module.exports = {
   organizationName: "apache", // Usually your GitHub org/user name.
   projectName: "casbin-website", // Usually your repo name.
   themeConfig: {
+    image: "img/social-card.png",
     metadata: [
       {
         name: "Apache Casbin",
