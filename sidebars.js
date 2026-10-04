@@ -37,6 +37,13 @@ module.exports = {
         "nodejs-rbac-tutorial",
         "python-rbac-tutorial",
         "java-rbac-tutorial",
+        "nestjs-rbac-tutorial",
+        "rust-rbac-tutorial",
+        "grpc-rbac-tutorial",
+        "go-abac-tutorial",
+        "nodejs-abac-tutorial",
+        "flask-abac-tutorial",
+        "ai-agent-authorization",
       ],
     },
     {
@@ -44,6 +51,7 @@ module.exports = {
       label: "Access Control Models",
       link: {type: "generated-index"},
       items: [
+        "access-control-models",
         "supported-models",
         "syntax-for-models",
         "effector",

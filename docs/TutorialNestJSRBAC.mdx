@@ -1,0 +1,231 @@
+---
+id: nestjs-rbac-tutorial
+title: RBAC in NestJS
+description: "NestJS RBAC tutorial: role-based access control with role inheritance for a NestJS API, using node-casbin, a global guard and a permission decorator."
+keywords: [nestjs rbac, rbac nestjs, authz nestjs, nestjs authorization, nestjs casbin, nestjs guard roles, role based access control nestjs, rbac hierarchy]
+authors: [hsluoyz]
+---
+
+This tutorial adds role-based access control (RBAC) to a [NestJS](https://nestjs.com) API with node-casbin. Each route declares the permission it needs with a decorator, a global guard asks Casbin whether the current user has it, and roles inherit from each other, so an `admin` automatically gets everything an `editor` can do.
+
+The permissions are named after resources and actions (`articles`, `delete`) instead of URL paths, which fits NestJS controllers well. For path-based rules, see the [Express version](/docs/nodejs-rbac-tutorial).
+
+## 1. Install
+
+Start from a NestJS project (`nest new my-app`) and add Casbin:
+
+```bash
+npm install casbin
+```
+
+## 2. Write the model
+
+Save this as `model.conf` in the project root:
+
+```ini
+[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = sub, obj, act
+
+[role_definition]
+g = _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act
+```
+
+- `r = sub, obj, act`: each request is a user, a resource, and an action.
+- `g = _, _`: users can be assigned to roles, and roles to other roles.
+- `g(r.sub, p.sub)` is true when the user has the role in the policy rule, either directly or through inherited roles.
+
+## 3. Write the policy
+
+Save this as `policy.csv`:
+
+```csv
+p, viewer, articles, read
+p, editor, articles, create
+p, editor, articles, update
+p, admin, articles, delete
+
+g, editor, viewer
+g, admin, editor
+
+g, alice, admin
+g, bob, editor
+g, carol, viewer
+```
+
+The first block grants each role only what is new at that level. The second block builds the hierarchy: an `editor` is also a `viewer`, and an `admin` is also an `editor`. The last block assigns users to roles. As a result:
+
+| User | Role | read | create | update | delete |
+|---|---|---|---|---|---|
+| alice | admin | yes | yes | yes | yes |
+| bob | editor | yes | yes | yes | no |
+| carol | viewer | yes | no | no | no |
+| dave | (none) | no | no | no | no |
+
+## 4. Add a permission decorator
+
+```ts title="src/permission.decorator.ts"
+import { SetMetadata } from '@nestjs/common';
+
+export const PERMISSION_KEY = 'permission';
+
+export interface Permission {
+  resource: string;
+  action: string;
+}
+
+// Declares which permission a route needs, for example @RequirePermission('articles', 'delete').
+export const RequirePermission = (resource: string, action: string) =>
+  SetMetadata(PERMISSION_KEY, { resource, action } as Permission);
+```
+
+## 5. Add the guard
+
+The guard reads the permission from the route's metadata and asks Casbin. Routes without the decorator stay public.
+
+```ts title="src/casbin.guard.ts"
+import { CanActivate, ExecutionContext, ForbiddenException, Inject, Injectable } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { Enforcer } from 'casbin';
+import { Request } from 'express';
+import { Permission, PERMISSION_KEY } from './permission.decorator';
+
+export const ENFORCER = 'CASBIN_ENFORCER';
+
+@Injectable()
+export class CasbinGuard implements CanActivate {
+  constructor(
+    private readonly reflector: Reflector,
+    @Inject(ENFORCER) private readonly enforcer: Enforcer,
+  ) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const permission = this.reflector.getAllAndOverride<Permission>(PERMISSION_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+    if (!permission) {
+      return true; // Routes without @RequirePermission are public.
+    }
+
+    const request = context.switchToHttp().getRequest<Request>();
+    // Replace this with the user your authentication guard puts on the request, such as request.user.
+    const user = request.header('X-User') ?? '';
+
+    const allowed = await this.enforcer.enforce(user, permission.resource, permission.action);
+    if (!allowed) {
+      throw new ForbiddenException();
+    }
+    return true;
+  }
+}
+```
+
+:::note
+The `X-User` header keeps the example short. Casbin handles authorization only. In a real application, an authentication guard, such as one based on `@nestjs/passport`, runs first and sets `request.user`; read the user name or ID from there.
+:::
+
+## 6. Use it in a controller
+
+```ts title="src/articles.controller.ts"
+import { Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { RequirePermission } from './permission.decorator';
+
+@Controller('articles')
+export class ArticlesController {
+  @Get()
+  @RequirePermission('articles', 'read')
+  findAll() {
+    return { articles: [] };
+  }
+
+  @Post()
+  @RequirePermission('articles', 'create')
+  create() {
+    return { created: true };
+  }
+
+  @Put(':id')
+  @RequirePermission('articles', 'update')
+  update(@Param('id') id: string) {
+    return { updated: id };
+  }
+
+  @Delete(':id')
+  @RequirePermission('articles', 'delete')
+  remove(@Param('id') id: string) {
+    return { deleted: id };
+  }
+}
+```
+
+## 7. Register the enforcer and the guard
+
+The enforcer is created once by a factory provider and injected into the guard. Registering the guard with `APP_GUARD` applies it to every route in the application.
+
+```ts title="src/app.module.ts"
+import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
+import { newEnforcer } from 'casbin';
+import { ArticlesController } from './articles.controller';
+import { CasbinGuard, ENFORCER } from './casbin.guard';
+
+@Module({
+  controllers: [ArticlesController],
+  providers: [
+    {
+      provide: ENFORCER,
+      useFactory: () => newEnforcer('model.conf', 'policy.csv'),
+    },
+    {
+      provide: APP_GUARD,
+      useClass: CasbinGuard,
+    },
+  ],
+})
+export class AppModule {}
+```
+
+## 8. Try it
+
+```bash
+npm run start
+```
+
+```bash
+curl -i -X DELETE -H "X-User: alice" http://localhost:3000/articles/1   # 200, admins can delete
+curl -i -X DELETE -H "X-User: bob"   http://localhost:3000/articles/1   # 403, editors cannot
+curl -i -X PUT    -H "X-User: bob"   http://localhost:3000/articles/1   # 200, editors can update
+curl -i -X POST   -H "X-User: carol" http://localhost:3000/articles     # 403, viewers are read-only
+curl -i           -H "X-User: carol" http://localhost:3000/articles     # 200
+curl -i           -H "X-User: dave"  http://localhost:3000/articles     # 403, no role
+```
+
+## 9. Manage roles at runtime
+
+Inject the enforcer anywhere you need it, for example in an admin service, with `@Inject(ENFORCER)`:
+
+```ts
+await enforcer.addRoleForUser('dave', 'editor');          // dave becomes an editor
+await enforcer.getImplicitRolesForUser('alice');          // [ 'admin', 'editor', 'viewer' ]
+await enforcer.getImplicitPermissionsForUser('bob');
+// [ [ 'editor', 'articles', 'create' ], [ 'editor', 'articles', 'update' ], [ 'viewer', 'articles', 'read' ] ]
+```
+
+`getImplicitPermissionsForUser` is handy for a "what can I do" endpoint that the frontend uses to show or hide buttons. The full list is in the [RBAC API](/docs/rbac-api).
+
+## Next steps
+
+- **Store the policy in a database.** Replace `policy.csv` with an [adapter](/docs/adapters), for example TypeORM, Prisma, Sequelize, or MongoDB. Policy changes made through the API are then saved automatically.
+- **Several instances.** Use a [watcher](/docs/watchers) so every instance reloads the policy when one of them changes it.
+- **Ownership rules.** "Authors may edit only their own articles" depends on the article, not just the role. Load the article in the handler and check it with an [ABAC](/docs/nodejs-abac-tutorial) model.
+- **Multi-tenant applications.** [RBAC with domains](/docs/rbac-with-domains) gives a user different roles in different tenants; add the tenant as a fourth argument to `enforce`.
+- **Ready-made modules.** The [middleware list](/docs/middlewares) links community NestJS modules such as nest-authz.

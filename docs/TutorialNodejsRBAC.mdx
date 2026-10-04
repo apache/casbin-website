@@ -8,7 +8,7 @@ authors: [hsluoyz]
 
 This tutorial adds role-based access control (RBAC) to a REST API built with [Express](https://expressjs.com). At the end, three roles (`admin`, `editor`, `viewer`) are allowed different HTTP methods on different routes, and the rules live in a policy file that you can change without touching the route handlers.
 
-The same model and policy work in every Casbin implementation, so you can reuse them in the [Go](/docs/go-rbac-tutorial), [Python](/docs/python-rbac-tutorial), and [Java](/docs/java-rbac-tutorial) versions of this tutorial.
+The same model and policy work in every Casbin implementation, so you can reuse them in the [Go](/docs/go-rbac-tutorial), [Python](/docs/python-rbac-tutorial), [Java](/docs/java-rbac-tutorial), and [Rust](/docs/rust-rbac-tutorial) versions of this tutorial. If you use NestJS, see [RBAC in NestJS](/docs/nestjs-rbac-tutorial).
 
 ## 1. Install
 
@@ -143,5 +143,5 @@ The full list is in the [RBAC API](/docs/rbac-api) and the [Management API](/doc
 - **Run more than one instance.** Use a [watcher](/docs/watchers) so every instance reloads the policy when one of them changes it.
 - **Show or hide UI elements.** [Frontend usage](/docs/frontend) explains how to send a user's permissions to the browser with `casbin.js`.
 - **Multi-tenant applications.** [RBAC with domains](/docs/rbac-with-domains) gives a user different roles in different tenants.
-- **Rules based on attributes.** Combine roles with [ABAC](/docs/abac), for example "editors may update only their own articles".
+- **Rules based on attributes.** Combine roles with [ABAC](/docs/abac), for example "editors may update only their own articles". The [ABAC tutorial](/docs/nodejs-abac-tutorial) builds this step by step.
 - **Ready-made middleware.** The [middleware list](/docs/middlewares) has plugins for Express, Koa, NestJS, Fastify, and other frameworks.

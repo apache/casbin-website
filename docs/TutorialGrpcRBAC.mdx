@@ -1,0 +1,284 @@
+---
+id: grpc-rbac-tutorial
+title: gRPC Authorization in Go
+description: "Role-based access control for a Go gRPC service with Casbin: unary and stream interceptors that check the caller's role against the full method name."
+keywords: [rbac grpc, grpc authorization, grpc interceptor authorization, go grpc rbac, grpc access control, casbin grpc, golang authorization library]
+authors: [hsluoyz]
+---
+
+In a gRPC service, every call names a full method such as `/library.v1.BookService/DeleteBook`. That makes method-level authorization simple: decide which roles may call which methods, and check it in a server interceptor before the handler runs. This tutorial does that in Go with Casbin, for both unary and streaming calls.
+
+## 1. Define the service
+
+The example is a small library service. Save this as `proto/library/v1/library.proto`:
+
+```protobuf title="proto/library/v1/library.proto"
+syntax = "proto3";
+
+package library.v1;
+
+option go_package = "example.com/library/gen/library/v1;libraryv1";
+
+service BookService {
+  rpc GetBook(GetBookRequest) returns (Book);
+  rpc CreateBook(CreateBookRequest) returns (Book);
+  rpc DeleteBook(DeleteBookRequest) returns (DeleteBookResponse);
+}
+
+message Book {
+  string id = 1;
+  string title = 2;
+}
+
+message GetBookRequest {
+  string id = 1;
+}
+
+message CreateBookRequest {
+  string title = 1;
+}
+
+message DeleteBookRequest {
+  string id = 1;
+}
+
+message DeleteBookResponse {}
+```
+
+Generate the Go code with `protoc` (or `buf generate`):
+
+```bash
+go mod init example.com/library
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+
+protoc -Iproto   --go_out=. --go_opt=module=example.com/library   --go-grpc_out=. --go-grpc_opt=module=example.com/library   proto/library/v1/library.proto
+
+go get github.com/casbin/casbin/v3 google.golang.org/grpc
+```
+
+## 2. Write the model
+
+Save this as `model.conf`:
+
+```ini
+[request_definition]
+r = sub, method
+
+[policy_definition]
+p = sub, method
+
+[role_definition]
+g = _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = g(r.sub, p.sub) && keyMatch(r.method, p.method)
+```
+
+- `r = sub, method`: each request is a caller and the full gRPC method name.
+- `g = _, _`: callers can be assigned to roles, and roles to other roles.
+- `keyMatch` lets a rule end in `*`, so one line can cover every method of a service.
+
+## 3. Write the policy
+
+Save this as `policy.csv`:
+
+```csv
+p, reader, /library.v1.BookService/GetBook
+p, librarian, /library.v1.BookService/CreateBook
+p, admin, /library.v1.BookService/*
+
+g, librarian, reader
+g, admin, librarian
+
+g, alice, admin
+g, bob, librarian
+g, carol, reader
+```
+
+A `reader` may call `GetBook`, a `librarian` may also call `CreateBook`, and an `admin` may call every method of `BookService`, including methods added later. The `g` lines between roles build the hierarchy, so each role lists only what is new at its level.
+
+## 4. Write the interceptors
+
+```go title="server/authz.go"
+package main
+
+import (
+    "context"
+
+    "github.com/casbin/casbin/v3"
+    "google.golang.org/grpc"
+    "google.golang.org/grpc/codes"
+    "google.golang.org/grpc/metadata"
+    "google.golang.org/grpc/status"
+)
+
+// authorize asks Casbin whether the caller may invoke fullMethod, such as /library.v1.BookService/DeleteBook.
+func authorize(ctx context.Context, e *casbin.Enforcer, fullMethod string) error {
+    // Replace this with the identity from your authentication layer,
+    // such as a verified JWT in the "authorization" metadata or the client's mTLS certificate.
+    md, _ := metadata.FromIncomingContext(ctx)
+    users := md.Get("x-user")
+    if len(users) == 0 {
+        return status.Error(codes.Unauthenticated, "missing user")
+    }
+
+    allowed, err := e.Enforce(users[0], fullMethod)
+    if err != nil {
+        return status.Error(codes.Internal, err.Error())
+    }
+    if !allowed {
+        return status.Errorf(codes.PermissionDenied, "%s may not call %s", users[0], fullMethod)
+    }
+    return nil
+}
+
+func UnaryAuthz(e *casbin.Enforcer) grpc.UnaryServerInterceptor {
+    return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
+        if err := authorize(ctx, e, info.FullMethod); err != nil {
+            return nil, err
+        }
+        return handler(ctx, req)
+    }
+}
+
+func StreamAuthz(e *casbin.Enforcer) grpc.StreamServerInterceptor {
+    return func(srv any, ss grpc.ServerStream, info *grpc.StreamServerInfo, handler grpc.StreamHandler) error {
+        if err := authorize(ss.Context(), e, info.FullMethod); err != nil {
+            return err
+        }
+        return handler(srv, ss)
+    }
+}
+```
+
+Unauthenticated callers get `Unauthenticated`, and authenticated callers without the permission get `PermissionDenied`, which is what gRPC clients and gateways expect.
+
+:::note
+The `x-user` metadata keeps the example short. Casbin handles authorization only. In a real service, verify a token from the `authorization` metadata, or take the identity from the client certificate with `peer.FromContext` when you use mTLS. If an authentication interceptor already does that, chain it before the authorization interceptor.
+:::
+
+## 5. Register them on the server
+
+```go title="server/main.go"
+package main
+
+import (
+    "context"
+    "log"
+    "net"
+
+    "github.com/casbin/casbin/v3"
+    "google.golang.org/grpc"
+
+    libraryv1 "example.com/library/gen/library/v1"
+)
+
+type bookService struct {
+    libraryv1.UnimplementedBookServiceServer
+}
+
+func (bookService) GetBook(ctx context.Context, req *libraryv1.GetBookRequest) (*libraryv1.Book, error) {
+    return &libraryv1.Book{Id: req.GetId(), Title: "The Go Programming Language"}, nil
+}
+
+func (bookService) CreateBook(ctx context.Context, req *libraryv1.CreateBookRequest) (*libraryv1.Book, error) {
+    return &libraryv1.Book{Id: "2", Title: req.GetTitle()}, nil
+}
+
+func (bookService) DeleteBook(ctx context.Context, req *libraryv1.DeleteBookRequest) (*libraryv1.DeleteBookResponse, error) {
+    return &libraryv1.DeleteBookResponse{}, nil
+}
+
+func main() {
+    e, err := casbin.NewEnforcer("model.conf", "policy.csv")
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    s := grpc.NewServer(
+        grpc.ChainUnaryInterceptor(UnaryAuthz(e)),
+        grpc.ChainStreamInterceptor(StreamAuthz(e)),
+    )
+    libraryv1.RegisterBookServiceServer(s, bookService{})
+
+    lis, err := net.Listen("tcp", ":50051")
+    if err != nil {
+        log.Fatal(err)
+    }
+    log.Fatal(s.Serve(lis))
+}
+```
+
+`grpc.ChainUnaryInterceptor` and `grpc.ChainStreamInterceptor` accept several interceptors, so logging, metrics, and authentication can be added next to the authorization check.
+
+## 6. Try it
+
+Start the server:
+
+```bash
+go run ./server
+```
+
+This client calls every method as four different users:
+
+```go title="client/main.go"
+package main
+
+import (
+    "context"
+    "fmt"
+    "log"
+
+    "google.golang.org/grpc"
+    "google.golang.org/grpc/credentials/insecure"
+    "google.golang.org/grpc/metadata"
+    "google.golang.org/grpc/status"
+
+    libraryv1 "example.com/library/gen/library/v1"
+)
+
+func main() {
+    conn, err := grpc.NewClient("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer conn.Close()
+    client := libraryv1.NewBookServiceClient(conn)
+
+    for _, user := range []string{"alice", "bob", "carol", "dave"} {
+        ctx := metadata.AppendToOutgoingContext(context.Background(), "x-user", user)
+
+        _, getErr := client.GetBook(ctx, &libraryv1.GetBookRequest{Id: "1"})
+        _, createErr := client.CreateBook(ctx, &libraryv1.CreateBookRequest{Title: "New book"})
+        _, deleteErr := client.DeleteBook(ctx, &libraryv1.DeleteBookRequest{Id: "1"})
+
+        fmt.Printf("%-6s GetBook=%-16v CreateBook=%-16v DeleteBook=%v\n", user,
+            status.Code(getErr), status.Code(createErr), status.Code(deleteErr))
+    }
+}
+```
+
+```bash
+go run ./client
+```
+
+```text
+alice  GetBook=OK               CreateBook=OK               DeleteBook=OK
+bob    GetBook=OK               CreateBook=OK               DeleteBook=PermissionDenied
+carol  GetBook=OK               CreateBook=PermissionDenied DeleteBook=PermissionDenied
+dave   GetBook=PermissionDenied CreateBook=PermissionDenied DeleteBook=PermissionDenied
+```
+
+With [grpcurl](https://github.com/fullstorydev/grpcurl), pass the user as a header: `grpcurl -plaintext -H "x-user: bob" ...`.
+
+## Going further
+
+- **Public methods.** Health checks and server reflection usually need no user. Return early at the top of `authorize` for them, for example `if strings.HasPrefix(fullMethod, "/grpc.health.v1.Health/") { return nil }`.
+- **Per-record rules.** The interceptor sees the method name before the handler runs. Rules that depend on the record, such as "librarians may delete only books from their own branch", belong in the handler after loading the record; see the [ABAC tutorial](/docs/go-abac-tutorial).
+- **Multi-tenant services.** Pass the tenant from metadata as a third argument and use [RBAC with domains](/docs/rbac-with-domains).
+- **Store the policy in a database.** Replace `policy.csv` with an [adapter](/docs/adapters), and add a [watcher](/docs/watchers) when several replicas serve the same service.
+- **HTTP APIs.** For REST endpoints in Go, see [RBAC in Go with Gin](/docs/go-rbac-tutorial).

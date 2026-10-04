@@ -10,6 +10,8 @@ authors: [hsluoyz]
 
 **Attribute-Based Access Control (ABAC)** decides access by evaluating **attributes** of the subject, object, and action (e.g. `resource.Owner`, `user.Role`), not just by identity strings. Casbin keeps this simple: you pass structs or objects into `Enforce()` and reference their fields in the matcher.
 
+For complete applications, see the ABAC tutorials for [Go](/docs/go-abac-tutorial), [Node.js with Express](/docs/nodejs-abac-tutorial), and [Python with Flask](/docs/flask-abac-tutorial). To decide between ABAC and RBAC, see [Choosing an access control model](/docs/access-control-models).
+
 Minimal example:
 
 ```ini

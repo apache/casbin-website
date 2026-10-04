@@ -1,0 +1,194 @@
+---
+id: flask-abac-tutorial
+title: ABAC in Python with Flask
+description: "Python ABAC tutorial: attribute-based access control for a Flask API with PyCasbin, using owner, department and status to decide who can read and edit."
+keywords: [python abac, abac flask, flask abac, authz flask, flask authorization, python access control, abac example, pycasbin]
+authors: [hsluoyz]
+---
+
+Role-based access control answers "what may an editor do?". Many real rules need more than a role: *authors may edit their own drafts*, *editors may edit articles from their own department*, *anyone may read a published article*. These depend on attributes of the user and of the resource, which is what attribute-based access control (ABAC) is for.
+
+This tutorial builds a small article API with [Flask](https://flask.palletsprojects.com) and puts all of those rules in a Casbin policy file. The same model and policy work unchanged in the [Go](/docs/go-abac-tutorial) and [Node.js](/docs/nodejs-abac-tutorial) versions of this tutorial. For role-based rules in Python, see the [FastAPI RBAC tutorial](/docs/python-rbac-tutorial). If you are still choosing between RBAC and ABAC, read [Choosing an access control model](/docs/access-control-models) first.
+
+## 1. Install
+
+```bash
+pip install pycasbin flask
+```
+
+## 2. Write the model
+
+Save this as `model.conf`:
+
+```ini
+[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = sub_rule, obj_type, act
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = r.obj.Type == p.obj_type && r.act == p.act && eval(p.sub_rule)
+```
+
+- `r.sub` and `r.obj` are Python objects. The matcher reads their attributes, such as `r.obj.Type`.
+- Each policy rule carries a condition in `sub_rule`. `eval(p.sub_rule)` evaluates that condition against the request, so the rules live in the policy instead of in the model.
+
+## 3. Write the policy
+
+Save this as `policy.csv`:
+
+```csv
+p, r.obj.Status == 'published', article, read
+p, r.sub.Name == r.obj.Owner, article, read
+p, r.sub.Name == r.obj.Owner && r.obj.Status == 'draft', article, update
+p, r.sub.Role == 'editor' && r.sub.Department == r.obj.Department, article, update
+p, r.sub.Role == 'editor' && r.sub.Department == r.obj.Department, article, publish
+```
+
+Read each line as "allow this action on articles when the condition is true":
+
+1. Anyone may read a published article.
+2. Authors may read their own articles, including drafts.
+3. Authors may edit their own articles while they are drafts.
+4. Editors may edit any article from their own department.
+5. Editors may publish articles from their own department.
+
+Conditions use the same syntax in every Casbin implementation; PyCasbin translates `&&` and `||` into Python's `and` and `or`.
+
+:::tip
+Write string literals in conditions with single quotes, as in `'published'`. A double quote in the middle of a field breaks CSV parsing. If a condition needs a comma, wrap the whole field in double quotes.
+:::
+
+## 4. Write the application
+
+ABAC needs the resource itself, not just its URL, so the check runs after the article has been loaded. The `authorize` helper loads the article, asks Casbin, and aborts with the right status code when the answer is no. Each view calls it first.
+
+```python title="app.py"
+from dataclasses import asdict, dataclass
+
+import casbin
+from flask import Flask, abort, request
+
+enforcer = casbin.Enforcer("model.conf", "policy.csv")
+app = Flask(__name__)
+
+
+@dataclass
+class User:
+    Name: str
+    Role: str
+    Department: str
+
+
+@dataclass
+class Article:
+    Id: str
+    Title: str
+    Owner: str
+    Department: str
+    Status: str
+    Type: str = "article"
+
+
+# In a real application these come from your database.
+users = {
+    "alice": User("alice", "author", "engineering"),
+    "bob": User("bob", "editor", "engineering"),
+    "carol": User("carol", "editor", "sales"),
+    "dave": User("dave", "author", "engineering"),
+}
+
+articles = {
+    "1": Article("1", "Draft by alice", "alice", "engineering", "draft"),
+    "2": Article("2", "Published by alice", "alice", "engineering", "published"),
+}
+
+
+def authorize(article_id: str, action: str) -> Article:
+    """Load the article and abort unless the current user may perform the action on it."""
+    # Replace this with the user from your session or JWT.
+    user = users.get(request.headers.get("X-User", ""))
+    if user is None:
+        abort(401)
+    article = articles.get(article_id)
+    if article is None:
+        abort(404)
+    if not enforcer.enforce(user, article, action):
+        abort(403)
+    return article
+
+
+@app.get("/articles/<article_id>")
+def read_article(article_id):
+    return asdict(authorize(article_id, "read"))
+
+
+@app.put("/articles/<article_id>")
+def update_article(article_id):
+    article = authorize(article_id, "update")
+    article.Title = (request.get_json(silent=True) or {}).get("title", article.Title)
+    return asdict(article)
+
+
+@app.post("/articles/<article_id>/publish")
+def publish_article(article_id):
+    article = authorize(article_id, "publish")
+    article.Status = "published"
+    return asdict(article)
+```
+
+Dataclasses keep the example short; any object works, including SQLAlchemy or Django models, as long as the attributes named in the policy exist.
+
+:::note
+The `X-User` header keeps the example short. Casbin handles authorization only; in a real application the user comes from your authentication layer, such as Flask-Login or a verified JWT.
+:::
+
+## 5. Try it
+
+```bash
+flask --app app run --port 5000
+```
+
+Article 1 is alice's draft and article 2 is her published article, both in the engineering department.
+
+```bash
+curl -i -H "X-User: dave"  http://localhost:5000/articles/1                 # 403, someone else's draft
+curl -i -H "X-User: dave"  http://localhost:5000/articles/2                 # 200, published
+curl -i -X PUT -H "X-User: alice" -H "Content-Type: application/json"      -d '{"title":"New title"}' http://localhost:5000/articles/1            # 200, her own draft
+curl -i -X PUT -H "X-User: alice" http://localhost:5000/articles/2          # 403, no longer a draft
+curl -i -X PUT -H "X-User: bob"   http://localhost:5000/articles/2          # 200, editor in engineering
+curl -i -X PUT -H "X-User: carol" http://localhost:5000/articles/2          # 403, editor in sales
+curl -i -X POST -H "X-User: alice" http://localhost:5000/articles/1/publish # 403, authors cannot publish
+curl -i -X POST -H "X-User: bob"   http://localhost:5000/articles/1/publish # 200
+curl -i -H "X-User: dave"  http://localhost:5000/articles/1                 # 200, now published
+```
+
+## 6. Change rules at runtime
+
+Conditions are policy rows, so they can be added and removed while the server is running, and saved to a database through an [adapter](/docs/adapters) such as the SQLAlchemy adapter:
+
+```python
+# Admins may edit any article.
+enforcer.add_policy("r.sub.Role == 'admin'", "article", "update")
+
+# Which rule allowed this request? Useful for audit logs.
+enforcer.enforce_ex(users["bob"], articles["2"], "update")
+# (True, ["r.sub.Role == 'editor' && r.sub.Department == r.obj.Department", 'article', 'update'])
+```
+
+## ABAC or RBAC?
+
+- Use **RBAC** when permissions follow job functions and do not depend on which record is being accessed. It is easier to audit: "list everything an editor can do" is a simple query. See the [RBAC in Python tutorial](/docs/python-rbac-tutorial).
+- Use **ABAC** when the answer depends on the record: its owner, department, status, or sensitivity.
+- Most applications combine both: roles decide which features a user can reach, and attributes narrow that down to the records they may touch. The [comparison of access control models](/docs/access-control-models#combining-rbac-and-abac) shows a combined model.
+
+## Next steps
+
+- **Full ABAC reference.** [ABAC](/docs/abac) covers JSON request parameters, quoting rules, and `eval()` in detail.
+- **Ready-made Flask integration.** The [middleware list](/docs/middlewares) includes flask-authz, which checks route-level rules for every request; keep record-level checks like the ones above in your views.
+- **Several workers.** Use a [watcher](/docs/watchers) so every Gunicorn or uWSGI worker reloads the policy when one of them changes it.
+- **Experiment in the browser.** The [online editor](/docs/online-editor) can evaluate ABAC requests with JSON attributes.

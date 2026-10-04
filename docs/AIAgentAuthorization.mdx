@@ -1,0 +1,211 @@
+---
+id: ai-agent-authorization
+title: Authorization for AI Agents and MCP Tools
+description: "Control which tools an AI agent may call with Casbin: per-agent permissions, argument limits, deny rules, and no more access than its user. With an MCP example."
+keywords: [ai agent authorization, ai agent permissions, rbac for ai agents, mcp authorization, mcp tool permissions, llm tool calling security, agent access control, casbin ai agent]
+authors: [hsluoyz]
+---
+
+An AI agent decides at run time which tools to call and with which arguments. The model can be wrong, and it can be talked into things by text it reads in a ticket, a web page, or a document. Authorization has to sit outside the model, at the point where a tool call is executed, and answer two questions:
+
+1. **May this agent call this tool with these arguments?** A support assistant may read tickets and issue small refunds, but should never run shell commands.
+2. **May the user it acts for do this?** An agent acting for someone must not get more access than that person has.
+
+Casbin handles both with one model and one policy, in the same way it handles users. This page shows the rules first, then wires them into a plain tool-calling loop and into an [MCP](https://modelcontextprotocol.io) server. The code is Python. The model and policy also work in the other Casbin implementations; in Go, pass the arguments as a struct and use its exported field names in conditions, such as `r.args.Amount`.
+
+## 1. Install
+
+```bash
+pip install pycasbin
+```
+
+## 2. Write the model
+
+Save this as `model.conf`:
+
+```ini
+[request_definition]
+r = sub, tool, args
+
+[policy_definition]
+p = sub, tool, cond, eft
+
+[role_definition]
+g = _, _
+
+[policy_effect]
+e = some(where (p.eft == allow)) && !some(where (p.eft == deny))
+
+[matchers]
+m = g(r.sub, p.sub) && globMatch(r.tool, p.tool) && (p.cond == '' || eval(p.cond))
+```
+
+- `r = sub, tool, args`: the caller (an agent or a user), the tool name, and the tool's arguments as an object.
+- `p = sub, tool, cond, eft`: each rule names a role, a tool pattern, an optional condition on the arguments, and whether it allows or denies.
+- `g = _, _`: agents and users have roles, and roles can inherit from other roles.
+- `globMatch` matches tool names with wildcards such as `tickets.*` or `*.delete`.
+- The policy effect allows a call if some rule allows it **and no rule denies it**, so a deny rule always wins.
+
+## 3. Write the policy
+
+Save this as `policy.csv`:
+
+```csv
+p, support-agent, tickets.*, , allow
+p, support-agent, orders.read, , allow
+p, support-agent, orders.refund, r.args.amount <= 100, allow
+p, any-agent, shell.*, , deny
+p, any-agent, *.delete, , deny
+
+p, support-staff, tickets.*, , allow
+p, support-staff, orders.*, , allow
+
+g, support-agent, any-agent
+g, triage-agent, any-agent
+p, triage-agent, tickets.read, , allow
+p, triage-agent, tickets.label, , allow
+
+g, alice, support-staff
+```
+
+Reading it from the top:
+
+- `support-agent` may use every ticket tool, read orders, and refund at most 100 per call. The condition `r.args.amount <= 100` is evaluated against the arguments the model produced.
+- Every role that inherits from `any-agent` is denied shell tools and any tool ending in `.delete`, whatever else it is granted. Put guardrails that apply to all agents here.
+- `support-staff` is a human role; `alice` has it.
+- `triage-agent` is a second, narrower agent that may only read and label tickets.
+
+:::tip
+Write string literals in conditions with single quotes, as in `r.args.region == 'eu'`. If a condition needs a comma, wrap the whole field in double quotes.
+:::
+
+## 4. Check every tool call
+
+`authorize_tool_call` runs two checks. The agent's own permissions limit what the agent can do at all, and the user's permissions limit what it can do for this user. Only calls that pass both are executed.
+
+```python title="tools.py"
+from types import SimpleNamespace
+
+import casbin
+
+enforcer = casbin.Enforcer("model.conf", "policy.csv")
+
+
+class ToolDenied(Exception):
+    pass
+
+
+def authorize_tool_call(agent: str, user: str, tool: str, args: dict) -> None:
+    """Allow the call only if both the agent and the user it acts for may make it."""
+    request_args = SimpleNamespace(**args)
+    if not enforcer.enforce(agent, tool, request_args):
+        raise ToolDenied(f"{agent} may not call {tool} with {args}")
+    if not enforcer.enforce(user, tool, request_args):
+        raise ToolDenied(f"{user} may not call {tool}, so an agent acting for them may not either")
+
+
+# The tools your agent can see. In a real application they call your services.
+TOOLS = {
+    "tickets.read": lambda ticket_id: {"id": ticket_id, "subject": "Refund request", "order_id": "A-1001"},
+    "orders.read": lambda order_id: {"id": order_id, "total": 240},
+    "orders.refund": lambda order_id, amount: {"order_id": order_id, "refunded": amount},
+    "shell.exec": lambda command: {"output": "..."},
+}
+
+
+def call_tool(agent: str, user: str, tool: str, args: dict) -> dict:
+    """Run a tool call proposed by the model, or return the denial as the tool result."""
+    try:
+        authorize_tool_call(agent, user, tool, args)
+    except ToolDenied as e:
+        # Returning the reason lets the model explain it or try something else.
+        return {"error": "permission_denied", "reason": str(e)}
+    return TOOLS[tool](**args)
+
+
+if __name__ == "__main__":
+    # Tool calls as a model might propose them while helping alice with a ticket.
+    proposed = [
+        ("tickets.read", {"ticket_id": "T-42"}),
+        ("orders.read", {"order_id": "A-1001"}),
+        ("orders.refund", {"order_id": "A-1001", "amount": 240}),
+        ("orders.refund", {"order_id": "A-1001", "amount": 80}),
+        ("shell.exec", {"command": "rm -rf /"}),
+    ]
+    for tool, args in proposed:
+        print(tool, args, "->", call_tool("support-agent", "alice", tool, args))
+
+    print()
+    print("bob:", call_tool("support-agent", "bob", "tickets.read", {"ticket_id": "T-42"}))
+```
+
+Running it prints:
+
+```text
+tickets.read {'ticket_id': 'T-42'} -> {'id': 'T-42', 'subject': 'Refund request', 'order_id': 'A-1001'}
+orders.read {'order_id': 'A-1001'} -> {'id': 'A-1001', 'total': 240}
+orders.refund {'order_id': 'A-1001', 'amount': 240} -> {'error': 'permission_denied', 'reason': "support-agent may not call orders.refund with {'order_id': 'A-1001', 'amount': 240}"}
+orders.refund {'order_id': 'A-1001', 'amount': 80} -> {'order_id': 'A-1001', 'refunded': 80}
+shell.exec {'command': 'rm -rf /'} -> {'error': 'permission_denied', 'reason': "support-agent may not call shell.exec with {'command': 'rm -rf /'}"}
+
+bob: {'error': 'permission_denied', 'reason': 'bob may not call tickets.read, so an agent acting for them may not either'}
+```
+
+The refund of 240 is refused even though alice may refund any amount, because the agent may not. Bob has no role, so the agent can do nothing for him. Returning the refusal as the tool result, instead of raising it to the user, lets the model explain the limit or hand the case to a person.
+
+## 5. Use it in an MCP server
+
+In an MCP server that uses OAuth, the access token already tells you both identities: the OAuth client is the agent, and the token's subject is the user who authorized it. With the official Python SDK (version 2), read them with `get_access_token()` and check each tool call:
+
+```python title="server.py"
+from mcp.server.auth.middleware.auth_context import get_access_token
+from mcp.server.mcpserver import MCPServer
+from mcp.server.mcpserver.exceptions import ToolError
+
+from tools import ToolDenied, authorize_tool_call
+
+mcp = MCPServer("support-tools")
+
+
+def authorize(tool: str, args: dict) -> None:
+    """Check the tool call against Casbin for the OAuth client (the agent) and the user it acts for."""
+    token = get_access_token()
+    if token is None or token.subject is None:
+        raise ToolError("not authenticated")
+    try:
+        authorize_tool_call(token.client_id, token.subject, tool, args)
+    except ToolDenied as e:
+        raise ToolError(str(e)) from e
+
+
+@mcp.tool()
+def refund_order(order_id: str, amount: float) -> dict:
+    """Refund part or all of an order."""
+    authorize("orders.refund", {"order_id": order_id, "amount": amount})
+    return {"order_id": order_id, "refunded": amount}
+
+
+@mcp.tool()
+def read_ticket(ticket_id: str) -> dict:
+    """Read a support ticket."""
+    authorize("tickets.read", {"ticket_id": ticket_id})
+    return {"id": ticket_id, "subject": "Refund request"}
+```
+
+Raising `ToolError` turns the refusal into a tool result with `isError` set, which MCP clients pass back to the model. The token's `client_id` must match the agent names in your policy; register each agent as its own OAuth client so that you can give it its own permissions and revoke them separately.
+
+## Design notes
+
+- **Default deny.** A tool that no rule mentions cannot be called, so a new tool is unavailable to agents until you grant it.
+- **Least privilege per agent.** Give each agent its own role rather than sharing one powerful role. The `triage-agent` above cannot touch orders even if a prompt asks it to.
+- **Check arguments, not just names.** Limits on amounts, recipients, paths, or regions belong in conditions. Validate the argument types before the check: the condition compares whatever the model sent, and comparing the string `"500"` with a number raises an error instead of returning a decision.
+- **Change permissions without redeploying.** Rules are data: `enforcer.add_policy(...)`, `enforcer.add_role_for_user(...)`, or edits through an [adapter](/docs/adapters) take effect on the next call. Use a [watcher](/docs/watchers) when several processes serve agents.
+- **Audit.** `enforcer.enforce_ex(...)` returns the rule that allowed a call; log it next to the tool call.
+- **Filter the tool list.** Call the same check when listing tools, so the model is not even offered tools it cannot use. This also saves tokens.
+
+## Next steps
+
+- [ABAC](/docs/abac) explains conditions and `eval()` in detail.
+- [RBAC with domains](/docs/rbac-with-domains) gives agents different permissions per workspace or tenant.
+- [Effector](/docs/effector) describes allow, deny, and priority effects.
+- [Choosing an access control model](/docs/access-control-models) compares RBAC, ABAC, and ReBAC.

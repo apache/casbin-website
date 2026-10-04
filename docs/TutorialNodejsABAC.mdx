@@ -1,0 +1,178 @@
+---
+id: nodejs-abac-tutorial
+title: ABAC in Node.js with Express
+description: "Node.js ABAC tutorial: attribute-based access control for an Express API with node-casbin, using owner, department and status to decide who can edit."
+keywords: [abac nodejs, abac expressjs, express abac, node.js abac, abac example, attribute-based access control javascript, node-casbin, nodejs authorization library]
+authors: [hsluoyz]
+---
+
+Role-based access control answers "what may an editor do?". Many real rules need more than a role: *authors may edit their own drafts*, *editors may edit articles from their own department*, *anyone may read a published article*. These depend on attributes of the user and of the resource, which is what attribute-based access control (ABAC) is for.
+
+This tutorial builds a small article API with [Express](https://expressjs.com) and puts all of those rules in a Casbin policy file. The same model and policy work unchanged in the [Go](/docs/go-abac-tutorial) and [Python](/docs/flask-abac-tutorial) versions of this tutorial. If you are still choosing between RBAC and ABAC, read [Choosing an access control model](/docs/access-control-models) first.
+
+## 1. Install
+
+```bash
+npm install casbin express
+```
+
+## 2. Write the model
+
+Save this as `model.conf`:
+
+```ini
+[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = sub_rule, obj_type, act
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = r.obj.Type == p.obj_type && r.act == p.act && eval(p.sub_rule)
+```
+
+- `r.sub` and `r.obj` are plain JavaScript objects. The matcher reads their properties, such as `r.obj.Type`.
+- Each policy rule carries a condition in `sub_rule`. `eval(p.sub_rule)` evaluates that condition against the request, so the rules live in the policy instead of in the model.
+
+## 3. Write the policy
+
+Save this as `policy.csv`:
+
+```csv
+p, r.obj.Status == 'published', article, read
+p, r.sub.Name == r.obj.Owner, article, read
+p, r.sub.Name == r.obj.Owner && r.obj.Status == 'draft', article, update
+p, r.sub.Role == 'editor' && r.sub.Department == r.obj.Department, article, update
+p, r.sub.Role == 'editor' && r.sub.Department == r.obj.Department, article, publish
+```
+
+Read each line as "allow this action on articles when the condition is true":
+
+1. Anyone may read a published article.
+2. Authors may read their own articles, including drafts.
+3. Authors may edit their own articles while they are drafts.
+4. Editors may edit any article from their own department.
+5. Editors may publish articles from their own department.
+
+:::tip
+Write string literals in conditions with single quotes, as in `'published'`. A double quote in the middle of a field breaks CSV parsing. If a condition needs a comma, wrap the whole field in double quotes.
+:::
+
+## 4. Add the middleware
+
+ABAC needs the resource itself, not just its URL. The `authorize` middleware loads the article, asks Casbin, and puts the article on `req` so the route handler does not load it again.
+
+```js title="app.js"
+const express = require('express');
+const { newEnforcer } = require('casbin');
+
+// In a real application these come from your database.
+const users = {
+  alice: { Name: 'alice', Role: 'author', Department: 'engineering' },
+  bob: { Name: 'bob', Role: 'editor', Department: 'engineering' },
+  carol: { Name: 'carol', Role: 'editor', Department: 'sales' },
+  dave: { Name: 'dave', Role: 'author', Department: 'engineering' },
+};
+
+const articles = {
+  1: { Type: 'article', Id: '1', Title: 'Draft by alice', Owner: 'alice', Department: 'engineering', Status: 'draft' },
+  2: { Type: 'article', Id: '2', Title: 'Published by alice', Owner: 'alice', Department: 'engineering', Status: 'published' },
+};
+
+// Loads the article, then asks Casbin whether the current user may perform `action` on it.
+function authorize(enforcer, action) {
+  return async (req, res, next) => {
+    // Replace this with the user from your session or JWT.
+    const user = users[req.get('X-User')];
+    if (!user) {
+      return res.status(401).json({ error: 'unauthenticated' });
+    }
+    const article = articles[req.params.id];
+    if (!article) {
+      return res.status(404).json({ error: 'not found' });
+    }
+    if (!(await enforcer.enforce(user, article, action))) {
+      return res.status(403).json({ error: 'forbidden' });
+    }
+    req.article = article;
+    next();
+  };
+}
+
+async function main() {
+  const enforcer = await newEnforcer('model.conf', 'policy.csv');
+
+  const app = express();
+  app.use(express.json());
+
+  app.get('/articles/:id', authorize(enforcer, 'read'), (req, res) => {
+    res.json(req.article);
+  });
+  app.put('/articles/:id', authorize(enforcer, 'update'), (req, res) => {
+    req.article.Title = req.body?.title ?? req.article.Title;
+    res.json(req.article);
+  });
+  app.post('/articles/:id/publish', authorize(enforcer, 'publish'), (req, res) => {
+    req.article.Status = 'published';
+    res.json(req.article);
+  });
+
+  app.listen(3000, () => console.log('listening on http://localhost:3000'));
+}
+
+main();
+```
+
+:::note
+The `X-User` header keeps the example short. Casbin handles authorization only; in a real application the user comes from your authentication layer, such as a verified JWT or a session.
+:::
+
+## 5. Try it
+
+```bash
+node app.js
+```
+
+Article 1 is alice's draft and article 2 is her published article, both in the engineering department.
+
+```bash
+curl -i -H "X-User: dave"  http://localhost:3000/articles/1                 # 403, someone else's draft
+curl -i -H "X-User: dave"  http://localhost:3000/articles/2                 # 200, published
+curl -i -X PUT -H "X-User: alice" -H "Content-Type: application/json" \
+     -d '{"title":"New title"}' http://localhost:3000/articles/1            # 200, her own draft
+curl -i -X PUT -H "X-User: alice" http://localhost:3000/articles/2          # 403, no longer a draft
+curl -i -X PUT -H "X-User: bob"   http://localhost:3000/articles/2          # 200, editor in engineering
+curl -i -X PUT -H "X-User: carol" http://localhost:3000/articles/2          # 403, editor in sales
+curl -i -X POST -H "X-User: alice" http://localhost:3000/articles/1/publish # 403, authors cannot publish
+curl -i -X POST -H "X-User: bob"   http://localhost:3000/articles/1/publish # 200
+curl -i -H "X-User: dave"  http://localhost:3000/articles/1                 # 200, now published
+```
+
+## 6. Change rules at runtime
+
+Conditions are policy rows, so they can be added and removed while the server is running, and saved to a database through an [adapter](/docs/adapters):
+
+```js
+// Admins may edit any article.
+await enforcer.addPolicy("r.sub.Role == 'admin'", 'article', 'update');
+
+// Which rule allowed this request? Useful for audit logs.
+const [ok, rule] = await enforcer.enforceEx(users.bob, articles[2], 'update');
+// true [ "r.sub.Role == 'editor' && r.sub.Department == r.obj.Department", 'article', 'update' ]
+```
+
+## ABAC or RBAC?
+
+- Use **RBAC** when permissions follow job functions and do not depend on which record is being accessed. It is easier to audit: "list everything an editor can do" is a simple query. See the [RBAC in Node.js tutorial](/docs/nodejs-rbac-tutorial).
+- Use **ABAC** when the answer depends on the record: its owner, department, status, or sensitivity.
+- Most applications combine both: roles decide which features a user can reach, and attributes narrow that down to the records they may touch. The [comparison of access control models](/docs/access-control-models#combining-rbac-and-abac) shows a combined model.
+
+## Next steps
+
+- **Full ABAC reference.** [ABAC](/docs/abac) covers JSON request parameters, quoting rules, and `eval()` in detail.
+- **NestJS.** The [NestJS tutorial](/docs/nestjs-rbac-tutorial) shows a guard and a decorator, which you can extend with the same ABAC model.
+- **Check permissions in the browser.** [Casbin.js](/docs/frontend) uses the same rules to show or hide buttons in the frontend.
+- **Experiment in the browser.** The [online editor](/docs/online-editor) can evaluate ABAC requests with JSON attributes.

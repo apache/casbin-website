@@ -1,0 +1,224 @@
+---
+id: access-control-models
+title: "RBAC vs ABAC vs ACL vs ReBAC: Choosing an Access Control Model"
+sidebar_label: Choosing a Model
+description: "ACL, RBAC, ABAC, ReBAC and PBAC compared on one example: what each decides on, strengths, weaknesses, when to choose it, and how to combine RBAC with ABAC."
+keywords: [rbac vs abac, rbac vs acl, abac vs rbac, rbac vs abac vs acl, rebac vs rbac, access control models, rbac vs abac vs pbac vs acl, role based access control, attribute based access control]
+authors: [hsluoyz]
+---
+
+Access control models differ in one thing: **what an authorization decision is based on**.
+
+| Model | Decides on | Example rule |
+|---|---|---|
+| ACL (access control list) | The user | alice may edit `design.md` |
+| RBAC (role-based) | The user's roles | editors may edit documents |
+| ABAC (attribute-based) | Attributes of the user, the resource, and the context | owners may edit their documents; people in the same department may read them |
+| ReBAC (relationship-based) | Relationships between the user and the resource | anyone who is a viewer of the folder may read the documents in it |
+| PBAC (policy-based) | Rule expressions stored as policy | whatever condition the policy row contains |
+
+These are not competing products: they are ways of writing rules, and real systems mix them. In Casbin each one is a few lines of model configuration, and you can switch or combine them without changing your application code. This page expresses the same small example in each model so that the differences are concrete.
+
+**The example:** a document app with one document, `design.md`, owned by alice. alice should be able to edit it, bob should be able to read it, and nobody else should have access.
+
+## ACL
+
+An access control list states, for each user, what they may do with each object.
+
+```ini
+[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = sub, obj, act
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = r.sub == p.sub && r.obj == p.obj && r.act == p.act
+```
+
+```csv
+p, alice, design.md, read
+p, alice, design.md, edit
+p, bob, design.md, read
+```
+
+- **Good at:** small systems and per-object sharing ("share this file with bob"). Every decision is easy to explain.
+- **Weak at:** scale. With *u* users and *o* objects the list grows toward *u × o* rows, and when someone changes jobs you must find and edit all of their rows.
+
+## RBAC
+
+Role-based access control puts roles between users and permissions. Permissions are granted to roles, and users are assigned roles.
+
+```ini
+[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = sub, obj, act
+
+[role_definition]
+g = _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act
+```
+
+```csv
+p, editor, design.md, read
+p, editor, design.md, edit
+p, viewer, design.md, read
+
+g, alice, editor
+g, bob, viewer
+g, carol, viewer
+```
+
+Giving carol read access was one `g` line; she inherits everything `viewer` can do. Roles can also inherit from other roles (`g, editor, viewer`), and [RBAC with domains](/docs/rbac-with-domains) gives a user different roles in different tenants.
+
+- **Good at:** permissions that follow job functions. It is easy to audit ("what can an editor do?", "who is an admin?"), and onboarding or offboarding is a role change.
+- **Weak at:** rules about specific records. "Authors may edit *their own* articles" cannot be written with roles alone; trying leads to one role per record, known as role explosion.
+
+**RBAC vs ACL:** an ACL is RBAC without the roles. Start with RBAC unless you really have only a handful of users, because adding roles later means rewriting every rule.
+
+Tutorials: [Go](/docs/go-rbac-tutorial), [Node.js](/docs/nodejs-rbac-tutorial), [NestJS](/docs/nestjs-rbac-tutorial), [Python](/docs/python-rbac-tutorial), [Java](/docs/java-rbac-tutorial), [Rust](/docs/rust-rbac-tutorial), [gRPC](/docs/grpc-rbac-tutorial).
+
+## ABAC
+
+Attribute-based access control evaluates conditions on attributes of the user (department, clearance), the resource (owner, status, sensitivity), and the environment (time, IP address). In Casbin you pass objects to `Enforce()` and read their fields in the matcher.
+
+```ini
+[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = sub, obj, act
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = r.sub.Name == r.obj.Owner || (r.act == 'read' && r.sub.Department == r.obj.Department)
+```
+
+There is no policy file: alice may edit `design.md` because she is its owner, and bob may read it because he works in the same department. A new document in the design department is readable by bob without any change to the rules.
+
+- **Good at:** rules that depend on the record or on context: ownership, department, document status, business hours, region. One rule replaces many role grants.
+- **Weak at:** auditing. "Who can read this document?" has no direct answer; you have to evaluate the conditions against every user. Conditions also need the attributes at hand, which means loading the record before the check.
+
+With the [eval() pattern](/docs/abac#complex-rules-with-eval), conditions move from the model into policy rows, so they can be added and removed at runtime like any other rule.
+
+Tutorials: [Go](/docs/go-abac-tutorial), [Node.js with Express](/docs/nodejs-abac-tutorial), [Python with Flask](/docs/flask-abac-tutorial).
+
+## ReBAC
+
+Relationship-based access control derives permissions from relationships: alice is the *owner* of `design.md`, bob is a *viewer* of it, and owners may edit while viewers may read. It is the model behind Google Zanzibar and its open-source descendants.
+
+```ini
+[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = relation, obj_type, act
+
+[role_definition]
+g = _, _, _
+g2 = _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = g(r.sub, r.obj, p.relation) && g2(r.obj, p.obj_type) && r.act == p.act
+```
+
+```csv
+p, owner, doc, read
+p, owner, doc, edit
+p, viewer, doc, read
+
+g, alice, design.md, owner
+g, bob, design.md, viewer
+g, bob, roadmap.md, owner
+
+g2, design.md, doc
+g2, roadmap.md, doc
+```
+
+bob can edit `roadmap.md`, which he owns, but only read `design.md`. The `p` rules describe what each relation allows once, for a whole type of object, and the `g` rows record who has which relation to which object.
+
+- **Good at:** sharing and collaboration (documents, folders, projects, organizations), especially when permissions are inherited through a hierarchy such as organization → folder → document.
+- **Weak at:** small or flat systems, where it is more machinery than needed. Relationships must be written whenever objects are created or shared.
+
+See [ReBAC](/docs/rebac) for the full model, and [Casbin vs. OpenFGA](/docs/casbin-vs-openfga) if you are considering a dedicated Zanzibar-style service.
+
+## PBAC
+
+Policy-based access control is less a separate model than a way of writing the others: the rules themselves are expressions stored as policy and evaluated at run time. In Casbin that is the `eval()` pattern used in the ABAC tutorials and on the [PBAC](/docs/pbac) page. Its value is operational: security or compliance teams can change rules without a code release.
+
+## Side by side
+
+| | ACL | RBAC | ABAC | ReBAC |
+|---|---|---|---|---|
+| Rules written as | user–object–action | role–object–action, plus user–role | conditions on attributes | relation–type–action, plus user–relation–object |
+| Number of rules grows with | users × objects | roles × permissions | number of distinct conditions | number of shared objects |
+| "What can alice do?" | Easy | Easy | Hard | Medium |
+| "Who can read this document?" | Easy | Easy | Hard | Easy |
+| Per-record rules (ownership) | One row per record | Not expressible without role explosion | Natural | Natural |
+| Context (time, IP, status) | No | No | Yes | Only with extra conditions |
+| Typical use | Small tools, file sharing | Admin panels, internal tools, most business apps | Data platforms, regulated data, ownership rules | Collaboration apps, multi-level hierarchies |
+
+## How to choose
+
+1. **Start with RBAC.** If permissions can be described by job function ("admins", "editors", "billing"), RBAC is the simplest model that scales and the easiest to audit.
+2. **Add ABAC conditions for ownership and context.** When you find yourself wanting "only their own" or "only during business hours", add conditions instead of more roles.
+3. **Choose ReBAC when sharing is the product.** If users share objects with each other and access inherits through folders, projects, or organizations, model the relationships directly.
+4. **Use domains for multi-tenancy.** If the same user has different roles in different organizations, use [RBAC with domains](/docs/rbac-with-domains) whatever else you choose.
+5. **Consider mandatory models only when required.** [BLP, Biba, and LBAC](/docs/mac-overview) suit environments with classification levels, such as government or defense.
+
+## Combining RBAC and ABAC
+
+Most applications end up here: roles decide which features a user can reach, and attributes narrow that down to the records they may touch. In this model admins may edit any document, while authors may edit only documents they own:
+
+```ini
+[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = sub, obj, act
+
+[role_definition]
+g = _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = g(r.sub.Name, p.sub) && r.obj.Type == p.obj && r.act == p.act && (p.sub == 'admin' || r.sub.Name == r.obj.Owner)
+```
+
+```csv
+p, admin, doc, edit
+p, author, doc, edit
+
+g, erin, admin
+g, alice, author
+g, bob, author
+```
+
+For `design.md` (type `doc`, owner alice), alice may edit because she is an author and the owner, erin may edit because she is an admin, and bob may not: he is an author, but not the owner.
+
+## FAQ
+
+**Is ABAC more secure than RBAC?** Neither is inherently more secure. ABAC can express finer rules, but its decisions are harder to audit; RBAC is coarser but easy to review. Security comes from rules that match what you intend and from being able to check that they do.
+
+**Can I start with RBAC and move to ABAC later?** Yes. In Casbin, the model is a configuration file and the application calls the same `Enforce()` method, so you can add conditions to the matcher, or combine both as shown above, without rewriting your authorization calls.
+
+**Where does PBAC fit?** PBAC describes *how* rules are managed (as policy data evaluated at run time) more than *what* they are based on. Casbin policies are data in every model, so any of the models above can be managed this way.
+
+**Does Casbin support all of these?** Yes, along with others such as [RBAC96](/docs/rbac-96), [OrBAC](/docs/orbac), [UCON](/docs/ucon), and priority and deny-override policies. See [Supported models](/docs/supported-models), and try any of them in the [online editor](/docs/online-editor).

@@ -1,0 +1,187 @@
+---
+id: rust-rbac-tutorial
+title: RBAC in Rust with Axum
+description: "Rust RBAC tutorial: role-based access control for an Axum REST API with casbin-rs, including the model, policy, middleware and runtime role changes."
+keywords: [rust rbac, axum rbac, axum authorization, casbin-rs, rust authorization library, role-based access control rust, axum middleware casbin]
+authors: [hsluoyz]
+---
+
+This tutorial adds role-based access control (RBAC) to a REST API written in Rust with [Axum](https://github.com/tokio-rs/axum) and [casbin-rs](https://github.com/apache/casbin-rs). At the end, three roles (`admin`, `editor`, `viewer`) are allowed different HTTP methods on different routes, and the rules live in a policy file that you can change without touching the handlers.
+
+The model and policy are the same as in the [Go](/docs/go-rbac-tutorial), [Node.js](/docs/nodejs-rbac-tutorial), [Python](/docs/python-rbac-tutorial), and [Java](/docs/java-rbac-tutorial) versions of this tutorial.
+
+## 1. Install
+
+```bash
+cargo new rbac && cd rbac
+cargo add casbin axum serde_json
+cargo add tokio --features full
+```
+
+This tutorial was tested with casbin 2.20 and axum 0.8.
+
+## 2. Write the model
+
+Save this as `model.conf` in the project root:
+
+```ini
+[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = sub, obj, act
+
+[role_definition]
+g = _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = g(r.sub, p.sub) && keyMatch2(r.obj, p.obj) && regexMatch(r.act, p.act)
+```
+
+- `r = sub, obj, act`: each request is a user, a URL path, and an HTTP method.
+- `g = _, _`: users can be assigned to roles.
+- `keyMatch2` matches paths such as `/api/articles/:id`, and `regexMatch` lets one rule list several methods. See [Functions](/docs/function) for the other built-in matchers.
+
+## 3. Write the policy
+
+Save this as `policy.csv`:
+
+```csv
+p, admin, /api/*, (GET)|(POST)|(PUT)|(DELETE)
+p, editor, /api/articles, (GET)|(POST)
+p, editor, /api/articles/:id, (GET)|(PUT)
+p, viewer, /api/articles, GET
+p, viewer, /api/articles/:id, GET
+
+g, alice, admin
+g, bob, editor
+g, carol, viewer
+```
+
+Lines starting with `p` grant a role access to a path and a set of methods. Lines starting with `g` assign users to roles.
+
+## 4. Add the middleware
+
+The enforcer is shared between requests as `Arc<RwLock<Enforcer>>`: checks take the read lock, so they run in parallel, and policy changes take the write lock. The middleware is attached with `route_layer`, so it runs only for routes that exist and unknown paths still return `404`.
+
+```rust title="src/main.rs"
+use std::sync::Arc;
+
+use axum::{
+    extract::{OriginalUri, Path, Request, State},
+    http::StatusCode,
+    middleware::{self, Next},
+    response::{IntoResponse, Response},
+    routing::get,
+    Json, Router,
+};
+use casbin::{CoreApi, Enforcer};
+use serde_json::{json, Value};
+use tokio::sync::RwLock;
+
+type SharedEnforcer = Arc<RwLock<Enforcer>>;
+
+/// Asks Casbin whether the current user may call this route.
+async fn authorize(State(enforcer): State<SharedEnforcer>, req: Request, next: Next) -> Response {
+    // Replace this with the user from your session or JWT.
+    let user = req
+        .headers()
+        .get("x-user")
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("")
+        .to_string();
+    // Inside a nested router req.uri() has the /api prefix stripped, so use the original URI.
+    let path = match req.extensions().get::<OriginalUri>() {
+        Some(OriginalUri(uri)) => uri.path().to_string(),
+        None => req.uri().path().to_string(),
+    };
+    let method = req.method().as_str().to_string();
+
+    match enforcer.read().await.enforce((user, path, method)) {
+        Ok(true) => next.run(req).await,
+        Ok(false) => (StatusCode::FORBIDDEN, Json(json!({ "error": "forbidden" }))).into_response(),
+        Err(e) => (StatusCode::INTERNAL_SERVER_ERROR, Json(json!({ "error": e.to_string() }))).into_response(),
+    }
+}
+
+async fn list_articles() -> Json<Value> {
+    Json(json!({ "articles": [] }))
+}
+
+async fn create_article() -> (StatusCode, Json<Value>) {
+    (StatusCode::CREATED, Json(json!({ "created": true })))
+}
+
+async fn update_article(Path(id): Path<u32>) -> Json<Value> {
+    Json(json!({ "updated": id }))
+}
+
+async fn delete_article(Path(id): Path<u32>) -> Json<Value> {
+    Json(json!({ "deleted": id }))
+}
+
+#[tokio::main]
+async fn main() {
+    let enforcer = Enforcer::new("model.conf", "policy.csv").await.unwrap();
+    let enforcer: SharedEnforcer = Arc::new(RwLock::new(enforcer));
+
+    let api = Router::new()
+        .route("/articles", get(list_articles).post(create_article))
+        .route("/articles/{id}", axum::routing::put(update_article).delete(delete_article))
+        .route_layer(middleware::from_fn_with_state(enforcer.clone(), authorize));
+
+    let app = Router::new().nest("/api", api).with_state(enforcer);
+
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:8080").await.unwrap();
+    axum::serve(listener, app).await.unwrap();
+}
+```
+
+:::caution
+Inside a router added with `nest`, `req.uri()` has the prefix removed: a request to `/api/articles` arrives as `/articles`, which matches no policy rule. That is why the middleware reads `OriginalUri`. If your middleware sees every request denied, check which path it passes to Casbin.
+:::
+
+:::note
+The `X-User` header keeps the example short. Casbin handles authorization only; in a real application the user name comes from your authentication layer, such as a verified JWT.
+:::
+
+## 5. Try it
+
+```bash
+cargo run
+```
+
+```bash
+curl -i -X POST   -H "X-User: bob"   http://localhost:8080/api/articles     # 201, editors can create
+curl -i -X DELETE -H "X-User: bob"   http://localhost:8080/api/articles/1   # 403, editors cannot delete
+curl -i -X DELETE -H "X-User: alice" http://localhost:8080/api/articles/1   # 200, admins can
+curl -i -X POST   -H "X-User: carol" http://localhost:8080/api/articles     # 403, viewers are read-only
+```
+
+## 6. Change roles at runtime
+
+Roles and permissions are data. Take the write lock to change them while the server is running:
+
+```rust
+use casbin::{MgmtApi, RbacApi};
+
+let mut e = enforcer.write().await;
+e.add_role_for_user("dave", "editor", None).await?;      // dave becomes an editor
+e.delete_role_for_user("bob", "editor", None).await?;    // bob is no longer an editor
+e.add_policy(vec!["editor".into(), "/api/comments".into(), "POST".into()]).await?;
+
+e.get_roles_for_user("alice", None);                     // ["admin"]
+```
+
+The `None` argument is the domain; pass `Some("tenant1")` when you use [RBAC with domains](/docs/rbac-with-domains).
+
+## Next steps
+
+- **Store the policy in a database.** Replace `policy.csv` with an adapter such as [sqlx-adapter](https://github.com/apache/casbin-sqlx-adapter) or [diesel-adapter](https://github.com/apache/casbin-rust-diesel-adapter) (see [Adapters](/docs/adapters)). Policy changes made through the API are then saved automatically.
+- **Ready-made middleware.** [axum-casbin](https://github.com/apache/casbin-axum-casbin) and the Actix plugins are listed under [Middleware](/docs/middlewares).
+- **Rules based on attributes.** Combine roles with [ABAC](/docs/abac), for example "editors may update only their own articles". [Choosing an access control model](/docs/access-control-models#combining-rbac-and-abac) shows a combined model.
+- **gRPC services.** The same idea applies to gRPC: see [gRPC authorization](/docs/grpc-rbac-tutorial), which uses Go but translates directly to a tonic interceptor.
+- **Experiment in the browser.** Paste the model and policy into the [online editor](/docs/online-editor) to test requests without running any code.
