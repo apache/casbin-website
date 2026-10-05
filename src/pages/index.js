@@ -11,7 +11,7 @@ import EditorPreview from "../components/EditorPreview";
 import LanguageIntegration from "../components/LanguageIntegration";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import AnimatedText from "../components/AnimatedText";
-import {Code, Zap} from "lucide-react";
+import {Code, ShieldCheck, Zap} from "lucide-react";
 import LogoCarousel from "@site/src/components/LogoCarousel";
 import latestReleaseData from "@site/src/data/latest-release.json";
 
@@ -81,6 +81,11 @@ function HomepageHeader() {
             <Translate>Try Online Editor</Translate>
           </Link>
         </div>
+        <a className={styles.trustBadge} href="https://www.bestpractices.dev/projects/15229" target="_blank" rel="noopener noreferrer">
+          <ShieldCheck size={16} className={styles.trustBadgeIcon} />
+          <span>OpenSSF Best Practices</span>
+          <span className={styles.trustBadgeLevel}>Passing</span>
+        </a>
         {/* logo carousel in hero */}
         <div style={{marginTop: "18px"}}>
           <LogoCarousel />

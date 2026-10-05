@@ -303,6 +303,34 @@ html[data-theme="light"] .highlightedKeyword {
   margin-top: 1rem;
 }
 
+.trustBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgb(255 255 255 / 75%);
+  transition: color 150ms ease;
+}
+
+.trustBadge:hover,
+.trustBadge:focus {
+  color: #fff;
+  text-decoration: none;
+}
+
+.trustBadgeIcon {
+  color: #4ade80;
+}
+
+.trustBadgeLevel {
+  padding-left: 0.45rem;
+  border-left: 1px solid rgb(255 255 255 / 30%);
+  color: #4ade80;
+  font-weight: 600;
+}
+
 /* Hero pill above the title */
 .heroPill {
   display: inline-flex;
