@@ -23,6 +23,12 @@
         },
         {
             "pattern": "^http://www.cnblogs.com"
+        },
+        {
+            "pattern": "^https://medium.com/"
+        },
+        {
+            "pattern": "^https://mvnrepository.com/"
         }
     ]
 }
