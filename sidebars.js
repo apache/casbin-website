@@ -146,6 +146,7 @@ module.exports = {
       label: "Advanced Usage",
       link: {type: "generated-index"},
       items: [
+        "production-deployment",
         "multi-threading",
         "benchmark",
         "performance",

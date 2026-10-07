@@ -1,0 +1,125 @@
+---
+id: production-deployment
+title: Production Deployment
+description: "Run Casbin in production - one enforcer per process, thread safety with SyncedEnforcer, decision caching, keeping replicas in sync with watchers, and writing policy inside database transactions."
+keywords: [production, deployment, SyncedEnforcer, watcher, replicas, thread safety, LoadPolicy]
+authors: [hsluoyz]
+---
+
+Casbin is a library: the enforcer lives inside your process and keeps the whole policy in memory. That makes `Enforce()` fast, but it also means **you** decide how the enforcer is created, shared between threads, and kept in sync with other instances. This page is a checklist for doing that correctly.
+
+## Create one enforcer per process
+
+Create the enforcer once at startup and share it. Loading policy is expensive: it reads every rule from the adapter and rebuilds the model and the role graph.
+
+Do **not** call `LoadPolicy()` (or create a new enforcer) on every request:
+
+```go
+// Don't: this reads the whole policy table on every request
+func authorize(sub, obj, act string) (bool, error) {
+    if err := e.LoadPolicy(); err != nil {
+        return false, err
+    }
+    return e.Enforce(sub, obj, act)
+}
+```
+
+Policy changes made through the enforcer's [Management API](/docs/management-api) (`AddPolicy`, `RemovePolicy`, `AddGroupingPolicy`, ...) update memory and, with [AutoSave](/docs/adapters#autosave), the database at the same time. Changes made by **other** instances reach this one through a [watcher](#keep-replicas-in-sync). There is no need to reload before enforcing.
+
+If the policy is too large to keep in memory, load only the part each instance needs with [Policy subset loading](/docs/policy-subset-loading).
+
+## Share the enforcer safely between threads
+
+The plain `Enforcer` is **not** safe for concurrent use when policy can change while requests are being enforced: a `LoadPolicy()` or `AddPolicy()` running on one thread can race with `Enforce()` on another. Use the synchronized enforcer, which guards reads and writes with a read-write lock:
+
+| Language | Synchronized enforcer |
+|----------|-----------------------|
+| Go | `casbin.NewSyncedEnforcer()`, `casbin.NewSyncedCachedEnforcer()` |
+| Java | `SyncedEnforcer`, `SyncedCachedEnforcer` |
+| Python | `casbin.SyncedEnforcer` |
+| Node.js | `newSyncedEnforcer()` |
+| C++ | `casbin::SyncedEnforcer` |
+
+The synchronized enforcer has the same API as `Enforcer`. See [Multithreading](/docs/multi-threading) and [Enforcers](/docs/enforcers) for details.
+
+## Cache decisions carefully
+
+`CachedEnforcer` and `SyncedCachedEnforcer` remember the result of each `Enforce()` call. They help when the same requests repeat often, but a cached decision can outlive the policy that produced it. In Go:
+
+- `LoadPolicy()` clears the whole cache.
+- Adding or removing a policy rule drops at most the cache entry whose request matches that rule exactly. Decisions that depended on the rule indirectly, for example through a role assignment (`g`), stay cached.
+- Call `InvalidateCache()` after changing role assignments, and set a time limit with `SetExpireTime()` so no stale decision lives forever.
+
+## Keep replicas in sync
+
+When you run more than one instance (several pods, or several worker processes per pod), each one has its own copy of the policy. Without synchronization, a permission granted through instance A is invisible to instance B, and, worse, a permission **revoked** through A keeps working on B until B restarts.
+
+Use a [watcher](/docs/watchers) (Redis, etcd, Kafka, NATS, a database, ...). When an instance changes policy, it publishes a message; the other instances receive it and update their copy.
+
+```go
+import (
+    "github.com/casbin/casbin/v3"
+    gormadapter "github.com/casbin/gorm-adapter/v3"
+    rediswatcher "github.com/casbin/redis-watcher/v2"
+)
+
+a, _ := gormadapter.NewAdapterByDB(db)
+e, _ := casbin.NewSyncedCachedEnforcer("rbac_model.conf", a)
+
+w, _ := rediswatcher.NewWatcher("redis:6379", rediswatcher.WatcherOptions{
+    Channel:    "/casbin",
+    IgnoreSelf: true,
+})
+_ = e.SetWatcher(w)
+
+// Reload through the synced, cached enforcer so the reload takes its lock
+// and clears its decision cache
+_ = w.SetUpdateCallback(func(string) { _ = e.LoadPolicy() })
+```
+
+Things to get right:
+
+- **Set the callback yourself when you use a wrapped enforcer.** In Go, `SetWatcher()` installs a default callback that reloads the inner `Enforcer`, which bypasses the lock of `SyncedEnforcer` and the cache of `SyncedCachedEnforcer`. Call `SetUpdateCallback()` after `SetWatcher()`, as above.
+- **AutoSave and notification are independent.** `EnableAutoSave()` decides whether a change is written to the adapter; `EnableAutoNotifyWatcher()` decides whether other instances are told about it. You can turn off AutoSave and still notify, which is what you need when you persist policy yourself (see [below](#write-policy-inside-your-own-transaction)). pycasbin 2.8.0 and earlier only notify when AutoSave is on; newer versions behave like the other languages.
+- **Incremental updates.** A plain `Watcher` makes the other instances reload the whole policy. A `WatcherEx` sends the exact change (`UpdateForAddPolicy`, `UpdateForRemovePolicy`, ...), and the receiving instance applies only that change. In Python, apply it with `DistributedEnforcer.add_policy_self(False, ...)` and friends, which update memory without writing to the adapter. In Go, the `Self*` methods (`SelfAddPolicy`, `SelfRemovePolicy`, ...) skip the watcher but still write to the adapter while AutoSave is on. When all instances share one database, the change is already there, so the second write duplicates or fails; reload with `LoadPolicy()` in the callback instead, as in the example above.
+- **Have a backstop.** Messages can be lost while an instance is disconnected from the message bus. A periodic full reload bounds how long a missed update can last: `StartAutoLoadPolicy(5 * time.Minute)` on a `SyncedEnforcer` (Go, Java and Python have it).
+- **Need strong consistency?** A watcher is eventually consistent. If every instance must see a change before the write returns, use a [dispatcher](/docs/dispatchers), or move authorization into one service with [Casbin Server](/docs/service).
+
+## Write policy inside your own transaction
+
+Applications often create a user, a team and the user's role in one database transaction. If the enforcer writes `casbin_rule` with AutoSave on, that write is outside your transaction, and if the transaction rolls back, the rule stays.
+
+Two ways to keep them together:
+
+1. **Write the rows yourself, then update memory after commit.** Turn AutoSave off, insert the `casbin_rule` rows in your transaction, and after it commits call the enforcer's `AddPolicy()` / `AddGroupingPolicy()`. With AutoSave off these only update memory, and the watcher still notifies the other instances.
+
+    ```python
+    enforcer.enable_auto_save(False)
+
+    with db.transaction():
+        create_user(...)
+        insert_casbin_rule("g", "alice", "team-admin")
+
+    # after commit: update this instance and notify the others
+    enforcer.add_grouping_policy("alice", "team-admin")
+    ```
+
+2. **Go: use the transactional enforcer.** `NewTransactionalEnforcer()` with a transactional adapter (for example `gormadapter.NewTransactionalAdapterByDB()`) buffers changes and applies them to the database and to memory on `Commit()`. See [Adapters: Transaction](/docs/adapters#transaction). A commit does not notify the watcher, so call `w.Update()` after it to tell the other instances.
+
+## Read-only replicas and migrations
+
+Some adapters create the `casbin_rule` table when they start. On a read-only database replica (for example a passive disaster-recovery site) that statement fails. Create the table with your own migrations and turn the adapter's migration off where the adapter supports it, for example `gormadapter.TurnOffAutoMigrate(db)` in Go. On read-only instances, only call `LoadPolicy()` and `Enforce()`.
+
+## Fail closed
+
+Treat any error as a denial:
+
+- If the enforcer cannot be created or the policy cannot be loaded at startup, refuse to serve requests that need authorization instead of letting them through.
+- If `Enforce()` returns an error, deny the request.
+
+```go
+ok, err := e.Enforce(sub, obj, act)
+if err != nil || !ok {
+    return http.StatusForbidden
+}
+```
