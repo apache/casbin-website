@@ -12,6 +12,12 @@
         "pinned": true
     },
     {
+        "caption": "NVIDIA Infra Controller",
+        "image": "users/nvidia.svg",
+        "infolink": "https://github.com/dsx-ai-factory/infra-controller",
+        "pinned": true
+    },
+    {
         "caption": "Docker",
         "image": "users/docker.png",
         "infolink": "https://docs.docker.com/engine/extend/legacy_plugins/#authorization-plugins",
