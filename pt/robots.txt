@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://casbin.apache.org/sitemap.xml
