@@ -8,10 +8,18 @@ export function onRouteDidUpdate({location, previousLocation}) {
     return;
   }
   const referrer = window.location.origin + previousLocation.pathname + previousLocation.search;
-  setTimeout(() => {
+  const oldTitle = document.title;
+  let tries = 0;
+  // The page title is updated shortly after the route change.
+  const track = () => {
+    if (document.title === oldTitle && tries++ < 20) {
+      setTimeout(track, 50);
+      return;
+    }
     paq.push(["setReferrerUrl", referrer]);
     paq.push(["setCustomUrl", window.location.href]);
     paq.push(["setDocumentTitle", document.title]);
     paq.push(["trackPageView"]);
-  }, 0);
+  };
+  setTimeout(track, 0);
 }
