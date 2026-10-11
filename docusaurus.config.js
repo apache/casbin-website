@@ -17,6 +17,28 @@ module.exports = {
     },
   },
   favicon: "img/favicon.png",
+  // ASF Matomo (analytics.apache.org), cookies disabled. Production builds only.
+  headTags: process.env.NODE_ENV === "production" ? [
+    {
+      tagName: "script",
+      attributes: {},
+      innerHTML: `
+        var _paq = window._paq = window._paq || [];
+        _paq.push(["setDoNotTrack", true]);
+        _paq.push(["disableCookies"]);
+        _paq.push(["trackPageView"]);
+        _paq.push(["enableLinkTracking"]);
+        (function() {
+          var u = "https://analytics.apache.org/";
+          _paq.push(["setTrackerUrl", u + "matomo.php"]);
+          _paq.push(["setSiteId", "91"]);
+          var d = document, g = d.createElement("script"), s = d.getElementsByTagName("script")[0];
+          g.async = true; g.src = u + "matomo.js"; s.parentNode.insertBefore(g, s);
+        })();
+      `,
+    },
+  ] : [],
+  clientModules: [require.resolve("./src/clientModules/matomo.js")],
   organizationName: "apache", // Usually your GitHub org/user name.
   projectName: "casbin-website", // Usually your repo name.
   themeConfig: {
