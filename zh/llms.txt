@@ -1,0 +1,128 @@
+# Apache Casbin
+
+> Apache Casbin (Incubating) is an open-source authorization library that supports access control models like ACL, RBAC, ABAC, ReBAC, PBAC, BLP, Biba and more. A model file (PERM: policy, effect, request, matchers) and policy rules decide every request, and the same model works in Go, Java, Node.js, Python, .NET, PHP, Rust, C++ and other languages.
+
+## Basics
+
+- [Overview](https://casbin.apache.org/zh/docs/overview/): Apache Casbin 是一个开源授权库，支持 Go、Java、Node.js、Python、.NET、PHP、Rust 和 C++，支持 ACL、RBAC、ABAC、ReBAC 等模型。
+- [Get Started](https://casbin.apache.org/zh/docs/get-started/): 为 Go、Java、Node.js、PHP、Python、.NET、C++ 或 Rust 安装 Casbin，用模型和策略创建 enforcer，并完成第一次授权检查。
+- [How It Works](https://casbin.apache.org/zh/docs/how-it-works/): Casbin 的工作原理：PERM 元模型（Policy、Effect、Request、Matchers）和 CONF 模型文件，让你在 ACL、RBAC、ABAC 和自定义模型之间切换。
+- [Tutorials](https://casbin.apache.org/zh/docs/tutorials/): Go、Java、Node.js、Python、PHP、.NET 等语言的 Casbin 论文、视频和社区教程，以及关于 PERM 建模的文章。
+
+## Guides
+
+- [在 Go 中用 Gin 实现 RBAC](https://casbin.apache.org/zh/docs/go-rbac-tutorial/): Go RBAC 分步教程：用 Casbin 为 Gin REST API 加上基于角色的访问控制，包括模型、策略、中间件和运行时角色管理。
+- [在 Node.js 中用 Express 实现 RBAC](https://casbin.apache.org/zh/docs/nodejs-rbac-tutorial/): Node.js RBAC 分步教程：用 Casbin 为 Express REST API 加上基于角色的访问控制，包括模型、策略、中间件和运行时角色管理。
+- [在 Python 中用 FastAPI 实现 RBAC](https://casbin.apache.org/zh/docs/python-rbac-tutorial/): Python RBAC 分步教程：用 PyCasbin 为 FastAPI REST API 加上基于角色的访问控制，包括模型、策略、依赖项和运行时角色管理。
+- [在 Java 中用 Spring Boot 实现 RBAC](https://casbin.apache.org/zh/docs/java-rbac-tutorial/): Java RBAC 分步教程：用 jCasbin 为 Spring Boot REST API 加上基于角色的访问控制，包括模型、策略、拦截器和运行时角色管理。
+- [在 NestJS 中实现 RBAC](https://casbin.apache.org/zh/docs/nestjs-rbac-tutorial/): NestJS RBAC 教程：用 node-casbin、全局守卫和权限装饰器，为 NestJS API 实现带角色继承的基于角色的访问控制。
+- [在 Rust 中用 Axum 实现 RBAC](https://casbin.apache.org/zh/docs/rust-rbac-tutorial/): Rust RBAC 教程：用 casbin-rs 为 Axum REST API 实现基于角色的访问控制，包括模型、策略、中间件和运行时角色修改。
+- [在 Go 中实现 gRPC 授权](https://casbin.apache.org/zh/docs/grpc-rbac-tutorial/): 用 Casbin 为 Go gRPC 服务实现基于角色的访问控制：用一元拦截器和流拦截器，按完整方法名检查调用方的角色。
+- [在 Go 中实现 ABAC](https://casbin.apache.org/zh/docs/go-abac-tutorial/): Go ABAC 教程：用 Casbin 为 net/http API 实现基于属性的访问控制，根据所有者、部门和状态决定谁能阅读、编辑和发布。
+- [在 Node.js 中用 Express 实现 ABAC](https://casbin.apache.org/zh/docs/nodejs-abac-tutorial/): Node.js ABAC 教程：用 node-casbin 为 Express API 实现基于属性的访问控制，根据所有者、部门和状态决定谁能编辑。
+- [在 Python 中用 Flask 实现 ABAC](https://casbin.apache.org/zh/docs/flask-abac-tutorial/): Python ABAC 教程：用 PyCasbin 为 Flask API 实现基于属性的访问控制，根据所有者、部门和状态决定谁能阅读和编辑。
+- [AI 智能体与 MCP 工具的授权](https://casbin.apache.org/zh/docs/ai-agent-authorization/): 用 Casbin 控制 AI 智能体可以调用哪些工具：按智能体授权、限制参数、拒绝规则，并且权限不超过它所代表的用户。附 MCP 示例。
+
+## Access Control Models
+
+- [RBAC、ABAC、ACL 与 ReBAC：如何选择访问控制模型](https://casbin.apache.org/zh/docs/access-control-models/): 用同一个例子对比 ACL、RBAC、ABAC、ReBAC 和 PBAC：各自依据什么判定、优缺点、什么时候选它，以及如何把 RBAC 和 ABAC 结合使用。
+- [Supported Models](https://casbin.apache.org/zh/docs/supported-models/): Casbin 支持的访问控制模型：ACL、RBAC、带域的 RBAC、ABAC、ReBAC、PBAC、BLP、Biba、LBAC、OrBAC、UCON、RESTful、IP 匹配、拒绝优先和优先级。
+- [Model Syntax](https://casbin.apache.org/zh/docs/syntax-for-models/): Casbin 模型语法参考：CONF 文件中的请求、策略、角色和效果定义以及匹配器，附运算符和示例。
+- [Effector](https://casbin.apache.org/zh/docs/effector/): Casbin 的 Effector 接口把所有匹配策略规则的效果合并为一个判定，支持允许优先、拒绝优先、优先级和自定义效果。
+- [Functions](https://casbin.apache.org/zh/docs/function/): Casbin 匹配器的内置函数：keyMatch、keyMatch2-5、regexMatch、ipMatch、globMatch 和键提取函数，以及如何注册自己的自定义函数。
+- [RBAC 概览](https://casbin.apache.org/zh/docs/rbac-overview/): Casbin 中基于角色的访问控制（RBAC）概览：基本 RBAC、资源角色、域（多租户）、模式匹配和带条件的角色。
+- [RBAC](https://casbin.apache.org/zh/docs/rbac/): Casbin 中的基于角色的访问控制（RBAC）：用 role_definition 定义角色、给用户分配角色、构建角色层级，并在匹配器中使用角色。
+- [RBAC with Pattern](https://casbin.apache.org/zh/docs/rbac-with-pattern/): 用 AddNamedMatchingFunc 和 AddNamedDomainMatchingFunc 在 Casbin 的角色分配和域中使用通配符和模式。
+- [RBAC with Domains](https://casbin.apache.org/zh/docs/rbac-with-domains/): 用 Casbin 实现多租户 RBAC：用三参数的角色定义，让同一个用户在不同的域或租户中拥有不同的角色。
+- [RBAC with Conditions](https://casbin.apache.org/zh/docs/rbac-with-conditions/): 用条件角色管理器给 Casbin 的角色分配附加条件，例如只在某个时间段内有效的角色。
+- [RBAC vs. RBAC96](https://casbin.apache.org/zh/docs/rbac-96/): Casbin RBAC 与 RBAC96 标准的关系：用户与角色、角色层级、会话与约束，以及 Casbin 通过域和灵活权限增加的能力。
+- [ReBAC](https://casbin.apache.org/zh/docs/rebac/): 用 Casbin 实现基于关系的访问控制（ReBAC）：根据用户与资源及资源类型的关系做授权。
+- [ABAC](https://casbin.apache.org/zh/docs/abac/): 用 Casbin 实现基于属性的访问控制（ABAC）：把结构体或对象传给 Enforce()，直接在匹配器中比较它们的属性，例如资源的所有者。
+- [PBAC](https://casbin.apache.org/zh/docs/pbac/): Casbin 中基于策略的访问控制（PBAC）：把规则表达式存在策略中，在运行时用 eval() 求值，实现依赖上下文的判定。
+- [MAC 概览](https://casbin.apache.org/zh/docs/mac-overview/): Casbin 中的强制访问控制（MAC）：Bell-LaPadula、Biba、LBAC 等基于标签、用户无法覆盖的模型。
+- [BLP](https://casbin.apache.org/zh/docs/blp/): 在 Casbin 中实现 Bell-LaPadula（BLP）机密性模型：为主体和对象设置安全级别，实施不上读、不下写规则。
+- [Biba](https://casbin.apache.org/zh/docs/biba/): 在 Casbin 中实现 Biba 完整性模型：为主体和对象设置完整性级别，实施不下读、不上写规则。
+- [LBAC](https://casbin.apache.org/zh/docs/lbac/): 在 Casbin 中实现基于格的访问控制（LBAC），在一个模型中同时执行机密性和完整性级别。
+- [OrBAC](https://casbin.apache.org/zh/docs/orbac/): 在 Casbin 中实现基于组织的访问控制（OrBAC）：按组织把角色、活动和视图映射到具体的用户、操作和对象。
+- [Priority Model](https://casbin.apache.org/zh/docs/priority-model/): 用 Casbin 优先级模型解决规则冲突：按策略顺序的隐式优先级、显式优先级字段，以及基于角色层级的优先级。
+- [使用控制（UCON）](https://casbin.apache.org/zh/docs/ucon/): 用 Casbin 实现使用控制（UCON）：在使用过程中持续检查的授权、义务和条件，支持可变属性。
+- [Super Administrator](https://casbin.apache.org/zh/docs/superadmin/): 超级管理员是整个系统的管理员。它可以用于RBAC、ABAC和带有域的RBAC等模型中。
+
+## 存储
+
+- [Model Storage](https://casbin.apache.org/zh/docs/model-storage/): 从 CONF 文件、字符串或代码中加载 Casbin 模型。模型定义访问控制逻辑，在运行时只读。
+- [Policy Storage](https://casbin.apache.org/zh/docs/policy-storage/): 通过适配器把 Casbin 策略规则存放在 CSV 文件、数据库或其他后端中，并通过适配器 API 加载或保存。
+- [Loading Policy Subsets](https://casbin.apache.org/zh/docs/policy-subset-loading/): 用支持过滤的适配器和 LoadFilteredPolicy() 只加载一部分 Casbin 策略规则，在大型或多租户部署中节省内存。
+
+## 应用案例
+
+- [Data Permissions](https://casbin.apache.org/zh/docs/data-permissions/): 用 Casbin 实现数据级权限：通过 RBAC 层级查询隐式角色和权限，并用 BatchEnforce() 过滤数据集。
+- [Menu Permissions](https://casbin.apache.org/zh/docs/menu-permissions/): 用 jCasbin 和 Spring Boot 实现基于菜单的访问控制：把角色映射到菜单和子菜单，每个用户只看到自己有权访问的菜单项。
+
+## Plugins
+
+- [插件概览](https://casbin.apache.org/zh/docs/plugins-overview/): Casbin 插件概览：把 Casbin 连接到数据库、消息总线和 Web 框架的适配器、watcher、dispatcher、角色管理器和中间件。
+- [Enforcers](https://casbin.apache.org/zh/docs/enforcers/): 执行器是Casbin中的主要结构，它作为一个接口供用户对策略规则和模型进行操作。
+- [Adapters](https://casbin.apache.org/zh/docs/adapters/): Casbin 适配器在 MySQL、PostgreSQL、MongoDB、Redis、文件等数十种存储中加载和保存策略规则。找到适合你的语言和数据库的适配器。
+- [Watchers](https://casbin.apache.org/zh/docs/watchers/): Casbin watcher 通过 etcd、Redis、Kafka、NATS 等消息总线，让多个 enforcer 实例之间的策略保持同步。
+- [Dispatchers](https://casbin.apache.org/zh/docs/dispatchers/): Casbin dispatcher 使用 Raft 等一致性协议，把增量的策略变更传播到集群中的每个 enforcer，且不改变 Casbin 的 API。
+- [Role Managers](https://casbin.apache.org/zh/docs/role-managers/): Casbin 角色管理器解析 RBAC 角色层级，来源可以是内存中的策略，也可以是 LDAP、Okta、Auth0、Azure AD 等外部来源。
+- [Middleware](https://casbin.apache.org/zh/docs/middlewares/): Web 框架和 API 网关的 Casbin 授权中间件：Gin、Echo、Express、Koa、NestJS、Django、Flask、FastAPI、Spring Boot、Laravel 等。
+- [Kong 授权](https://casbin.apache.org/zh/docs/kong-authz/): kong-authz 是一个用 lua-casbin 对请求做授权的 Kong API 网关插件。安装它，配置模型和策略，即可保护你的 Kong 路由。
+- [GraphQL Middleware](https://casbin.apache.org/zh/docs/graphql-middlewares/): 用 Casbin 为 GraphQL API 加上授权：在 resolver 中对类型、字段和操作实施访问控制，并提供常见 GraphQL 服务器的中间件。
+- [Cloud Native](https://casbin.apache.org/zh/docs/cloud-native/): 在云原生技术栈中用 Casbin 做授权：把 Casbin 与 Envoy、Istio、Traefik、KubeSphere 等基础设施集成的项目。
+
+## API
+
+- [API Overview](https://casbin.apache.org/zh/docs/api-overview/): Casbin 主要 API 概览：Enforce、BatchEnforce、EnforceEx、Management API 和 RBAC API，示例使用 RBAC 模型和 CSV 策略。
+- [Management API](https://casbin.apache.org/zh/docs/management-api/): Casbin Management API 参考：在运行时获取、添加、删除、更新和过滤策略规则与角色分配，附各语言示例。
+- [RBAC API](https://casbin.apache.org/zh/docs/rbac-api/): 一个更友好的RBAC API。此API是管理API的一个子集。 RBAC用户可以使用此API简化代码。
+- [RBAC with Domains API](https://casbin.apache.org/zh/docs/rbac-with-domains-api/): 一个更用户友好的RBAC与域的API。此API是管理API的一个子集。 RBAC用户可以使用此API简化他们的代码。
+- [RBAC with Conditions API](https://casbin.apache.org/zh/docs/rbac-with-conditions-api/): Casbin 带条件的 RBAC 的 API 参考：在用户与角色的关联上注册条件函数并向其传参。
+- [Role Manager API](https://casbin.apache.org/zh/docs/rolemanager-api/): RoleManager API提供了一个定义管理角色操作的接口。向RoleManager添加匹配函数后，可以在角色名称和域中使用通配符。
+
+## 高级用法
+
+- [Production Deployment](https://casbin.apache.org/zh/docs/production-deployment/): Run Casbin in production - one enforcer per process, thread safety with SyncedEnforcer, decision caching, keeping replicas in sync with watchers, and writing policy inside database transactions.
+- [Multithreading](https://casbin.apache.org/zh/docs/multi-threading/): 在 Go、Java、C++ 等语言中用同步 enforcer（SyncedEnforcer）在多线程代码中安全地使用 Casbin。
+- [Benchmarks](https://casbin.apache.org/zh/docs/benchmark/): Casbin 判定基准测试：ACL、RBAC、ABAC、RESTful 等模型在规则数从几条到 110,000 条时，每次 Enforce() 调用的时间和内存。
+- [Performance Optimization](https://casbin.apache.org/zh/docs/performance/): 大规模优化 Casbin：用同步 enforcer 和分片应对大请求量，用过滤加载策略减少内存占用。
+- [Kubernetes Admission Webhook](https://casbin.apache.org/zh/docs/k8s-gatekeeper/): Casbin K8s-Gatekeeper 是一个 Kubernetes 准入 webhook，用声明式的 Casbin 模型和策略允许或拒绝对任意 Kubernetes 资源的操作。
+- [Envoy (Service Mesh Authorization)](https://casbin.apache.org/zh/docs/envoy/): 通过 Envoy 外部授权用 Casbin 对服务网格流量做授权：envoy-authz 为 Envoy 和 Istio 执行 RBAC 和 ABAC 策略。
+
+## 管理
+
+- [Admin Portal](https://casbin.apache.org/zh/docs/admin-portal/): 在网页界面中管理 Casbin 模型和策略。 Casdoor 等管理后台在 Casbin 之上提供模型编辑器、策略编辑器和权限管理。
+- [Casbin Service](https://casbin.apache.org/zh/docs/service/): 用 Casbin Server 等项目把 Casbin 作为远程授权服务通过 gRPC 或 HTTP 运行，而不是嵌入库。
+- [命令行工具](https://casbin.apache.org/zh/docs/command-line-tools/): Go、Java、Node.js、Python、.NET 和 Rust 的 Casbin 命令行工具：在 shell 中加载模型和策略、执行判定检查、管理策略。
+- [Logging & Error Handling](https://casbin.apache.org/zh/docs/log-error/): 在 Casbin 中启用并自定义请求、模型加载和策略变更的日志，并处理 enforcer 返回的错误。
+- [Frontend Integration](https://casbin.apache.org/zh/docs/frontend/): Casbin.js是一个Casbin插件，它可以方便你在前端应用程序中管理访问控制
+
+## Editors & Tools
+
+- [Online Editor](https://casbin.apache.org/zh/docs/online-editor/): 用在线编辑器在浏览器中编写和测试 Casbin 模型和策略：语法高亮、自动补全、AI 辅助和即时的判定结果。
+- [IDE Plugins](https://casbin.apache.org/zh/docs/ide-plugins/): JetBrains IDE 和 Visual Studio Code 的 Casbin 插件：为模型和策略文件提供语法高亮和编辑支持。
+
+## Comparisons
+
+- [Casbin 与其他方案对比](https://casbin.apache.org/zh/docs/comparison/): Apache Casbin 与 OpenFGA、Open Policy Agent（OPA）、CASL 和 Cedar 的对比：库还是服务、策略语言、访问控制模型、语言支持，以及如何选择。
+- [Casbin 与 OpenFGA 对比](https://casbin.apache.org/zh/docs/casbin-vs-openfga/): 对比 Apache Casbin 和 OpenFGA：嵌入式库与 Zanzibar 式服务、RBAC 与 ReBAC 建模、存储、性能特点，以及如何选择。
+- [Casbin 与 Open Policy Agent（OPA）对比](https://casbin.apache.org/zh/docs/casbin-vs-opa/): 对比 Apache Casbin 和 Open Policy Agent：模型与策略数据还是 Rego、嵌入式库还是策略代理、运行时策略管理、语言支持，以及如何选择。
+- [Casbin 与 CASL 对比](https://casbin.apache.org/zh/docs/casbin-vs-casl/): 面向 JavaScript 和 TypeScript 应用对比 Apache Casbin 和 CASL：规则作为数据还是写在代码中、前后端使用、多语言服务，以及如何选择。
+- [Casbin 与 Cedar 对比](https://casbin.apache.org/zh/docs/casbin-vs-cedar/): 对比 Apache Casbin 和 Cedar：可配置的 PERM 模型与 Cedar 策略语言、校验与分析、语言支持、策略存储，以及如何选择。
+
+## About & More
+
+- [Adopters](https://casbin.apache.org/zh/docs/adopters/): 直接在代码中、或通过插件或依赖使用 Apache Casbin 做授权的公司和开源项目。
+- [Contributing](https://casbin.apache.org/zh/docs/contributing/): 如何为 Apache Casbin 做贡献：核心库与语言移植、适配器、中间件、网站和翻译，以及如何开始。
+- [Privacy Policy](https://casbin.apache.org/zh/docs/privacy-policy/): Apache Casbin 网站的隐私政策：收集哪些信息、如何使用，以及如何保护。
+- [Terms of Service](https://casbin.apache.org/zh/docs/terms-of-service/): 使用 Apache Casbin 网站的服务条款。
+
+## More
+
+- [下载](https://casbin.apache.org/zh/docs/download/): 下载并校验 Apache Casbin 发布版
+
+## Optional
+
+- [Source code](https://github.com/apache/casbin): Go implementation and examples (Apache-2.0)
+- [Online editor](https://editor.casbin.org): Write and test a model and policy in the browser
