@@ -1,10 +1,57 @@
 ---
 id: rbac
-title: RBAC
-description: "Role-based access control (RBAC) in Casbin - define roles with role_definition, assign users to roles, build role hierarchies and use roles in matchers."
-keywords: [RBAC, role definition, role hierarchy]
+title: "What is RBAC? Role-Based Access Control in Casbin"
+sidebar_label: RBAC
+description: "What role-based access control (RBAC) is and how to use it in Casbin: define roles with role_definition, assign users to roles, build role hierarchies and check roles in matchers."
+keywords: [RBAC, role-based access control, what is rbac, rbac model, rbac example, role definition, role hierarchy, rbac vs abac]
 authors: [hsluoyz]
 ---
+
+## What is RBAC?
+
+**Role-based access control (RBAC)** grants permissions to **roles** instead of to individual users, and gives each user one or more roles. To let a new employee do their job you assign them a role such as `editor` or `billing`; to change what all editors can do you change the role once.
+
+RBAC has three parts:
+
+- **Users**: people or services that make requests.
+- **Roles**: named job functions, such as `admin`, `editor` or `viewer`.
+- **Permissions**: an action on a resource, such as `edit` on `/articles`.
+
+A request is allowed when one of the user's roles holds the permission. Roles can also **inherit** from other roles: if `editor` inherits from `viewer`, editors get everything viewers can do. RBAC was formalized by NIST in the 1990s, and the RBAC96 family of models describes the variants: flat roles, role hierarchies and constraints. See [RBAC vs. RBAC96](/docs/rbac-96) for how Casbin maps to them.
+
+A minimal RBAC model and policy in Casbin:
+
+```ini
+[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = sub, obj, act
+
+[role_definition]
+g = _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act
+```
+
+```csv
+p, editor, article, edit
+p, viewer, article, read
+
+g, editor, viewer
+g, alice, editor
+g, bob, viewer
+```
+
+alice may edit and read articles (`editor` inherits `viewer`); bob may only read them.
+
+**RBAC vs ABAC:** RBAC is easy to audit but cannot say "only their own records" without creating a role per record. [ABAC](/docs/abac) adds conditions on attributes such as the owner or the time of day, and most applications combine both. [Choosing an access control model](/docs/access-control-models) compares ACL, RBAC, ABAC and ReBAC on one example.
+
+**Tutorials:** add RBAC to a web API in [Go with Gin](/docs/go-rbac-tutorial), [Node.js with Express](/docs/nodejs-rbac-tutorial), [NestJS](/docs/nestjs-rbac-tutorial), [Python with FastAPI](/docs/python-rbac-tutorial), [Java with Spring Boot](/docs/java-rbac-tutorial), [Rust](/docs/rust-rbac-tutorial) or [gRPC](/docs/grpc-rbac-tutorial). You can also try the RBAC examples in the [online editor](/docs/online-editor).
 
 ## Role definition
 

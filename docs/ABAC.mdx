@@ -1,16 +1,35 @@
 ---
 id: abac
-title: ABAC
-description: "Attribute-based access control (ABAC) with Casbin - pass structs or objects to Enforce() and compare their attributes, such as the resource owner, directly in the matcher."
-keywords: [ABAC, ABAC model]
+title: "What is ABAC? Attribute-Based Access Control with Examples"
+sidebar_label: ABAC
+description: "What attribute-based access control (ABAC) is, how it differs from RBAC, and how to write ABAC rules in Casbin: compare user, resource and environment attributes in the matcher or store conditions as policy."
+keywords: [ABAC, attribute-based access control, what is abac, abac model, abac vs rbac, abac example, attribute based access control example]
 authors: [hsluoyz]
 ---
 
 ## What is ABAC?
 
-**Attribute-Based Access Control (ABAC)** decides access by evaluating **attributes** of the subject, object, and action (e.g. `resource.Owner`, `user.Role`), not just by identity strings. Casbin keeps this simple: you pass structs or objects into `Enforce()` and reference their fields in the matcher.
+**Attribute-based access control (ABAC)** grants or denies a request by evaluating **attributes** against rules, instead of looking up who the user is or which role they hold. NIST, which published the reference definition in [SP 800-162](https://csrc.nist.gov/pubs/sp/800/162/upd2/final), groups the inputs into four kinds:
 
-For complete applications, see the ABAC tutorials for [Go](/docs/go-abac-tutorial), [Node.js with Express](/docs/nodejs-abac-tutorial), and [Python with Flask](/docs/flask-abac-tutorial). To decide between ABAC and RBAC, see [Choosing an access control model](/docs/access-control-models).
+| Attributes of | Examples |
+|---|---|
+| The subject (user or service) | department, clearance level, employment type, age |
+| The object (resource) | owner, department, classification, status |
+| The action | read, edit, approve, delete |
+| The environment | time of day, IP address or network, device, location |
+
+A rule is a condition over these attributes, for example "a user may read a document if they are in the same department as the document, during business hours". Because the rule refers to attributes rather than to named users or roles, new users and new documents are covered without adding any rule.
+
+Casbin keeps ABAC simple: you pass structs or objects into `Enforce()` and reference their fields in the matcher. Complete applications are in the ABAC tutorials for [Go](/docs/go-abac-tutorial), [Node.js with Express](/docs/nodejs-abac-tutorial), and [Python with Flask](/docs/flask-abac-tutorial).
+
+### ABAC vs RBAC
+
+[RBAC](/docs/rbac) decides on the user's **roles**: "editors may edit documents". ABAC decides on **attributes**: "the owner may edit the document". Roles are easy to audit, because you can list what a role allows and who holds it; attributes express rules about specific records and context, such as ownership, department or time, which roles alone cannot express without creating one role per record. Most applications combine them: roles decide which features a user can reach, and attribute conditions narrow that down to the records they may touch. [Choosing an access control model](/docs/access-control-models) compares ACL, RBAC, ABAC and ReBAC on one example and shows how to combine RBAC with ABAC in a single Casbin model.
+
+### Strengths and weaknesses
+
+- **Good at:** ownership ("only their own"), context (business hours, office network), and data that carries its own labels (department, region, sensitivity). One rule can replace many role grants.
+- **Weak at:** auditing. "Who can read this document?" has no direct answer; you have to evaluate the rule against every user. Rules also need the attributes at hand, so the application usually loads the record before the check.
 
 Minimal example:
 
@@ -76,6 +95,37 @@ Enabling JSON parameter support introduces a performance overhead of approximate
 
 :::
 
+## Environment attributes
+
+The request can carry more than `sub`, `obj` and `act`. Add a field for the environment and pass it to `Enforce()` like any other object. This model lets the owner edit their document at any time, and lets people from the same department read it between 9:00 and 18:00:
+
+```ini
+[request_definition]
+r = sub, obj, act, env
+
+[policy_definition]
+p = sub, obj, act
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = r.sub.Name == r.obj.Owner || (r.act == "read" && r.sub.Department == r.obj.Department && r.env.Hour >= 9 && r.env.Hour < 18)
+```
+
+```go
+type User struct{ Name, Department string }
+type Doc struct{ Name, Owner, Department string }
+type Env struct{ Hour int }
+
+doc := Doc{Name: "design.md", Owner: "alice", Department: "design"}
+bob := User{Name: "bob", Department: "design"}
+
+ok, _ := e.Enforce(bob, doc, "read", Env{Hour: 10}) // true
+ok, _ = e.Enforce(bob, doc, "read", Env{Hour: 22})  // false: outside business hours
+ok, _ = e.Enforce(bob, doc, "edit", Env{Hour: 10})  // false: bob is not the owner
+```
+
 ## Using ABAC
 
 1. Reference attributes in the matcher (e.g. `r.sub.Role`, `r.obj.Owner`).
@@ -125,3 +175,13 @@ m = eval(p.sub_rule) && r.obj == p.obj && r.act == p.act
 p, r.sub.Age > 18, /data1, read
 p, r.sub.Age < 60, /data2, write
 ```
+
+## FAQ
+
+**Is ABAC better than RBAC?** Neither is better in general. ABAC expresses finer rules; RBAC is easier to review. Start with roles and add attribute conditions where roles stop fitting, such as ownership or time windows.
+
+**What is the difference between ABAC and PBAC?** ABAC says what decisions are based on (attributes). [PBAC](/docs/pbac) says how the rules are managed: as policy data evaluated at run time. The `eval()` pattern above is both: attribute conditions stored as policy.
+
+**Is ABAC the same as XACML?** No. XACML is an OASIS standard language for writing ABAC policies. Casbin does not use XACML; rules are written in the model's matcher or stored as policy rows.
+
+**Can I try ABAC without writing code?** Yes. Pick an ABAC example in the [online editor](/docs/online-editor) and edit the matcher and the request.

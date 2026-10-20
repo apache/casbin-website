@@ -1,13 +1,14 @@
 ---
 id: rebac
-title: ReBAC
-description: "Relationship-based access control (ReBAC) with Casbin - authorize users through their relationships to resources and resource types."
-keywords: [ReBAC, ReBAC model]
+title: "What is ReBAC? Relationship-Based Access Control with Examples"
+sidebar_label: ReBAC
+description: "What relationship-based access control (ReBAC) is, how it relates to Google Zanzibar, how it differs from RBAC and ABAC, and how to model user-resource relationships in Casbin."
+keywords: [ReBAC, relationship-based access control, what is rebac, rebac model, rebac vs rbac, rebac vs abac, zanzibar, relationship tuples]
 authors: [D0000M]
 ---
 ## What is ReBAC?
 
-**ReBAC (Relationship-Based Access Control)** bases authorization on **relationships** between entities (user–resource, resource–type, etc.), not only on roles or attributes. It fits systems with rich relationship graphs: social networks, collaboration tools, multi-tenant apps.
+**Relationship-based access control (ReBAC)** decides access from **relationships** between users and resources: alice is the *owner* of a document, bob is a *viewer* of it, the document is *in* a folder, the folder *belongs to* a team. Rules are written once per type of relationship, for example "owners may edit, viewers may read", and every user gets access through the relationships recorded for them.
 
 Typical questions ReBAC answers:
 
@@ -15,7 +16,21 @@ Typical questions ReBAC answers:
 - Is the user a **member** of the project that owns the resource?
 - Does the resource **belong to a type** the user has access to?
 
-Relationships are often modeled as graphs or paths.
+It fits applications where sharing is part of the product: document and file sharing, collaboration tools, project trackers, social networks and multi-tenant SaaS.
+
+### ReBAC and Google Zanzibar
+
+ReBAC became widely known through Google's paper on [Zanzibar](https://research.google/pubs/zanzibar-googles-consistent-global-authorization-system/) (USENIX ATC 2019), the system behind sharing in Google Drive, Calendar and other services. Zanzibar stores relationships as **tuples** of object, relation and user, such as `doc:design.md#viewer@user:bob`. Open-source services such as OpenFGA and SpiceDB follow the same design. In Casbin the same fact is one policy row, `g, bob, design.md, viewer`, and the model's matcher says what each relation allows.
+
+### ReBAC vs RBAC vs ABAC
+
+| | Access comes from | Example rule |
+|---|---|---|
+| [RBAC](/docs/rbac) | The user's role, the same for every resource | editors may edit documents |
+| ReBAC | The user's relationship to this particular resource | the owner of a document may edit it |
+| [ABAC](/docs/abac) | Attributes of the user, resource and environment | people in the document's department may read it during business hours |
+
+RBAC with a role per resource ("alice is editor *of doc1*") is already a simple form of ReBAC, which is how Casbin models it below. [Choosing an access control model](/docs/access-control-models) works through one example in every model and compares them side by side.
 
 ## ReBAC in Casbin
 
@@ -56,3 +71,9 @@ g2, doc1, doc
 ```
 
 So: the user must have the right **role on the resource** and the resource must match the **type** in the permission rule. Casbin combines `g` (user–resource–role), `g2` (resource–type), and `p` (role–type–action) to decide access.
+
+## FAQ
+
+**Do I need a Zanzibar-style service to use ReBAC?** No. If relationships fit in your application's database and checks happen inside your service, a library such as Casbin is enough. A dedicated service makes sense when many services must share one relationship store; see [Casbin vs. OpenFGA](/docs/casbin-vs-openfga).
+
+**Can I try this model without writing code?** Yes. Choose the ReBAC example in the [online editor](/docs/online-editor).

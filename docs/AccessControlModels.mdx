@@ -9,6 +9,8 @@ authors: [hsluoyz]
 
 Access control models differ in one thing: **what an authorization decision is based on**.
 
+**RBAC vs ABAC in short:** RBAC grants permissions to roles and assigns roles to users, so it answers "what can editors do?" easily but cannot say "only their own documents" without a role per document. ABAC evaluates conditions on attributes of the user, the resource and the environment, so it handles ownership, department and time rules naturally but is harder to audit. Most applications use RBAC for features and add ABAC conditions for records; the [last example on this page](#combining-rbac-and-abac) does both in one Casbin model.
+
 | Model | Decides on | Example rule |
 |---|---|---|
 | ACL (access control list) | The user | alice may edit `design.md` |
@@ -220,5 +222,7 @@ For `design.md` (type `doc`, owner alice), alice may edit because she is an auth
 **Can I start with RBAC and move to ABAC later?** Yes. In Casbin, the model is a configuration file and the application calls the same `Enforce()` method, so you can add conditions to the matcher, or combine both as shown above, without rewriting your authorization calls.
 
 **Where does PBAC fit?** PBAC describes *how* rules are managed (as policy data evaluated at run time) more than *what* they are based on. Casbin policies are data in every model, so any of the models above can be managed this way.
+
+**Which libraries and platforms support both RBAC and ABAC?** Casbin supports both, and their combination, in one model for Go, Java, Node.js, Python, .NET, Rust and other languages. Policy engines such as [OPA](/docs/casbin-vs-opa) and [Cedar](/docs/casbin-vs-cedar) can express both as well, while Zanzibar-style services such as [OpenFGA](/docs/casbin-vs-openfga) are built around ReBAC. [Casbin vs. Alternatives](/docs/comparison) compares them.
 
 **Does Casbin support all of these?** Yes, along with others such as [RBAC96](/docs/rbac-96), [OrBAC](/docs/orbac), [UCON](/docs/ucon), and priority and deny-override policies. See [Supported models](/docs/supported-models), and try any of them in the [online editor](/docs/online-editor).

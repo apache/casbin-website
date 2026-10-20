@@ -1,11 +1,15 @@
 ---
 id: pbac
-title: PBAC
-description: "Policy-based access control (PBAC) in Casbin - store rule expressions in policy and evaluate them at runtime with eval() for context-dependent decisions."
+title: "What is PBAC? Policy-Based Access Control in Casbin"
+sidebar_label: PBAC
+description: "What policy-based access control (PBAC) is, how it differs from ABAC and RBAC, and how to store rule expressions as policy in Casbin and evaluate them at runtime with eval()."
 keywords:
   [
     pbac,
     policy-based access control,
+    what is pbac,
+    pbac vs abac,
+    pbac vs rbac,
     dynamic policies,
     rule-based authorization,
   ]
@@ -14,14 +18,20 @@ authors: [casbin]
 
 ## What is PBAC?
 
-**PBAC (Policy-Based Access Control)** decides authorization from **rules stored in policy**, evaluated at runtime with `eval()`. Unlike fixed role or attribute checks, PBAC can express complex, context-dependent conditions.
+**Policy-based access control (PBAC)** keeps authorization rules as **policy data**, separate from application code, and evaluates them at runtime. Changing who may do what means editing a policy, not shipping a new release, which is why PBAC is often chosen when security or compliance teams own the rules.
+
+In Casbin, PBAC means storing rule expressions in policy rows and evaluating them with `eval()`. Unlike fixed role or attribute checks in the model, each policy row can carry its own condition.
 
 Policies can include:
 
-- **Dynamic expressions** — evaluated per request (e.g. `r.sub.Age >= 18`)
-- **Complex logic** — boolean and comparison operators, attribute access
-- **Context** — user, resource, and environment attributes
-- **Business rules** — domain-specific logic in policy
+- **Dynamic expressions**: evaluated per request (e.g. `r.sub.Age >= 18`)
+- **Complex logic**: boolean and comparison operators, attribute access
+- **Context**: user, resource, and environment attributes
+- **Business rules**: domain-specific logic in policy
+
+### PBAC vs ABAC vs RBAC
+
+[RBAC](/docs/rbac) and [ABAC](/docs/abac) describe **what** a decision is based on: roles, or attributes. PBAC describes **how** the rules are managed: as policy evaluated at runtime. The two overlap. The examples on this page are ABAC conditions managed as PBAC, and a Casbin RBAC policy is also data that can change at runtime. In practice, "PBAC" is used for systems where the rule logic itself, not only the assignments, lives in policy. [Choosing an access control model](/docs/access-control-models) compares the models on one example.
 
 ## Model
 
