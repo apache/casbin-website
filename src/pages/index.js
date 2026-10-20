@@ -270,8 +270,8 @@ const structuredData = {
 export default function Home() {
   return (
     <Layout
-      title="Open-Source Authorization Library for ACL, RBAC and ABAC"
-      description="Apache Casbin is an open-source authorization library that supports ACL, RBAC, ABAC, ReBAC and more, with one model for Go, Java, Node.js, Python, .NET, PHP, Rust and C++.">
+      title="Open-Source Access Control and Authorization Library for ACL, RBAC and ABAC"
+      description="Apache Casbin is an open-source access control library for permissions in your applications: ACL, RBAC, ABAC, ReBAC and more, with one model for Go, Java, Node.js, Python, .NET, PHP, Rust and C++.">
       <Head>
         <script type="application/ld+json">{JSON.stringify(structuredData)}</script>
       </Head>
