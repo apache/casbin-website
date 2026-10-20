@@ -34,13 +34,13 @@ The plain `Enforcer` is **not** safe for concurrent use when policy can change w
 
 | Language | Synchronized enforcer |
 |----------|-----------------------|
-| Go | `casbin.NewSyncedEnforcer()`, `casbin.NewSyncedCachedEnforcer()` |
+| Go | `casbin.NewSyncedEnforcer()`, `casbin.NewSyncedCachedEnforcer()`, `casbin.NewSyncedContextEnforcer()` (for the `*Ctx` API, versions after v3.11.0) |
 | Java | `SyncedEnforcer`, `SyncedCachedEnforcer` |
 | Python | `casbin.SyncedEnforcer` |
 | Node.js | `newSyncedEnforcer()` |
 | C++ | `casbin::SyncedEnforcer` |
 
-The synchronized enforcer has the same API as `Enforcer`. See [Multithreading](/docs/multi-threading) and [Enforcers](/docs/enforcers) for details.
+The synchronized enforcer has the same API as `Enforcer`. In Go, `ContextEnforcer` is not synchronized either: concurrent `LoadPolicyCtx()` / `AddPolicyCtx()` and `Enforce()` can crash the process with `concurrent map read and map write`, so use `NewSyncedContextEnforcer()` instead (versions after v3.11.0; in earlier versions guard it with your own `sync.RWMutex`). See [Multithreading](/docs/multi-threading) and [Enforcers](/docs/enforcers) for details.
 
 ## Cache decisions carefully
 
@@ -104,7 +104,7 @@ Two ways to keep them together:
     enforcer.add_grouping_policy("alice", "team-admin")
     ```
 
-2. **Go: use the transactional enforcer.** `NewTransactionalEnforcer()` with a transactional adapter (for example `gormadapter.NewTransactionalAdapterByDB()`) buffers changes and applies them to the database and to memory on `Commit()`. See [Adapters: Transaction](/docs/adapters#transaction). A commit does not notify the watcher, so call `w.Update()` after it to tell the other instances.
+2. **Go: use the transactional enforcer.** `NewTransactionalEnforcer()` with a transactional adapter (for example `gormadapter.NewTransactionalAdapterByDB()`) buffers changes and applies them to the database and to memory on `Commit()`. See [Adapters: Transaction](/docs/adapters#transaction). Versions after v3.11.0 notify the watcher once `Commit()` has succeeded, with the exact changes when the watcher is a `WatcherEx`, and a rolled-back transaction notifies nobody. In v3.11.0 and earlier a commit does not notify the watcher, so call `w.Update()` after it to tell the other instances.
 
 ## Read-only replicas and migrations
 
