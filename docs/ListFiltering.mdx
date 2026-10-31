@@ -1,0 +1,132 @@
+---
+id: list-filtering
+title: List Filtering
+description: "Filter list and search results with Casbin - BatchEnforce, per-unit implicit permissions, a materialized permission table, and Postgres RLS, plus the query-planner gap."
+keywords: [list filtering, data filtering, BatchEnforce, row-level security, PlanResources]
+authors: [hsluoyz]
+---
+
+`Enforce()` answers one question: may this subject do this action on this object? A list endpoint asks a different question: **which rows may this user see?** Casbin has no query planner (the equivalent of Cerbos `PlanResources` or a Zanzibar `LookupResources`), so the filter has to be built by the application. There are four practical patterns.
+
+## 1. Check the page with `BatchEnforce()`
+
+The simplest option: fetch the page, build one request per row, and keep the allowed rows.
+
+```go
+rows, _ := queryPage(...) // each row has UnitPath and Path
+
+requests := make([][]interface{}, 0, len(rows))
+for _, row := range rows {
+    requests = append(requests, []interface{}{userID, row.UnitPath, row.Path, "read"})
+}
+allowed, err := e.BatchEnforce(requests)
+if err != nil {
+    return nil, err
+}
+result := make([]Row, 0, len(rows))
+for i, row := range rows {
+    if allowed[i] {
+        result = append(result, row)
+    }
+}
+```
+
+This supports every matcher, including regex and custom functions. The cost is one `Enforce()` per row, so it is a good fit for pages of tens to a few hundred rows; for a 10,000-row export, use one of the next patterns.
+
+## 2. Group by unit and query implicit permissions once per unit
+
+If the list is already scoped to one unit, or the page spans only a few units, ask Casbin what the user can do in that unit:
+
+```go
+perms, err := e.GetImplicitPermissionsForUser(userID, unitPath)
+```
+
+`perms` contains the `p` rules that apply to the user's roles in `unitPath`, including rules inherited from ancestor units. The domain field in each returned rule is **replaced with `unitPath`**, not the unit where the rule was originally granted. Without a domain argument, a domain-scoped enforcer returns nothing, so always pass the unit.
+
+Then match each row's object against the returned object patterns (for example with `keyMatch2`) and its action. This is still a scan over the user's rules per unit, but it avoids one `Enforce()` per row and gives you a list you can cache for the request.
+
+## 3. Materialize a permission table
+
+For large lists, latency-sensitive endpoints, or SQL-side pagination, keep a denormalized table that the database can index:
+
+```sql
+CREATE TABLE user_scope_grant (
+  user_id    text NOT NULL,
+  scope_path text NOT NULL, -- the unit where the grant was made, e.g. /acme/eng
+  action     text NOT NULL
+);
+CREATE INDEX user_scope_grant_user ON user_scope_grant (user_id, action);
+```
+
+Build it from the policy and role links:
+
+- `e.GetPolicy()` gives `(sub, dom, obj, act)`.
+- `e.GetGroupingPolicy()` gives `(user, role, dom)`.
+- Expand roles with `e.GetImplicitRolesForUser(user, dom)` (or compute the transitive closure of `g` yourself), and write one row per user/role grant.
+
+Then the list query becomes a join, and the subtree condition is a prefix match:
+
+```sql
+SELECT d.*
+FROM documents d
+WHERE EXISTS (
+  SELECT 1
+  FROM user_scope_grant a
+  WHERE a.user_id = $1
+    AND a.action = 'read'
+    AND (d.unit_path = a.scope_path OR d.unit_path LIKE a.scope_path || '/%')
+);
+```
+
+(If unit paths can contain `%` or `_`, escape them before the `LIKE`.)
+
+This example assumes the policy grants the whole unit subtree, as in [Nested Organizations](/docs/nested-organizations). If your policy also restricts the object pattern inside the unit, store a normalized prefix in the table or apply the pattern in the application after the SQL filter.
+
+Rebuild or update the table when the policy changes: in the same transaction as the policy write, or through a watcher that triggers a rebuild. A full rebuild is cheap for small policies; for large ones, update only the affected user/role rows.
+
+## 4. Postgres row-level security
+
+If you already use Postgres RLS, keep Casbin for single-object checks and use RLS for lists. At the start of the request, put the user's effective scope paths into a session setting:
+
+```sql
+SET LOCAL app.user_scopes = '/acme,/acme/eng';
+```
+
+Then:
+
+```sql
+CREATE POLICY document_read ON documents
+FOR SELECT
+USING (
+  EXISTS (
+    SELECT 1
+    FROM unnest(string_to_array(current_setting('app.user_scopes'), ',')) AS scope(path)
+    WHERE documents.unit_path = scope.path
+       OR documents.unit_path LIKE scope.path || '/%'
+  )
+);
+```
+
+The scope list still comes from Casbin (or from the materialized table above); RLS only applies it to every query.
+
+## What Casbin does not do
+
+There is no built-in query planner: Casbin cannot turn an arbitrary matcher into a SQL `WHERE` clause. Regexes, custom functions, and `eval(p.obj_rule)`-style rules cannot be pushed into SQL without a normalization layer.
+
+If you need a generic planner over arbitrary policies, use a system that provides one (Cerbos `PlanResources`, SpiceDB/OpenFGA lookup APIs), or accept the materialized-table approach and keep the policy language simple enough to translate.
+
+## Choosing
+
+| Situation | Pattern |
+|-----------|---------|
+| Page of tens or hundreds of rows, any matcher | `BatchEnforce()` |
+| List scoped to one or a few units | implicit permissions per unit |
+| Large lists, SQL pagination, latency-sensitive | materialized permission table |
+| Postgres and existing RLS | RLS + session scopes |
+| Arbitrary policies and a generic query planner | external authorization service |
+
+## See also
+
+- [Nested Organizations](/docs/nested-organizations)
+- [Data Permissions](/docs/data-permissions)
+- [Policy Subset Loading](/docs/policy-subset-loading)

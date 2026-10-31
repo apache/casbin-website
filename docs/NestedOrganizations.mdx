@@ -1,0 +1,130 @@
+---
+id: nested-organizations
+title: Nested Organizations
+description: "Model nested organizations in Casbin - grant a role at a unit and inherit it through the whole subtree with domain paths and a descendant matching function."
+keywords: [nested organizations, organization hierarchy, departments, domain hierarchy, subtree]
+authors: [hsluoyz]
+---
+
+Most multi-tenant systems are not flat: a company contains divisions, a division contains departments, and a department contains teams. A role granted at one unit should apply to that unit **and every unit below it**, but never to its parent or its siblings.
+
+This page shows one model for that in Casbin, plus a variant that needs no custom matching function. For the other half of the problem, filtering list queries, see [List Filtering](/docs/list-filtering).
+
+## Model: the unit path is the domain
+
+Use the unit's path as the [domain](/docs/rbac-with-domains). Every grant records the unit where it was made; the matcher accepts the grant when the request's unit is that unit or a descendant.
+
+```ini
+[request_definition]
+r = sub, dom, obj, act
+
+[policy_definition]
+p = sub, dom, obj, act
+
+[role_definition]
+g = _, _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = g(r.sub, p.sub, r.dom) && isDescendant(r.dom, p.dom) && keyMatch2(r.obj, p.obj) && r.act == p.act
+```
+
+`isDescendant(child, parent)` is your function:
+
+```go
+func isDescendant(domain, ancestor string) bool {
+    return domain == ancestor || strings.HasPrefix(domain, ancestor+"/")
+}
+```
+
+Register it twice in Go: once for the matcher, once for the role manager's domain matching.
+
+```go
+e.AddFunction("isDescendant", func(args ...interface{}) (interface{}, error) {
+    return isDescendant(args[0].(string), args[1].(string)), nil
+})
+e.AddNamedDomainMatchingFunc("g", "isDescendant", isDescendant)
+```
+
+Do this before the first `Enforce()`.
+
+## Policy
+
+```csv
+p, admin,  /acme,     /acme/*,     read
+p, editor, /acme/eng, /acme/eng/*, write
+
+g, alice, admin,  /acme
+g, bob,   editor, /acme/eng
+```
+
+`alice` is an admin at `/acme`; she can read anything under `/acme`, including `/acme/eng/backend`. `bob` is an editor at `/acme/eng`; he can write under `/acme/eng`, but not at `/acme` itself and not under a sibling unit.
+
+```go
+e.Enforce("alice", "/acme/eng/backend", "/acme/eng/backend/doc1", "read")  // true
+e.Enforce("alice", "/other",            "/other/doc1",              "read")  // false
+e.Enforce("bob",   "/acme",             "/acme/doc1",               "write") // false
+e.Enforce("bob",   "/acme/eng/backend", "/acme/eng/backend/doc1",   "write") // true
+```
+
+Why both `g(...)` and `isDescendant(...)`:
+
+- `g(r.sub, p.sub, r.dom)` answers "does the user have this role in this unit?". The domain matching function makes the role manager include role links granted at ancestor units, so one `g` rule at `/acme` covers the whole subtree.
+- `isDescendant(r.dom, p.dom)` answers "is this policy's unit the request's unit or one of its ancestors?". Without it, a policy at a child unit could match a request at the parent.
+- `keyMatch2(r.obj, p.obj)` scopes the object to the subtree; `/acme/*` matches `/acme/eng/backend/doc1`. The unit node itself (`/acme`) does not match `/acme/*`; if the unit is also a resource, add an exact rule for it.
+
+## Variant: pattern domains with `keyMatch2`
+
+If you do not want a custom function, store the pattern in the role and policy domain and use the built-in `keyMatch2` as the domain matching function:
+
+```ini
+[matchers]
+m = g(r.sub, p.sub, r.dom) && keyMatch2(r.dom, p.dom) && keyMatch2(r.obj, p.obj) && r.act == p.act
+```
+
+```csv
+p, admin, /acme/*, /acme/*, read
+g, alice, admin,  /acme/*
+```
+
+```go
+e.AddNamedDomainMatchingFunc("g", "keyMatch2", util.KeyMatch2)
+```
+
+This has the same subtree behavior, except that `/acme` itself does not match `/acme/*`; grant the root separately if it is a resource. Choose this variant if you prefer built-in functions; choose the `isDescendant` variant if you want `g, alice, admin, /acme` to read naturally.
+
+## Other languages
+
+| Language | Register the domain matching function |
+|----------|----------------------------------------|
+| Go | `e.AddNamedDomainMatchingFunc("g", "isDescendant", isDescendant)` |
+| Python | `e.add_named_domain_matching_func("g", is_descendant)` |
+| Node.js | `await e.addNamedDomainMatchingFunc("g", isDescendant)` |
+| Java | `e.addNamedDomainMatchingFunc("g", "isDescendant", this::isDescendant)` |
+
+The matcher function is registered with the usual custom-function API of each port (`AddFunction`, `add_function`, `addFunction`, `addFunction`).
+
+## Delegated administration
+
+Casbin decides access; it does not manage roles. If each unit has an admin who may grant roles only inside their subtree, enforce that with a second policy:
+
+```csv
+p, unit-admin, /acme/eng, /acme/eng/*, manage
+g, carol, unit-admin, /acme/eng
+```
+
+Before writing a role binding in unit `target`, check `unit-admin` on `target` with the same `isDescendant` model. That keeps the "cannot grant above or beside your own unit" rule in policy instead of in application code.
+
+## Scale notes
+
+- The role manager keeps one role-manager entry per domain it has seen. A tree with tens of thousands of units means tens of thousands of entries; measure before you model a very large tree this way.
+- Domain matching is applied when a domain's role manager is first built, then cached; the cost is not paid on every `Enforce()`.
+- Run a synchronized enforcer in a multi-threaded server and keep replicas in sync with a watcher; see [Production Deployment](/docs/production-deployment).
+
+## See also
+
+- [RBAC with Domains](/docs/rbac-with-domains)
+- [List Filtering](/docs/list-filtering)
+- [Data Permissions](/docs/data-permissions)

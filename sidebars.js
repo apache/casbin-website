@@ -103,6 +103,8 @@ module.exports = {
       link: {type: "generated-index"},
       items: [
         "data-permissions",
+        "nested-organizations",
+        "list-filtering",
         "menu-permissions",
       ],
     },
