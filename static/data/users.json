@@ -1,5 +1,11 @@
 [
     {
+        "caption": "AWS",
+        "image": "users/aws.svg",
+        "infolink": "https://github.com/awslabs/visual-asset-management-system",
+        "pinned": true
+    },
+    {
         "caption": "Intel RMD",
         "image": "users/intel.png",
         "infolink": "https://github.com/intel/rmd",
@@ -195,12 +201,6 @@
         "caption": "Sphereon",
         "image": "users/sphereon.svg",
         "infolink": "https://github.com/Sphereon-Opensource/SSI-SDK",
-        "pinned": true
-    },
-    {
-        "caption": "AWS",
-        "image": "users/aws.svg",
-        "infolink": "https://github.com/awslabs/visual-asset-management-system",
         "pinned": true
     }
 ]
