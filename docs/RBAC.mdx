@@ -3,7 +3,7 @@ id: rbac
 title: "What is RBAC? Role-Based Access Control in Casbin"
 sidebar_label: RBAC
 description: "What role-based access control (RBAC) is and how to use it in Casbin: define roles with role_definition, assign users to roles, build role hierarchies and check roles in matchers."
-keywords: [RBAC, role-based access control, what is rbac, rbac model, rbac example, role definition, role hierarchy, rbac vs abac]
+keywords: [RBAC, role-based access control, what is rbac, rbac model, rbac example, role definition, role hierarchy, rbac vs abac, permission dependencies, g2]
 authors: [hsluoyz]
 ---
 
@@ -108,6 +108,45 @@ ok, err := e.DeleteUser("alice") // without SetFieldIndex, it will raise an erro
 ```
 
 :::
+
+## Named role systems and permission dependencies
+
+`g`, `g2`, `g3`, ... are independent role systems. Each one defines a graph that the matcher calls by the same name; `g2` is not a built-in "permission depends on permission" relation. A row such as `g2, edit, read` is only an edge — it changes a decision only if the matcher asks `g2(...)`.
+
+That matters when your permission catalog has dependencies, for example "edit implies read", so a role that may edit must also be allowed to read. There are two clean ways to model it.
+
+**Use role inheritance when the dependency is part of authorization.** Give each bundle a role and let the roles inherit:
+
+```csv
+p, editor, article, edit
+p, viewer, article, read
+
+g, editor, viewer
+g, alice, editor
+```
+
+alice can read because `editor` inherits `viewer`; no `g2` is involved.
+
+**Use a separate `g2` graph when the dependency itself should be in the policy.** The matcher defines the meaning:
+
+```ini
+[role_definition]
+g = _, _
+g2 = _, _
+
+[matchers]
+m = g(r.sub, p.sub) && r.obj == p.obj && (r.act == p.act || g2(p.act, r.act))
+```
+
+```csv
+p, admin, article, write
+g2, write, read
+g, alice, admin
+```
+
+The request `alice, article, read` matches the `p, admin, article, write` row because `g2(write, read)` is true: `write` is a child of `read`, the same direction as `g` edges. `g2` rows grant nothing on their own and are not validated by Casbin; you own the direction and the meaning of each edge, while Casbin applies the same transitive inheritance as `g`.
+
+If the dependency is only **catalog metadata** — say, a role editor should pre-select "read" in the admin UI when someone ticks "edit" — keep it in the permission catalog and expand it into `p`, `g` or `g2` rows when you generate the policy. Casbin does not need to store data that is never evaluated. The policy does not have to live in a CSV file either: an adapter can load the generated rows from a database or from your YAML/JSON catalog, so the catalog stays the source of truth. See [Adapters](/docs/adapters) for the adapter API.
 
 ## Role hierarchy
 
