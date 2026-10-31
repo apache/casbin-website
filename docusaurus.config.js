@@ -272,7 +272,16 @@ module.exports = {
         {
           title: "More",
           className: "footer-more-column",
-          items: [],
+          items: [
+            {
+              label: "Privacy Policy",
+              to: "/docs/privacy-policy",
+            },
+            {
+              label: "Terms of Service",
+              to: "/docs/terms-of-service",
+            },
+          ],
         },
       ],
       logo: {
