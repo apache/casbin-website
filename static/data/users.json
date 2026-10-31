@@ -172,5 +172,35 @@
         "image": "users/pulsar.png",
         "infolink": "https://apachecon.com/acasia2021/sessions/1049.html",
         "pinned": true
+    },
+    {
+        "caption": "Coinbase",
+        "image": "users/coinbase.png",
+        "infolink": "https://github.com/coinbase/baseca",
+        "pinned": true
+    },
+    {
+        "caption": "Superplane",
+        "image": "users/superplane.png",
+        "infolink": "https://github.com/superplanehq/superplane",
+        "pinned": true
+    },
+    {
+        "caption": "Bloom Housing",
+        "image": "users/bloom-housing.png",
+        "infolink": "https://github.com/bloom-housing/bloom",
+        "pinned": true
+    },
+    {
+        "caption": "Sphereon",
+        "image": "users/sphereon.svg",
+        "infolink": "https://github.com/Sphereon-Opensource/SSI-SDK",
+        "pinned": true
+    },
+    {
+        "caption": "AWS",
+        "image": "users/aws.svg",
+        "infolink": "https://github.com/awslabs/visual-asset-management-system",
+        "pinned": true
     }
 ]
