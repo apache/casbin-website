@@ -195,5 +195,7 @@
         "ignored_definitions": [
             "//"
         ]
-    }
+    },
+    "MD055": false,
+    "MD060": false
 }
