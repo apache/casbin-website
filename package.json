@@ -20,7 +20,7 @@
     "lint": "yarn lint:js && yarn lint:css && yarn lint:md",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "crowdin:sync": "docusaurus write-translations && crowdin upload && crowdin download",
+    "caslingo:sync": "bash scripts/caslingo-sync.sh",
     "prepare": "husky install"
   },
   "dependencies": {

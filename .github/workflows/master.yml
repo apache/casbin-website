@@ -30,7 +30,7 @@ jobs:
     permissions:
       contents: write
     env:
-      CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+      CASLINGO_TOKEN: ${{ secrets.CASLINGO_TOKEN }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -44,9 +44,9 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Crowdin sync
+      - name: Caslingo sync
         if: github.event_name != 'pull_request'
-        run: yarn crowdin:sync
+        run: yarn caslingo:sync
 
       - name: Generate footer stars
         run: yarn generate:footer-stars
