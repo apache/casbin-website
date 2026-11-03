@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkcasbin_website||=[]).push([[5619],{3648(t,e,i){i.r(e);i(6540);var s=i(4848);const l=function(){return(0,s.jsx)("iframe",{src:"https://editor.casbin.org/",style:{width:"100%",height:"100vh",display:"block"},title:"Casbin-editor",allowFullScreen:!0})};i.d(e,["default",0,l])}}]);

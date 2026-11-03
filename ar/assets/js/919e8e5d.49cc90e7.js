@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkcasbin_website||=[]).push([[3989],{3696(e){e.exports=JSON.parse('{"categoryGeneratedIndex":{"title":"API","slug":"/category/api","permalink":"/ar/docs/category/api","sidebar":"docs","navigation":{"previous":{"title":"Cloud Native","permalink":"/ar/docs/cloud-native"},"next":{"title":"API Overview","permalink":"/ar/docs/api-overview"}}}}')}}]);

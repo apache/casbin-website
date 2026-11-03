@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkcasbin_website||=[]).push([[1976],{9706(t){t.exports=JSON.parse('{"tag":{"label":"MCP","permalink":"/it/blog/tags/mcp","allTagsPath":"/it/blog/tags","count":1,"unlisted":false},"listMetadata":{"permalink":"/it/blog/tags/mcp","page":1,"postsPerPage":10,"totalPages":1,"totalCount":1,"blogDescription":"Blog","blogTitle":"Blog"}}')}}]);
