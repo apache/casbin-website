@@ -1,13 +1,13 @@
 ---
 id: ucon
-title: Usage Control (UCON)
-description: "Usage control (UCON) with Casbin - authorizations, obligations and conditions that are checked continuously during use, with mutable attributes."
+title: "What is Usage Control (UCON)? Continuous Authorization"
+description: "What usage control (UCON) is: authorizations, obligations and conditions checked continuously during use, with mutable attributes, and how to implement it with Casbin."
 keywords:
   [ucon, usage control, access control, authorization, obligations, conditions]
 authors: [nodece]
 ---
 
-## Overview
+## What is UCON?
 
 **UCON (Usage Control)** extends access control with **authorizations (A)**, **obligations (B)**, and **conditions (C)**. It supports **continuous** enforcement during use (not only at access time) and **mutable** attributes. Casbin does not implement UCON in the core; use the [casbin-ucon](https://github.com/apache/casbin-ucon) extension for session-based usage control.
 
@@ -166,3 +166,17 @@ func main() {
 ## References
 
 For complete API documentation, detailed usage, and latest updates about casbin-ucon, refer to [casbin-ucon](https://github.com/apache/casbin-ucon).
+
+## FAQ
+
+**Does Casbin support UCON in the core?** No. The core library makes a decision when `Enforce()` is called. UCON needs continuous checks and mutable attributes, so it is provided by the [casbin-ucon](https://github.com/apache/casbin-ucon) extension, which wraps an enforcer with sessions, conditions and obligations.
+
+**How is UCON different from RBAC?** RBAC decides once, before access, from roles. UCON can also decide during use and after access, and its attributes can change while a session is active, so a permission can be revoked without waiting for the next login.
+
+**When should I use UCON?** When access depends on time, usage count, location or other changing context, or when the policy must react while a session is still running. If a role check at request time is enough, use [RBAC](/docs/rbac).
+
+## Related models
+
+- [RBAC](/docs/rbac)
+- [ABAC](/docs/abac)
+- [Access control models compared](/docs/access-control-models)

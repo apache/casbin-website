@@ -1,7 +1,7 @@
 ---
 id: lbac
-title: LBAC
-description: "Implement lattice-based access control (LBAC) in Casbin, enforcing confidentiality and integrity levels together in a single model."
+title: "What is LBAC? Lattice-Based Access Control in Casbin"
+description: "What lattice-based access control (LBAC) is, how it combines confidentiality and integrity levels, and how to enforce both in one Casbin model."
 keywords: [lbac, lattice-based access control, security model, confidentiality, integrity]
 authors: [nodece]
 ---
@@ -92,3 +92,17 @@ This LBAC implementation is well-suited for:
 - System administrators assign security levels
 - Access decisions consider both confidentiality and integrity levels
 - The model prevents information leakage and data corruption
+
+## FAQ
+
+**What is the difference between LBAC and MAC?** MAC is the category: access is decided by system-assigned labels rather than by the resource owner. LBAC is one way to implement MAC, using a lattice of security levels. The model on this page puts confidentiality and integrity levels in the same lattice.
+
+**How is LBAC different from RBAC?** RBAC grants permissions to roles that people hold; LBAC grants nothing to roles. Every request carries the subject's and object's levels, and the matcher compares them, so there is no per-user policy to maintain.
+
+**Can LBAC be combined with RBAC?** Yes. Keep the role checks of [RBAC](/docs/rbac) and add the level comparisons to the same matcher; the [access control models](/docs/access-control-models) page shows the same idea for RBAC and ABAC.
+
+## Related models
+
+- [MAC overview](/docs/mac-overview)
+- [Bell-LaPadula (confidentiality)](/docs/blp)
+- [Biba (integrity)](/docs/biba)

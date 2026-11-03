@@ -1,10 +1,12 @@
 ---
 id: superadmin
-title: Super Administrator
-description: The Super Admin is the administrator of the entire system. It can be used in models such as RBAC, ABAC, and RBAC with domains. 
-keywords: [Super Admin]
+title: "Super Administrator in Casbin: Bypass Policy Checks"
+description: "What a super administrator (root) is in Casbin, how to add one to the matcher, and how the same pattern works with RBAC, ABAC and RBAC with domains."
+keywords: [Super Admin, super administrator, root user, bypass policy]
 authors: [ErikQQY]
 ---
+
+## What is a Super Admin?
 
 A **Super Admin** (e.g. `root`) is a subject that bypasses normal policy and always gets allow. You implement it in the **matcher** by adding a condition like `r.sub == "root"`. Example:
 
@@ -23,3 +25,17 @@ m = r.sub == p.sub && r.obj == p.obj && r.act == p.act || r.sub == "root"
 ```
 
 The matcher allows the request if either (1) it matches a policy rule, or (2) `r.sub == "root"`. So `root` is never denied. The same pattern works in RBAC, ABAC, or RBAC-with-domains: add `|| r.sub == "root"` (or your superuser name) to the matcher.
+
+## FAQ
+
+**How do I make a super admin in Casbin?** Add `r.sub == "root"` (or your own user name) as an alternative in the matcher, as above. The check runs before the policy lookup, so the super admin needs no policy rows.
+
+**Is a super admin the same as an admin role?** No. An admin role is a normal role with permissions and can be audited or removed like any other role. A super admin bypasses the policy entirely, so keep it to one account and protect it with MFA.
+
+**Does this work with RBAC with domains?** Yes. Append the same condition to the matcher; it is independent of the role or domain check.
+
+## Related models
+
+- [RBAC](/docs/rbac)
+- [ABAC](/docs/abac)
+- [Access control models compared](/docs/access-control-models)

@@ -1,12 +1,12 @@
 ---
 id: biba
-title: Biba
+title: "Biba Integrity Model: No Read Down, No Write Up"
 description: "Implement the Biba integrity model in Casbin - integrity levels for subjects and objects, with no read down and no write up rules."
 keywords: [biba, integrity model, security model, data integrity]
 authors: [nodece]
 ---
 
-## Overview
+## What is the Biba model?
 
 The **Biba** model (1975) enforces **integrity**: subjects and objects have integrity levels. Rules: **no read down** (don’t read lower-integrity data), **no write up** (don’t write to higher-integrity data). So high-integrity data cannot be corrupted by lower-integrity sources.
 
@@ -97,3 +97,17 @@ Common Biba model applications:
 | Read Rule     | No Read Up            | No Read Down          |
 | Write Rule    | No Write Down         | No Write Up           |
 | Phrase        | "Read down, write up" | "Read up, write down" |
+
+## FAQ
+
+**What does "no read down, no write up" mean?** A subject may not read data with a lower integrity level than its own (no read down), and may not write to data with a higher integrity level (no write up). Both rules keep low-integrity data from contaminating high-integrity data.
+
+**What is the difference between Biba and Bell-LaPadula?** Bell-LaPadula protects confidentiality with "no read up, no write down"; Biba protects integrity with the mirrored rules. The table above compares them.
+
+**Does Casbin ship a Biba model?** Casbin does not have a built-in model named Biba. You write it as a matcher over integrity levels, as on this page; the same approach works in any Casbin port.
+
+## Related models
+
+- [LBAC (confidentiality and integrity in one lattice)](/docs/lbac)
+- [Bell-LaPadula](/docs/blp)
+- [MAC overview](/docs/mac-overview)
