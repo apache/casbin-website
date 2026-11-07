@@ -202,5 +202,11 @@
         "image": "users/sphereon.svg",
         "infolink": "https://github.com/Sphereon-Opensource/SSI-SDK",
         "pinned": true
+    },
+    {
+        "caption": "Wordfully",
+        "image": "users/wordfully.svg",
+        "infolink": "https://wordfully.ai/",
+        "pinned": false
     }
 ]
