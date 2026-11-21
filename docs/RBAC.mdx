@@ -88,7 +88,7 @@ So the request is allowed only if the request subject has the role given in the 
 :::note
 
 1. Casbin only stores and evaluates user–role (and resource–role) mappings; it does not validate that users or roles exist. That is the job of authentication.
-2. Do not reuse the same name for a user and a role (e.g. user `alice` and role `alice`), since Casbin cannot tell them apart. Use a prefix (e.g. `role_alice`) if needed.
+2. Do not reuse the same name for a user and a role (e.g. user `alice` and role `alice`), since Casbin cannot tell them apart. Use [typed names](#distinguishing-users-from-roles) to keep them apart.
 3. Role inheritance is transitive and unbounded: if A has role B and B has role C, then A effectively has role C.
 
 :::
@@ -169,7 +169,35 @@ func NewRoleManager(maxHierarchyLevel int) rbac.RoleManager {
 
 ## Distinguishing users from roles
 
-In Casbin, users and roles are both strings. In flat RBAC (no role hierarchy), `GetAllSubjects()` and `GetAllRoles()` return the left and right sides of `g` rules (often users and roles). With a hierarchy, the same name can appear as both user and role; if your app does not track which is which, use a naming convention (e.g. prefix `role::`) and check it when interpreting results.
+In Casbin, users and roles are both strings. In flat RBAC (no role hierarchy), `GetAllSubjects()` and `GetAllRoles()` return the left and right sides of `g` rules (often users and roles). With a hierarchy, the same name can appear as both user and role.
+
+Because names are plain strings, two entities of different kinds with the same name are the same subject. When names come from users, that is a privilege escalation: a user who signs up as `admins` gets every permission of the group `admins`, and an organization named `acme_t_dev` gets the permissions of the team `dev` in `acme` if team names are built as `<org>_t_<team>`.
+
+Use `TypedName` to give every name its type. Different types or parts always give different names, because `%`, `:` and `/` inside them are escaped:
+
+```go
+casbin.TypedName("user", "admins")      // user:admins
+casbin.TypedName("group", "admins")     // group:admins
+casbin.TypedName("team", "acme", "dev") // team:acme/dev
+casbin.TypedName("org", "acme_t_dev")   // org:acme_t_dev
+casbin.TypedName("org", "acme/dev")     // org:acme%2Fdev
+```
+
+Use typed names both when you write policies and when you enforce:
+
+```go
+e.AddPolicy(casbin.TypedName("group", "admins"), "data1", "write")
+e.AddGroupingPolicy(casbin.TypedName("user", "bob"), casbin.TypedName("group", "admins"))
+
+ok, err := e.Enforce(casbin.TypedName("user", username), "data1", "write")
+```
+
+`ParseTypedName` returns the type and parts of a typed name, and `FilterTypedNames` keeps the names of one type, for example the teams among a user's roles:
+
+```go
+roles, err := e.GetImplicitRolesForUser(casbin.TypedName("user", "bob"))
+teams := casbin.FilterTypedNames(roles, "team")
+```
 
 ## Implicit roles and permissions
 
