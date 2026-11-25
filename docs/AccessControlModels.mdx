@@ -217,6 +217,8 @@ For `design.md` (type `doc`, owner alice), alice may edit because she is an auth
 
 ## FAQ
 
+**What is the difference between RBAC and ABAC?** RBAC grants permissions to roles and assigns roles to users, so it answers "what can editors do?". ABAC evaluates conditions on attributes of the user, the resource and the environment, so it answers "may this user edit this record, right now?". RBAC is easier to audit; ABAC expresses ownership, department and time rules without a role per record. Most applications use roles for features and attribute conditions for records, as in the combined example above.
+
 **Is ABAC more secure than RBAC?** Neither is inherently more secure. ABAC can express finer rules, but its decisions are harder to audit; RBAC is coarser but easy to review. Security comes from rules that match what you intend and from being able to check that they do.
 
 **Can I start with RBAC and move to ABAC later?** Yes. In Casbin, the model is a configuration file and the application calls the same `Enforce()` method, so you can add conditions to the matcher, or combine both as shown above, without rewriting your authorization calls.
