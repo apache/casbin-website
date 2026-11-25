@@ -1,6 +1,6 @@
 ---
 id: rbac
-title: "What is RBAC? Role-Based Access Control in Casbin"
+title: "What is RBAC? Role-Based Access Control with Examples"
 sidebar_label: RBAC
 description: "What role-based access control (RBAC) is and how to use it in Casbin: define roles with role_definition, assign users to roles, build role hierarchies and check roles in matchers."
 keywords: [RBAC, role-based access control, what is rbac, rbac model, rbac example, role definition, role hierarchy, rbac vs abac, permission dependencies, g2]
@@ -210,6 +210,20 @@ See [RBAC with pattern](/docs/rbac-with-pattern).
 ## Role manager
 
 See [Role managers](/docs/role-managers) for custom role management.
+
+## FAQ
+
+**What does RBAC stand for?** Role-based access control. Permissions are attached to roles, users are assigned roles, and a request is allowed when one of the user's roles holds the permission.
+
+**What is an example of RBAC?** In the document app above, `viewer` may read articles and `editor` may edit them. Giving alice the `editor` role lets her read and edit, because `editor` inherits `viewer`; bob, who has `viewer`, can only read. No permission is granted to alice or bob directly.
+
+**What are the types of RBAC?** The RBAC96 family describes four levels: RBAC0 has users, roles and permissions; RBAC1 adds role hierarchies; RBAC2 adds constraints such as separation of duty; RBAC3 combines both. Casbin implements RBAC0 and RBAC1, and constraints are expressed as policy rows or enforced by the application. See [RBAC vs. RBAC96](/docs/rbac-96).
+
+**Is RBAC better than ABAC?** Neither is better in general. RBAC is easier to audit, because a role lists what it allows and who holds it, but expressing "only their own records" needs a role per record. [ABAC](/docs/abac) evaluates conditions on attributes such as the owner, the department or the time of day, and most applications use roles for features and attribute conditions for records.
+
+**Is RBAC still relevant?** Yes. Roles remain the default way to model which features a user can reach: NIST formalized RBAC in the 1990s, and SSO group mappings and cloud IAM roles still follow it. [ReBAC](/docs/rebac) extends it when sharing is per resource rather than per role; it does not replace it.
+
+**How do I add RBAC to an application?** Use an authorization library instead of hard-coding role checks. In Casbin the model is a configuration file and the policy is data, so roles and permissions change without redeploying. Complete examples are in the [Go](/docs/go-rbac-tutorial), [Node.js](/docs/nodejs-rbac-tutorial), [Python](/docs/python-rbac-tutorial) and [Java](/docs/java-rbac-tutorial) tutorials.
 
 ## Related models
 
