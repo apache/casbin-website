@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkcasbin_website||=[]).push([[7488],{7935(e){e.exports=JSON.parse('{"categoryGeneratedIndex":{"title":"**Basics**","slug":"/category/basics","permalink":"/id/docs/category/basics","sidebar":"docs","navigation":{"previous":{"title":"Unduh","permalink":"/id/docs/download"},"next":{"title":"Gambaran Umum","permalink":"/id/docs/overview"}}}}')}}]);

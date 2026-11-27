@@ -1,0 +1,130 @@
+# Apache Casbin
+
+> Apache Casbin (Incubating) is an open-source authorization library that supports access control models like ACL, RBAC, ABAC, ReBAC, PBAC, BLP, Biba and more. A model file (PERM: policy, effect, request, matchers) and policy rules decide every request, and the same model works in Go, Java, Node.js, Python, .NET, PHP, Rust, C++ and other languages.
+
+## Cơ bản
+
+- [Tổng quan](https://casbin.apache.org/vi/docs/overview/): Apache Casbin là một thư viện ủy quyền mã nguồn mở dành cho Go, Java, Node.js, Python, .NET, PHP, Rust và C++, hỗ trợ ACL, RBAC, ABAC, ReBAC và nhiều mô hình khác.
+- [Bắt đầu nhanh](https://casbin.apache.org/vi/docs/get-started/): Cài đặt Casbin cho Go, Java, Node.js, PHP, Python, .NET, C++ hoặc Rust, tạo một enforcer từ mô hình và chính sách, và chạy kiểm tra ủy quyền đầu tiên của bạn.
+- [Cách hoạt động](https://casbin.apache.org/vi/docs/how-it-works/): Cách Casbin hoạt động - siêu mô hình PERM (Policy, Effect, Request, Matchers) và các tệp mô hình CONF cho phép bạn chuyển đổi giữa ACL, RBAC, ABAC và các mô hình tùy chỉnh.
+- [Hướng dẫn](https://casbin.apache.org/vi/docs/tutorials/): Các bài báo, video và hướng dẫn cộng đồng của Casbin dành cho Go, Java, Node.js, Python, PHP, .NET và các ngôn ngữ khác, cùng với các bài viết về mô hình hóa bằng PERM.
+
+## Hướng dẫn
+
+- [Hướng dẫn RBAC Golang: Kiểm soát truy cập dựa trên vai trò trong Gin](https://casbin.apache.org/vi/docs/go-rbac-tutorial/): Hướng dẫn RBAC Go từng bước - thêm kiểm soát truy cập dựa trên vai trò vào REST API Gin với Casbin, bao gồm model, policy, middleware và quản lý vai trò lúc chạy.
+- [Hướng dẫn RBAC trong Node.js: Kiểm soát truy cập dựa trên vai trò trong Express](https://casbin.apache.org/vi/docs/nodejs-rbac-tutorial/): Hướng dẫn từng bước về RBAC trong Node.js - thêm kiểm soát truy cập dựa trên vai trò vào API REST Express bằng Casbin, bao gồm model, policy, middleware và quản lý vai trò trong thời gian chạy.
+- [Hướng dẫn Python RBAC: Kiểm soát truy cập dựa trên vai trò trong FastAPI](https://casbin.apache.org/vi/docs/python-rbac-tutorial/): Hướng dẫn Python RBAC từng bước - thêm kiểm soát truy cập dựa trên vai trò vào REST API FastAPI với PyCasbin, bao gồm mô hình, chính sách, dependency và quản lý vai trò thời gian chạy.
+- [Hướng dẫn RBAC Spring Boot: Kiểm soát truy cập dựa trên vai trò với jCasbin](https://casbin.apache.org/vi/docs/java-rbac-tutorial/): Hướng dẫn RBAC từng bước cho Java - thêm kiểm soát truy cập dựa trên vai trò vào API REST Spring Boot với jCasbin, bao gồm model, policy, interceptor và quản lý vai trò lúc chạy.
+- [NestJS RBAC Tutorial: Role-Based Access Control with Guards](https://casbin.apache.org/vi/docs/nestjs-rbac-tutorial/): Hướng dẫn NestJS RBAC: kiểm soát truy cập dựa trên vai trò với kế thừa vai trò cho một API NestJS, sử dụng node-casbin, một global guard và một permission decorator.
+- [RBAC trong Rust với Axum](https://casbin.apache.org/vi/docs/rust-rbac-tutorial/): Hướng dẫn Rust RBAC: kiểm soát truy cập dựa trên vai trò cho REST API Axum với casbin-rs, bao gồm mô hình, chính sách, middleware và thay đổi vai trò lúc runtime.
+- [Ủy quyền gRPC trong Go](https://casbin.apache.org/vi/docs/grpc-rbac-tutorial/): Kiểm soát truy cập dựa trên vai trò cho một dịch vụ Go gRPC với Casbin: các interceptor unary và stream kiểm tra vai trò của người gọi so với tên phương thức đầy đủ.
+- [ABAC trong Go](https://casbin.apache.org/vi/docs/go-abac-tutorial/): Hướng dẫn ABAC Go: kiểm soát truy cập dựa trên thuộc tính cho API net/http với Casbin, sử dụng chủ sở hữu, bộ phận và trạng thái để quyết định ai có thể đọc, chỉnh sửa và xuất bản.
+- [ABAC trong Node.js với Express](https://casbin.apache.org/vi/docs/nodejs-abac-tutorial/): Hướng dẫn ABAC cho Node.js: kiểm soát truy cập dựa trên thuộc tính cho một API Express với node-casbin, sử dụng owner, department và status để quyết định ai có thể chỉnh sửa.
+- [ABAC trong Python với Flask](https://casbin.apache.org/vi/docs/flask-abac-tutorial/): Hướng dẫn ABAC trong Python: kiểm soát truy cập dựa trên thuộc tính cho API Flask với PyCasbin, sử dụng chủ sở hữu, bộ phận và trạng thái để quyết định ai có thể đọc và chỉnh sửa.
+- [Ủy quyền cho Tác nhân AI và Công cụ MCP](https://casbin.apache.org/vi/docs/ai-agent-authorization/): Kiểm soát những công cụ mà một tác nhân AI được phép gọi bằng Casbin: quyền hạn theo từng tác nhân, giới hạn tham số, quy tắc từ chối, và không vượt quá quyền truy cập của người dùng. Kèm ví dụ về MCP.
+
+## Mô hình Kiểm soát Truy cập
+
+- [RBAC vs ABAC vs ACL vs ReBAC: Chọn mô hình kiểm soát truy cập](https://casbin.apache.org/vi/docs/access-control-models/): So sánh ACL, RBAC, ABAC, ReBAC và PBAC trên một ví dụ: mỗi mô hình dựa vào điều gì để đưa ra quyết định, ưu điểm, nhược điểm, khi nào nên chọn và cách kết hợp RBAC với ABAC.
+- [Supported Models](https://casbin.apache.org/vi/docs/supported-models/): Các mô hình kiểm soát truy cập được hỗ trợ bởi Casbin - ACL, RBAC, RBAC kèm domain, ABAC, ReBAC, PBAC, BLP, Biba, LBAC, OrBAC, UCON, RESTful, IP match, deny-override và priority.
+- [Cú pháp Model](https://casbin.apache.org/vi/docs/syntax-for-models/): Tham chiếu cú pháp model của Casbin - các định nghĩa request, policy, role và effect cùng với matchers trong các tệp CONF, bao gồm các toán tử và ví dụ.
+- [**Effector**](https://casbin.apache.org/vi/docs/effector/): Giao diện Effector của Casbin kết hợp các hiệu ứng từ tất cả các quy tắc chính sách khớp lại thành một quyết định duy nhất, hỗ trợ allow-override, deny-override, priority và các hiệu ứng tùy chỉnh.
+- [**Functions**](https://casbin.apache.org/vi/docs/function/): Các hàm matcher tích hợp sẵn của Casbin - keyMatch, keyMatch2-5, regexMatch, ipMatch, globMatch và trích xuất khóa - cũng như cách đăng ký các hàm tùy chỉnh của riêng bạn.
+- [Tổng quan RBAC](https://casbin.apache.org/vi/docs/rbac-overview/): Tổng quan về kiểm soát truy cập dựa trên vai trò (RBAC) trong Casbin - RBAC cơ bản, vai trò tài nguyên, miền (multi-tenancy), khớp mẫu và vai trò có điều kiện.
+- [RBAC là gì? Kiểm soát truy cập dựa trên vai trò với các ví dụ](https://casbin.apache.org/vi/docs/rbac/): RBAC cấp quyền cho các vai trò thay vì người dùng. Ý nghĩa của kiểm soát truy cập dựa trên vai trò, một ví dụ, RBAC96, so sánh RBAC với ABAC và cách triển khai bằng Casbin.
+- [RBAC với Pattern](https://casbin.apache.org/vi/docs/rbac-with-pattern/): Sử dụng ký tự đại diện và mẫu trong phân công vai trò và miền của Casbin với AddNamedMatchingFunc và AddNamedDomainMatchingFunc.
+- [RBAC with Domains](https://casbin.apache.org/vi/docs/rbac-with-domains/): RBAC đa thuê bao (multi-tenant) với Casbin - cấp cho cùng một người dùng các vai trò khác nhau trong các domain hoặc tenant khác nhau bằng định nghĩa role ba đối số.
+- [RBAC với Điều kiện](https://casbin.apache.org/vi/docs/rbac-with-conditions/): Gắn các điều kiện vào việc gán vai trò của Casbin với role manager có điều kiện, ví dụ như các vai trò chỉ hợp lệ trong một khoảng thời gian cụ thể.
+- [**RBAC vs. RBAC96**](https://casbin.apache.org/vi/docs/rbac-96/): Cách Casbin RBAC liên quan đến tiêu chuẩn RBAC96 - người dùng và vai trò, phân cấp vai trò, phiên và ràng buộc, cùng những gì Casbin bổ sung với các miền (domains) và quyền linh hoạt.
+- [ReBAC là gì? Kiểm soát truy cập dựa trên quan hệ với ví dụ](https://casbin.apache.org/vi/docs/rebac/): Kiểm soát truy cập dựa trên quan hệ (ReBAC) là gì, nó liên quan thế nào đến Google Zanzibar, khác biệt ra sao so với RBAC và ABAC, và cách mô hình hóa quan hệ người dùng-tài nguyên trong Casbin.
+- [ABAC là gì? Kiểm soát truy cập dựa trên thuộc tính với ví dụ](https://casbin.apache.org/vi/docs/abac/): ABAC (Attribute-Based Access Control) là gì, nó khác RBAC như thế nào và cách viết quy tắc ABAC trong Casbin: so sánh các thuộc tính người dùng, tài nguyên và môi trường trong matcher hoặc lưu trữ điều kiện dưới dạng policy.
+- [PBAC là gì? Kiểm soát truy cập dựa trên chính sách trong Casbin](https://casbin.apache.org/vi/docs/pbac/): Kiểm soát truy cập dựa trên chính sách (PBAC) là gì, sự khác biệt so với ABAC và RBAC, và cách lưu trữ các biểu thức quy tắc dưới dạng chính sách trong Casbin và đánh giá chúng tại thời gian chạy bằng eval().
+- [Tổng quan về MAC](https://casbin.apache.org/vi/docs/mac-overview/): Kiểm soát truy cập bắt buộc (MAC) trong Casbin - các mô hình dựa trên nhãn như Bell-LaPadula, Biba và LBAC mà người dùng không thể ghi đè.
+- [BLP](https://casbin.apache.org/vi/docs/blp/): Triển khai mô hình bảo mật Bell-LaPadula (BLP) trong Casbin - các mức độ bảo mật cho chủ thể và đối tượng, với quy tắc không đọc lên và không ghi xuống.
+- [Mô hình Tính toàn vẹn Biba: Không đọc xuống, Không ghi lên](https://casbin.apache.org/vi/docs/biba/): Cài đặt mô hình tính toàn vẹn Biba trong Casbin - mức độ tính toàn vẹn cho chủ thể và đối tượng, với quy tắc không đọc xuống và không ghi lên.
+- [LBAC là gì? Kiểm soát truy cập dựa trên lưới trong Casbin](https://casbin.apache.org/vi/docs/lbac/): Kiểm soát truy cập dựa trên lưới (LBAC) là gì, cách nó kết hợp mức bảo mật và tính toàn vẹn, và cách thực thi cả hai trong một mô hình Casbin.
+- [**OrBAC**](https://casbin.apache.org/vi/docs/orbac/): Triển khai kiểm soát truy cập dựa trên tổ chức (OrBAC) trong Casbin - ánh xạ các vai trò, hoạt động và quan điểm sang người dùng, hành động và đối tượng cụ thể cho từng tổ chức.
+- [Mô hình ưu tiên](https://casbin.apache.org/vi/docs/priority-model/): Giải quyết xung đột giữa các quy tắc bằng mô hình ưu tiên của Casbin - ưu tiên ngầm định theo thứ tự chính sách, trường ưu tiên tường minh và ưu tiên dựa trên phân cấp vai trò.
+- [Usage Control (UCON) là gì? Ủy quyền liên tục](https://casbin.apache.org/vi/docs/ucon/): Usage control (UCON) là gì: các ủy quyền, nghĩa vụ và điều kiện được kiểm tra liên tục trong quá trình sử dụng, với các thuộc tính có thể thay đổi, và cách triển khai nó bằng Casbin.
+- [Super Administrator trong Casbin: Bỏ qua Kiểm tra Chính sách](https://casbin.apache.org/vi/docs/superadmin/): Siêu quản trị viên (root) là gì trong Casbin, cách thêm một người vào matcher và cách cùng mẫu này hoạt động với RBAC, ABAC và RBAC kèm domain.
+
+## Lưu trữ
+
+- [**Model Storage**](https://casbin.apache.org/vi/docs/model-storage/): Tải một mô hình Casbin từ tệp CONF, từ chuỗi hoặc từ mã. Các mô hình xác định logic kiểm soát truy cập của bạn và chỉ được đọc (read-only) tại thời gian chạy.
+- [Lưu trữ Chính sách](https://casbin.apache.org/vi/docs/policy-storage/): Lưu trữ các quy tắc chính sách của Casbin trong một tệp CSV, cơ sở dữ liệu hoặc bất kỳ backend nào khác thông qua adapters, và tải hoặc lưu chúng thông qua API của adapter.
+- [Tải tập con chính sách](https://casbin.apache.org/vi/docs/policy-subset-loading/): Tải chỉ một tập con các quy tắc chính sách Casbin bằng các adapter được lọc và LoadFilteredPolicy(), để tiết kiệm bộ nhớ trong các triển khai lớn hoặc đa thuê bao.
+
+## Use Cases
+
+- [Quyền dữ liệu](https://casbin.apache.org/vi/docs/data-permissions/): Quyền cấp độ dữ liệu với Casbin - truy vấn các vai trò và quyền ngầm định thông qua phân cấp RBAC và lọc tập dữ liệu bằng BatchEnforce().
+- [**Nested Organizations**](https://casbin.apache.org/vi/docs/nested-organizations/): Mô hình hóa tổ chức lồng nhau trong Casbin - cấp vai trò tại một đơn vị và kế thừa nó qua toàn bộ cây con bằng đường dẫn domain và hàm khớp hậu duệ.
+- [**List Filtering**](https://casbin.apache.org/vi/docs/list-filtering/): Filter list and search results with Casbin - BatchEnforce, per-unit implicit permissions, a materialized permission table, and Postgres RLS, plus the query-planner gap.
+- [Quyền Menu](https://casbin.apache.org/vi/docs/menu-permissions/): Kiểm soát truy cập dựa trên menu với jCasbin và Spring Boot - ánh xạ các vai trò tới menu và menu con và hiển thị cho mỗi người dùng chỉ những mục menu mà họ có quyền truy cập.
+
+## Plugins
+
+- [Tổng quan về Plugin](https://casbin.apache.org/vi/docs/plugins-overview/): Tổng quan về các plugin của Casbin - adapters, watchers, dispatchers, role managers và middlewares giúp kết nối Casbin với cơ sở dữ liệu, bus tin nhắn và các framework web.
+- [Trình thực thi](https://casbin.apache.org/vi/docs/enforcers/): Enforcer là cấu trúc chính trong Casbin, đóng vai trò như một giao diện để người dùng thực hiện các thao tác trên quy tắc chính sách và mô hình.
+- [Bộ chuyển đổi](https://casbin.apache.org/vi/docs/adapters/): Các adapter của Casbin tải và lưu trữ các quy tắc chính sách trong MySQL, PostgreSQL, MongoDB, Redis, tệp và hàng chục kho lưu trữ khác. Tìm adapter cho ngôn ngữ và cơ sở dữ liệu của bạn.
+- [Watchers](https://casbin.apache.org/vi/docs/watchers/): Casbin watchers giữ cho chính sách được đồng bộ hóa giữa nhiều phiên bản enforcer thông qua etcd, Redis, Kafka, NATS và các bus tin nhắn khác.
+- [Dispatchers](https://casbin.apache.org/vi/docs/dispatchers/): Dispatcher của Casbin lan truyền các thay đổi chính sách gia tăng đến mọi enforcer trong cụm bằng cách sử dụng giao thức nhất quán như Raft, mà không thay đổi API của Casbin.
+- [Role Managers](https://casbin.apache.org/vi/docs/role-managers/): Casbin role managers giải quyết phân cấp vai trò RBAC, từ chính sách trong bộ nhớ hoặc từ các nguồn bên ngoài như LDAP, Okta, Auth0 và Azure AD.
+- [Middleware](https://casbin.apache.org/vi/docs/middlewares/): Middleware ủy quyền Casbin cho các framework web và API gateway - Gin, Echo, Express, Koa, NestJS, Django, Flask, FastAPI, Spring Boot, Laravel và nhiều hơn nữa.
+- [**Kong Authorization**](https://casbin.apache.org/vi/docs/kong-authz/): **kong-authz** là một plugin cho Kong API Gateway giúp ủy quyền các yêu cầu bằng lua-casbin. Cài đặt nó, cấu hình mô hình và chính sách, và bảo vệ các route của Kong.
+- [**GraphQL Middleware**](https://casbin.apache.org/vi/docs/graphql-middlewares/): Thêm tính năng ủy quyền vào các API GraphQL bằng Casbin - thực thi quyền truy cập trên các kiểu dữ liệu, trường và thao tác trong resolver, cùng với middleware cho các máy chủ GraphQL phổ biến.
+- [**Cloud Native**](https://casbin.apache.org/vi/docs/cloud-native/): Sử dụng Casbin cho ủy quyền trong các stack cloud-native: các dự án tích hợp Casbin với Envoy, Istio, Traefik, KubeSphere và các hạ tầng khác.
+
+## API
+
+- [Tổng quan API](https://casbin.apache.org/vi/docs/api-overview/): Tổng quan về các API chính của Casbin - Enforce, BatchEnforce, EnforceEx, Management API và RBAC API - với các ví dụ sử dụng mô hình RBAC và chính sách CSV.
+- [**Management API**](https://casbin.apache.org/vi/docs/management-api/): Tài liệu tham khảo **Management API** của Casbin - lấy, thêm, xóa, cập nhật và lọc các quy tắc chính sách và phân công vai trò trong thời gian chạy, kèm theo ví dụ cho mỗi ngôn ngữ.
+- [**RBAC API**](https://casbin.apache.org/vi/docs/rbac-api/): Một API thân thiện hơn cho RBAC. API này là tập con của Management API. Người dùng RBAC có thể sử dụng API này để đơn giản hóa mã
+- [API cho RBAC with Domains](https://casbin.apache.org/vi/docs/rbac-with-domains-api/): Một API thân thiện hơn với người dùng cho RBAC with domains. API này là một tập con của Management API. Người dùng RBAC có thể sử dụng API này để đơn giản hóa mã nguồn của họ.
+- [API cho RBAC with Conditions](https://casbin.apache.org/vi/docs/rbac-with-conditions-api/): Tài liệu tham khảo API cho Casbin RBAC with conditions - đăng ký các hàm điều kiện trên các liên kết user-role và truyền tham số cho chúng.
+- [Role Manager API](https://casbin.apache.org/vi/docs/rolemanager-api/): API RoleManager cung cấp một giao diện để xác định các thao tác quản lý vai trò. Việc thêm một hàm khớp vào RoleManager cho phép sử dụng ký tự đại diện trong tên vai trò và domain.
+
+## Sử dụng nâng cao
+
+- [Triển khai môi trường Production](https://casbin.apache.org/vi/docs/production-deployment/): Vận hành Casbin trong môi trường production - một enforcer cho mỗi process, an toàn luồng với SyncedEnforcer, cache quyết định, đồng bộ các bản sao với watchers, và ghi policy trong transaction database.
+- [**Multithreading**](https://casbin.apache.org/vi/docs/multi-threading/): Sử dụng Casbin an toàn trong mã đa luồng với synchronized enforcer (SyncedEnforcer) trong Go, Java, C++ và các ngôn ngữ khác.
+- [**Benchmarks**](https://casbin.apache.org/vi/docs/benchmark/): Các benchmark thực thi của Casbin - thời gian và bộ nhớ trên mỗi lần gọi Enforce() cho các mô hình ACL, RBAC, ABAC, RESTful và các mô hình khác, từ vài quy tắc đến 110.000 quy tắc chính sách.
+- [Tối ưu hóa hiệu suất](https://casbin.apache.org/vi/docs/performance/): Tối ưu hóa Casbin ở quy mô lớn - xử lý khối lượng yêu cầu cao với enforcer đồng bộ và sharding, giảm tiêu thụ bộ nhớ bằng cách nạp chính sách theo bộ lọc (filtered policy loading).
+- [Kubernetes Admission Webhook](https://casbin.apache.org/vi/docs/k8s-gatekeeper/): Casbin K8s-Gatekeeper là một admission webhook của Kubernetes, cho phép hoặc từ chối các thao tác trên bất kỳ tài nguyên Kubernetes nào bằng cách sử dụng các mô hình và chính sách Casbin theo kiểu declarative.
+- [Envoy (Ủy quyền Service Mesh)](https://casbin.apache.org/vi/docs/envoy/): Ủy quyền lưu lượng service mesh bằng Casbin thông qua ủy quyền ngoài của Envoy - envoy-authz thực thi các chính sách RBAC và ABAC cho Envoy và Istio.
+
+## Quản lý
+
+- [Admin Portal](https://casbin.apache.org/vi/docs/admin-portal/): Quản lý các mô hình và chính sách của Casbin trong giao diện người dùng web. Casdoor và các admin portal khác cung cấp trình chỉnh sửa mô hình, trình chỉnh sửa chính sách và quản lý quyền hạn dựa trên Casbin.
+- [Casbin Service](https://casbin.apache.org/vi/docs/service/): Chạy Casbin như một dịch vụ ủy quyền từ xa qua gRPC hoặc HTTP với Casbin Server và các dự án khác, thay vì nhúng thư viện.
+- [**Công cụ dòng lệnh**](https://casbin.apache.org/vi/docs/command-line-tools/): Các công cụ dòng lệnh của Casbin cho Go, Java, Node.js, Python, .NET và Rust - tải mô hình và chính sách, thực hiện kiểm tra enforce và quản lý chính sách từ shell của bạn.
+- [Logging & Error Handling](https://casbin.apache.org/vi/docs/log-error/): Bật và tùy chỉnh logging trong Casbin cho các yêu cầu, tải model và thay đổi chính sách, đồng thời xử lý các lỗi được trả về bởi enforcer.
+- [Tích hợp Frontend](https://casbin.apache.org/vi/docs/frontend/): Casbin.js là một addon của Casbin giúp đơn giản hóa việc quản lý kiểm soát truy cập trong ứng dụng frontend
+
+## Trình chỉnh sửa & Công cụ
+
+- [**Online Editor**](https://casbin.apache.org/vi/docs/online-editor/): Viết và thử nghiệm các mô hình và chính sách Casbin trong trình duyệt với trình chỉnh sửa trực tuyến - tô sáng cú pháp, tự động hoàn thành, hỗ trợ AI và kết quả enforce tức thì.
+- [IDE Plugins](https://casbin.apache.org/vi/docs/ide-plugins/): Các plugin Casbin cho JetBrains IDEs và Visual Studio Code - hỗ trợ tô sáng cú pháp và chỉnh sửa cho các tệp model và policy.
+
+## So sánh
+
+- [Casbin vs. Alternatives](https://casbin.apache.org/vi/docs/comparison/): So sánh Apache Casbin với OpenFGA, Open Policy Agent (OPA), CASL và Cedar - thư viện hoặc dịch vụ, ngôn ngữ chính sách, mô hình kiểm soát truy cập, hỗ trợ ngôn ngữ và khi nào nên chọn từng công cụ.
+- [Casbin vs. OpenFGA](https://casbin.apache.org/vi/docs/casbin-vs-openfga/): So sánh Apache Casbin và OpenFGA - thư viện nhúng so với dịch vụ kiểu Zanzibar, mô hình hóa RBAC và ReBAC, lưu trữ, đặc điểm hiệu suất và khi nào nên chọn từng công cụ.
+- [Casbin vs. Open Policy Agent (OPA)](https://casbin.apache.org/vi/docs/casbin-vs-opa/): So sánh Apache Casbin và Open Policy Agent - mô hình và dữ liệu chính sách so với Rego, thư viện nhúng so với agent chính sách, quản lý chính sách khi đang chạy, hỗ trợ ngôn ngữ và khi nào nên chọn từng loại.
+- [Casbin vs. CASL](https://casbin.apache.org/vi/docs/casbin-vs-casl/): So sánh Apache Casbin và CASL cho các ứng dụng JavaScript và TypeScript - quy tắc dưới dạng dữ liệu so với khả năng trong mã, sử dụng frontend và backend, dịch vụ đa ngôn ngữ, và khi nào nên chọn mỗi loại.
+- [So sánh Casbin và Cedar](https://casbin.apache.org/vi/docs/casbin-vs-cedar/): So sánh Apache Casbin và Cedar - model PERM có thể cấu hình so với ngôn ngữ chính sách Cedar, xác thực và phân tích, hỗ trợ ngôn ngữ lập trình, lưu trữ chính sách và khi nào nên chọn từng công cụ.
+
+## Giới thiệu & Thêm
+
+- [**Adopters**](https://casbin.apache.org/vi/docs/adopters/): Các công ty và dự án mã nguồn mở sử dụng Apache Casbin cho việc phân quyền, trực tiếp trong mã nguồn hoặc thông qua plugin hay dependency.
+- [Đóng góp](https://casbin.apache.org/vi/docs/contributing/): Cách đóng góp cho Apache Casbin - các thư viện lõi và cổng ngôn ngữ, adapters, middleware, trang web và bản dịch - và cách bắt đầu.
+- [Chính sách quyền riêng tư](https://casbin.apache.org/vi/docs/privacy-policy/): Chính sách bảo mật cho trang web Apache Casbin và dịch vụ đăng nhập: loại thông tin nào được thu thập, cách sử dụng, lưu trữ và chia sẻ.
+- [Điều khoản dịch vụ](https://casbin.apache.org/vi/docs/terms-of-service/): Điều khoản dịch vụ khi sử dụng trang web Apache Casbin.
+
+## More
+
+- [Tải xuống](https://casbin.apache.org/vi/docs/download/): Tải xuống và xác minh các phiên bản phát hành Apache Casbin
+
+## Optional
+
+- [Source code](https://github.com/apache/casbin): Go implementation and examples (Apache-2.0)
+- [Online editor](https://editor.casbin.org): Write and test a model and policy in the browser

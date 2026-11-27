@@ -1,0 +1,130 @@
+# Apache Casbin
+
+> Apache Casbin (Incubating) is an open-source authorization library that supports access control models like ACL, RBAC, ABAC, ReBAC, PBAC, BLP, Biba and more. A model file (PERM: policy, effect, request, matchers) and policy rules decide every request, and the same model works in Go, Java, Node.js, Python, .NET, PHP, Rust, C++ and other languages.
+
+## **Basics**
+
+- [Gambaran Keseluruhan](https://casbin.apache.org/ms/docs/overview/): Apache Casbin ialah pustaka pengesahan sumber terbuka untuk Go, Java, Node.js, Python, .NET, PHP, Rust dan C++ yang menyokong ACL, RBAC, ABAC, ReBAC dan lain-lain.
+- [Mulai](https://casbin.apache.org/ms/docs/get-started/): Pasang Casbin untuk Go, Java, Node.js, PHP, Python, .NET, C++ atau Rust, cipta enforcer daripada model dan dasar, serta jalankan pemeriksaan kebenaran pertama anda.
+- [Cara Ia Berfungsi](https://casbin.apache.org/ms/docs/how-it-works/): Cara Casbin berfungsi - metamodel PERM (Policy, Effect, Request, Matchers) dan fail model CONF yang membolehkan anda beralih antara ACL, RBAC, ABAC dan model tersuai.
+- [Tutorial](https://casbin.apache.org/ms/docs/tutorials/): Kertas, video, dan tutorial komuniti Casbin untuk Go, Java, Node.js, Python, PHP, .NET dan bahasa lain, serta artikel tentang pemodelan dengan PERM.
+
+## **Guides**
+
+- [Tutorial RBAC Golang: Kawalan Akses Berasaskan Peranan dalam Gin](https://casbin.apache.org/ms/docs/go-rbac-tutorial/): Tutorial RBAC Go langkah demi langkah - tambah kawalan akses berasaskan peranan ke API REST Gin dengan Casbin, termasuk model, dasar, perantara, dan pengurusan peranan semasa berjalan.
+- [Tutorial RBAC Node.js: Kawalan Akses Berasaskan Peranan dalam Express](https://casbin.apache.org/ms/docs/nodejs-rbac-tutorial/): Tutorial RBAC Node.js langkah demi langkah - tambah kawalan akses berasaskan peranan kepada API REST Express dengan Casbin, termasuk model, dasar, perisian antara muka (middleware), dan pengurusan peranan semasa masa berjalan.
+- [Tutorial RBAC Python: Kawalan Akses Berasaskan Peranan dalam FastAPI](https://casbin.apache.org/ms/docs/python-rbac-tutorial/): Tutorial RBAC Python langkah demi langkah - tambah kawalan akses berasaskan peranan ke API REST FastAPI dengan PyCasbin, termasuk model, dasar, kebergantungan, dan pengurusan peranan semasa berjalan.
+- [Tutorial RBAC Spring Boot: Kawalan Akses Berasaskan Peranan dengan jCasbin](https://casbin.apache.org/ms/docs/java-rbac-tutorial/): Tutorial RBAC Java langkah demi langkah - tambah kawalan akses berasaskan peranan ke API REST Spring Boot dengan jCasbin, termasuk model, dasar, intersektor, dan pengurusan peranan masa nyata.
+- [Tutorial RBAC NestJS: Kawalan Akses Berasaskan Peran dengan Guards](https://casbin.apache.org/ms/docs/nestjs-rbac-tutorial/): Tutorial RBAC NestJS: kawalan akses berasaskan peran dengan pewarisan peran untuk API NestJS, menggunakan node-casbin, guard global, dan hiasan (decorator) kebenaran.
+- [RBAC dalam Rust dengan Axum](https://casbin.apache.org/ms/docs/rust-rbac-tutorial/): Tutorial RBAC Rust: kawalan akses berasaskan peranan untuk API REST Axum dengan casbin-rs, termasuk model, dasar, middleware, dan perubahan peranan semasa berjalan.
+- [Pengesahan Kuasa gRPC dalam Go](https://casbin.apache.org/ms/docs/grpc-rbac-tutorial/): Kawalan akses berasaskan peranan untuk perkhidmatan gRPC Go dengan Casbin: penangkap unary dan stream yang menyemak peranan penelefon terhadap nama kaedah penuh.
+- [ABAC dalam Go](https://casbin.apache.org/ms/docs/go-abac-tutorial/): Tutorial ABAC Go: kawalan akses berasaskan atribut untuk API net/http dengan Casbin, menggunakan pemilik, jabatan dan status untuk menentukan siapa yang boleh membaca, mengedit dan menerbitkan.
+- [ABAC dalam Node.js dengan Express](https://casbin.apache.org/ms/docs/nodejs-abac-tutorial/): Tutorial ABAC Node.js: kawalan akses berasaskan atribut untuk API Express dengan node-casbin, menggunakan pemilik, jabatan dan status untuk menentukan siapa yang boleh mengedit.
+- [ABAC dalam Python dengan Flask](https://casbin.apache.org/ms/docs/flask-abac-tutorial/): Tutorial ABAC Python: kawalan akses berasaskan atribut untuk API Flask dengan PyCasbin, menggunakan pemilik, jabatan dan status untuk menentukan siapa boleh membaca dan mengedit.
+- [Pengautorisasian untuk Ejen AI dan Alat MCP](https://casbin.apache.org/ms/docs/ai-agent-authorization/): Kawal alat yang boleh dipanggil oleh ejen AI dengan Casbin: kebenaran setiap ejen, had hujah, peraturan tolak, dan tiada akses melebihi pengguna. Dengan contoh MCP.
+
+## **Access Control Models**
+
+- [RBAC vs ABAC vs ACL vs ReBAC: Memilih Model Kawalan Akses](https://casbin.apache.org/ms/docs/access-control-models/): Perbandingan ACL, RBAC, ABAC, ReBAC dan PBAC dalam satu contoh: apa yang menjadi asas setiap keputusan, kekuatan, kelemahan, bila perlu memilihnya, dan cara menggabungkan RBAC dengan ABAC.
+- [Model Disokong](https://casbin.apache.org/ms/docs/supported-models/): Model kawalan akses yang disokong oleh Casbin - ACL, RBAC, RBAC dengan domain, ABAC, ReBAC, PBAC, BLP, Biba, LBAC, OrBAC, UCON, RESTful, padanan IP, deny-override dan keutamaan.
+- [Sintaks Model](https://casbin.apache.org/ms/docs/syntax-for-models/): Rujukan sintaks model Casbin - definisi permintaan, dasar, peranan dan kesan serta padanan dalam fail CONF, dengan operator dan contoh.
+- [Effector](https://casbin.apache.org/ms/docs/effector/): Antara muka Effector Casbin menggabungkan kesan semua peraturan dasar yang sepadan menjadi satu keputusan, untuk *allow-override*, *deny-override*, keutamaan dan kesan tersuai.
+- [Fungsi](https://casbin.apache.org/ms/docs/function/): Fungsi pemadanan Casbin terbina dalam - keyMatch, keyMatch2-5, regexMatch, ipMatch, globMatch dan ekstraksi kunci - dan cara mendaftar fungsi tersuai anda sendiri.
+- [Gambaran Keseluruhan RBAC](https://casbin.apache.org/ms/docs/rbac-overview/): Gambaran keseluruhan kawalan akses berasaskan peranan (RBAC) dalam Casbin - RBAC asas, peranan sumber, domain (multi-tenansi), padanan corak dan peranan bersyarat.
+- [Apakah RBAC? Kawalan Akses Berasaskan Peranan dengan Contoh](https://casbin.apache.org/ms/docs/rbac/): RBAC memberikan kebenaran kepada peranan dan bukannya pengguna. Apa maksud kawalan akses berasaskan peranan, contoh, RBAC96, RBAC vs ABAC, dan cara melaksanakannya dengan Casbin.
+- [RBAC dengan Corak](https://casbin.apache.org/ms/docs/rbac-with-pattern/): Gunakan wildcard dan corak dalam penugasan peranan dan domain Casbin dengan **AddNamedMatchingFunc** dan **AddNamedDomainMatchingFunc**.
+- [RBAC dengan Domain](https://casbin.apache.org/ms/docs/rbac-with-domains/): RBAC pelbagai penyewa dengan Casbin - berikan pengguna yang sama peranan berbeza dalam domain atau penyewa yang berbeza dengan definisi peranan tiga argumen.
+- [RBAC dengan Syarat](https://casbin.apache.org/ms/docs/rbac-with-conditions/): Lampirkan syarat kepada penetapan peranan Casbin dengan pengurus peranan bersyarat, sebagai contoh peranan yang sah hanya dalam tetingkap masa.
+- [RBAC vs. RBAC96](https://casbin.apache.org/ms/docs/rbac-96/): Bagaimana Casbin RBAC berkaitan dengan piawaian RBAC96 - pengguna dan peranan, hierarki peranan, sesi dan kekangan, serta apa yang ditambahkan oleh Casbin dengan domain dan kebenaran fleksibel.
+- [Apakah ReBAC? Kawalan Akses Berasaskan Hubungan dengan Contoh](https://casbin.apache.org/ms/docs/rebac/): Apa itu kawalan akses berasaskan hubungan (ReBAC), bagaimana ia berkaitan dengan Google Zanzibar, bagaimana ia berbeza daripada RBAC dan ABAC, dan bagaimana memodelkan hubungan pengguna-sumber dalam Casbin.
+- [Apakah ABAC? Kawalan Akses Berasaskan Atribut dengan Contoh](https://casbin.apache.org/ms/docs/abac/): Menerangkan apa itu kawalan akses berasaskan atribut (ABAC), bagaimana ia berbeza daripada RBAC, dan cara menulis peraturan ABAC dalam Casbin: bandingkan atribut pengguna, sumber dan persekitaran dalam padanan atau simpan keadaan sebagai dasar.
+- [Apa itu PBAC? Kawalan Akses Berasaskan Dasar dalam Casbin](https://casbin.apache.org/ms/docs/pbac/): Apa itu kawalan akses berasaskan dasar (PBAC), bagaimana ia berbeza daripada ABAC dan RBAC, dan bagaimana menyimpan ungkapan peraturan sebagai dasar dalam Casbin serta menilainya semasa runtime dengan eval().
+- [Gambaran Keseluruhan MAC](https://casbin.apache.org/ms/docs/mac-overview/): Kawalan akses wajib (MAC) dalam Casbin - model berasaskan label seperti Bell-LaPadula, Biba dan LBAC yang tidak boleh diatasi oleh pengguna.
+- [BLP](https://casbin.apache.org/ms/docs/blp/): Laksanakan model kerahsiaan Bell-LaPadula (BLP) dalam Casbin - tahap keselamatan untuk subjek dan objek, dengan peraturan tiada baca ke atas dan tiada tulis ke bawah.
+- [Model Integriti Biba: Tiada Baca Turun, Tiada Tulis Naik](https://casbin.apache.org/ms/docs/biba/): Laksanakan model integriti Biba dalam Casbin - tahap integriti untuk subjek dan objek, dengan peraturan tiada baca turun dan tiada tulis naik.
+- [Apakah LBAC? Kawalan Akses Berasaskan Kisi dalam Casbin](https://casbin.apache.org/ms/docs/lbac/): Penjelasan tentang kawalan akses berasaskan kisi (LBAC), cara ia menggabungkan tahap kerahsiaan dan integriti, serta cara menguatkuasakan kedua-duanya dalam satu model Casbin.
+- [OrBAC](https://casbin.apache.org/ms/docs/orbac/): Laksanakan kawalan akses berasaskan organisasi (OrBAC) dalam Casbin - peranan, aktiviti dan paparan dipetakan kepada pengguna, tindakan dan objek konkrit mengikut organisasi.
+- [Model Keutamaan](https://casbin.apache.org/ms/docs/priority-model/): Selesaikan konflik peraturan dengan model keutamaan Casbin - keutamaan implisit mengikut urutan dasar, medan keutamaan eksplisit, dan keutamaan berdasarkan hierarki peranan.
+- [Apakah Kawalan Penggunaan (UCON)? Pengesahan Kebenaran Berterusan](https://casbin.apache.org/ms/docs/ucon/): Apa itu kawalan penggunaan (UCON): pengesahan kebenaran, kewajipan dan syarat yang disemak secara berterusan semasa penggunaan, dengan atribut boleh ubah, dan cara melaksanakannya dengan Casbin.
+- [Pentadbir Super dalam Casbin: Melangkau Semakan Dasar](https://casbin.apache.org/ms/docs/superadmin/): Apa itu pentadbir super (root) dalam Casbin, cara menambahnya ke dalam matcher, dan bagaimana corak yang sama berfungsi dengan RBAC, ABAC dan RBAC dengan domain.
+
+## **Storage**
+
+- [Model Storage](https://casbin.apache.org/ms/docs/model-storage/): Muatkan model Casbin dari fail CONF, dari rentetan atau dari kod. Model menentukan logik kawalan akses anda dan bersifat baca-sahaja semasa masa jalan.
+- [Storan Polisi](https://casbin.apache.org/ms/docs/policy-storage/): Simpan peraturan polisi Casbin dalam fail CSV, pangkalan data atau mana-mana backend lain melalui adapter, dan muat atau simpan mereka melalui API adapter.
+- [Memuatkan Subset Dasar](https://casbin.apache.org/ms/docs/policy-subset-loading/): Muatkan hanya subset peraturan dasar Casbin dengan pengadaptasi berpenapis dan LoadFilteredPolicy(), untuk menjimatkan memori dalam deployment besar atau multi-tenant.
+
+## Kes Penggunaan
+
+- [Kebenaran Data](https://casbin.apache.org/ms/docs/data-permissions/): Kebenaran peringkat data dengan Casbin - pertanyaan peranan dan kebenaran implisit melalui hierarki RBAC, dan penapis set data dengan BatchEnforce().
+- [**Nested Organizations**](https://casbin.apache.org/ms/docs/nested-organizations/): Modelkan organisasi bersarang dalam Casbin - berikan peranan pada satu unit dan warisi melalui keseluruhan subtrees dengan laluan domain dan fungsi padanan keturunan.
+- [**Penapisan Senarai**](https://casbin.apache.org/ms/docs/list-filtering/): Tapis senarai dan hasil carian dengan Casbin - **BatchEnforce**, kebenaran tersirat setiap unit, jadual kebenaran dimaterikan, dan Postgres RLS, serta jurang perancang pertanyaan.
+- [**Menu Permissions**](https://casbin.apache.org/ms/docs/menu-permissions/): Kawalan akses berasaskan menu dengan jCasbin dan Spring Boot - petakan peranan kepada menu dan sub-menu serta tunjukkan setiap pengguna hanya item menu yang boleh mereka akses.
+
+## **Plugins**
+
+- [Gambaran Keseluruhan Plugin](https://casbin.apache.org/ms/docs/plugins-overview/): Gambaran keseluruhan plugin Casbin - adapter, watcher, dispatcher, pengurus peranan dan middleware yang menghubungkan Casbin dengan pangkalan data, bas mesej dan rangka kerja web.
+- [Enforcers](https://casbin.apache.org/ms/docs/enforcers/): Enforcer ialah struktur utama dalam Casbin yang bertindak sebagai antara muka bagi pengguna untuk menjalankan operasi pada peraturan dasar dan model.
+- [Adapters](https://casbin.apache.org/ms/docs/adapters/): Adapter Casbin memuat dan menyimpan peraturan dasar dalam MySQL, PostgreSQL, MongoDB, Redis, fail dan puluhan stor lain. Cari adapter untuk bahasa dan pangkalan data anda.
+- [Watchers](https://casbin.apache.org/ms/docs/watchers/): Casbin watchers mengekalkan penyegerakan dasar merentas pelbagai instans enforcer melalui etcd, Redis, Kafka, NATS dan bas mesej lain.
+- [Penghantar](https://casbin.apache.org/ms/docs/dispatchers/): Penghantar Casbin mempropagasikan perubahan dasar inkremental kepada setiap enforcer dalam kluster menggunakan protokol konsistensi seperti Raft, tanpa mengubah API Casbin.
+- [Pengurus Peranan](https://casbin.apache.org/ms/docs/role-managers/): Pengurus peranan Casbin menyelesaikan hierarki peranan RBAC, sama ada daripada polisi dalam memori atau daripada sumber luaran seperti LDAP, Okta, Auth0 dan Azure AD.
+- [Middleware](https://casbin.apache.org/ms/docs/middlewares/): Middleware pengesahan Casbin untuk rangka kerja web dan gerbang API - Gin, Echo, Express, Koa, NestJS, Django, Flask, FastAPI, Spring Boot, Laravel dan lain-lain.
+- [Pengesanan Kuasa Kong](https://casbin.apache.org/ms/docs/kong-authz/): kong-authz ialah plugin Kong API Gateway yang mengesahkan permintaan dengan lua-casbin. Pasangkannya, konfigurasikan model dan dasar, serta lindungi laluan Kong anda.
+- [Perantara GraphQL](https://casbin.apache.org/ms/docs/graphql-middlewares/): Tambahkan pengesahan pada API GraphQL dengan Casbin - kuatkan akses pada jenis, medan dan operasi dalam resolver, dengan perantara untuk pelayan GraphQL popular.
+- [Cloud Native](https://casbin.apache.org/ms/docs/cloud-native/): Gunakan Casbin untuk pengesahan dalam teknologi cloud-native: projek yang mengintegrasikan Casbin dengan Envoy, Istio, Traefik, KubeSphere dan infrastruktur lain.
+
+## **API**
+
+- [Gambaran Keseluruhan API](https://casbin.apache.org/ms/docs/api-overview/): Gambaran keseluruhan API utama Casbin - Enforce, BatchEnforce, EnforceEx, API Pengurusan dan API RBAC - dengan contoh menggunakan model RBAC dan polisi CSV.
+- [API Pengurusan](https://casbin.apache.org/ms/docs/management-api/): Rujukan API Pengurusan Casbin - dapatkan, tambah, buang, kemas kini dan tapis peraturan dasar serta pelantikan peranan semasa berjalan, dengan contoh untuk setiap bahasa.
+- [API RBAC](https://casbin.apache.org/ms/docs/rbac-api/): API yang lebih mesra untuk RBAC. API ini adalah subset daripada API Pengurusan. Pengguna RBAC boleh menggunakan API ini untuk memudahkan kod
+- [API RBAC dengan Domain](https://casbin.apache.org/ms/docs/rbac-with-domains-api/): API yang lebih mesra pengguna untuk RBAC dengan domain. API ini ialah subset daripada API Pengurusan. Pengguna RBAC boleh menggunakan API ini untuk mempermudahkan kod mereka.
+- [API RBAC dengan Syarat](https://casbin.apache.org/ms/docs/rbac-with-conditions-api/): Rujukan API untuk Casbin RBAC dengan syarat - daftarkan fungsi syarat pada pautan pengguna-peranan dan luluskan parameter kepadanya.
+- [API Pengurus Peranan](https://casbin.apache.org/ms/docs/rolemanager-api/): API RoleManager menyediakan antara muka untuk mentakrifkan operasi untuk menguruskan peranan. Penambahan fungsi padanan kepada RoleManager membolehkan penggunaan wildcard dalam nama peranan dan domain.
+
+## Penggunaan Lanjutan
+
+- [**Production Deployment**](https://casbin.apache.org/ms/docs/production-deployment/): Jalankan Casbin dalam produksi - satu enforcer per proses, keselamatan benang dengan SyncedEnforcer, cache keputusan, mengekalkan replika segerak dengan watchers, dan menulis dasar di dalam urus niaga pangkalan data.
+- [Multithreading](https://casbin.apache.org/ms/docs/multi-threading/): Gunakan Casbin dengan selamat dalam kod berbilang benang dengan enforcer tersinkronisasi (**SyncedEnforcer**) dalam Go, Java, C++ dan bahasa lain.
+- [Penanda aras](https://casbin.apache.org/ms/docs/benchmark/): Penanda aras pelaksanaan Casbin - masa dan memori setiap panggilan Enforce() untuk model ACL, RBAC, ABAC, RESTful dan lain-lain, dari beberapa peraturan hingga 110,000 peraturan polisi.
+- [Optimum Prestasi](https://casbin.apache.org/ms/docs/performance/): Optimumkan Casbin pada skala besar - tangani isipadu permintaan tinggi dengan enforcer segerak dan pemecahan (sharding), serta kurangkan penggunaan memori dengan pemuatan dasar terfilter.
+- [Kubernetes Admission Webhook](https://casbin.apache.org/ms/docs/k8s-gatekeeper/): Casbin K8s-Gatekeeper ialah webhook kemasukan Kubernetes yang membenarkan atau menafikan operasi pada mana-mana sumber Kubernetes menggunakan model dan polisi Casbin deklaratif.
+- [Envoy (Pengesahan Rangkaian Perkhidmatan)](https://casbin.apache.org/ms/docs/envoy/): Benarkan trafik rangkaian perkhidmatan dengan Casbin melalui pengesahan luaran Envoy - envoy-authz menguatkuasakan dasar RBAC dan ABAC untuk Envoy dan Istio.
+
+## **Management**
+
+- [Portal Pentadbiran](https://casbin.apache.org/ms/docs/admin-portal/): Urus model dan dasar Casbin dalam UI web. Casdoor dan portal pentadbir lain menyediakan penyunting model, penyunting dasar dan pengurusan kebenaran di atas Casbin.
+- [**Casbin Service**](https://casbin.apache.org/ms/docs/service/): Jalankan Casbin sebagai perkhidmatan pengesahan jarak jauh melalui gRPC atau HTTP dengan **Casbin Server** dan projek lain, dan bukannya menyematkan pustaka.
+- [Alat Baris Perintah](https://casbin.apache.org/ms/docs/command-line-tools/): Alat baris perintah Casbin untuk Go, Java, Node.js, Python, .NET dan Rust - muatkan model dan polisi, jalankan semakan enforce dan urus polisi dari shell anda.
+- [Pencatatan Log & Pengendalian Ralat](https://casbin.apache.org/ms/docs/log-error/): Aktifkan dan sesuaikan pencatatan log dalam Casbin untuk permintaan, pemuatan model dan perubahan dasar, serta kendalikan ralat yang dikembalikan oleh enforcer.
+- [Integrasi Bahagian Hadapan](https://casbin.apache.org/ms/docs/frontend/): Casbin.js ialah tambahan Casbin yang memudahkan pengurusan kawalan akses anda dalam aplikasi bahagian hadapan
+
+## **Editors & Tools**
+
+- [**Online Editor**](https://casbin.apache.org/ms/docs/online-editor/): Tulis dan uji model serta dasar-dasar Casbin dalam pelayar dengan **Online Editor** - penyorotan sintaks, penyelesaian automatik, bantuan AI dan hasil enforce serta-merta.
+- [**IDE Plugins**](https://casbin.apache.org/ms/docs/ide-plugins/): Plugin Casbin untuk IDE JetBrains dan Visual Studio Code - penyorotan sintaks dan sokongan penyuntingan untuk fail model dan polisi.
+
+## **Comparisons**
+
+- [Casbin vs. Alternatif](https://casbin.apache.org/ms/docs/comparison/): Bagaimana Apache Casbin dibandingkan dengan OpenFGA, Open Policy Agent (OPA), CASL, dan Cedar - pustaka atau perkhidmatan, bahasa polisi, model kawalan akses, sokongan bahasa, dan bila hendak memilih setiap satu.
+- [Casbin vs. OpenFGA](https://casbin.apache.org/ms/docs/casbin-vs-openfga/): Perbandingan Apache Casbin dan OpenFGA - pustaka terbenam versus perkhidmatan gaya Zanzibar, pemodelan RBAC dan ReBAC, penyimpanan, ciri-ciri prestasi, dan bila hendak memilih masing-masing.
+- [Casbin vs. Open Policy Agent (OPA)](https://casbin.apache.org/ms/docs/casbin-vs-opa/): Perbandingan antara Apache Casbin dan Open Policy Agent - model dan data dasar versus Rego, pustaka tertanam versus ejen dasar, pengurusan dasar semasa masa berjalan, sokongan bahasa, dan bila perlu memilih setiap satu.
+- [Casbin vs. CASL](https://casbin.apache.org/ms/docs/casbin-vs-casl/): Perbandingan Apache Casbin dan CASL untuk aplikasi JavaScript dan TypeScript - peraturan sebagai data versus keupayaan dalam kod, penggunaan frontend dan backend, perkhidmatan berbilang bahasa, dan bila hendak memilih setiap satu.
+- [Casbin vs. Cedar](https://casbin.apache.org/ms/docs/casbin-vs-cedar/): Perbandingan antara Apache Casbin dan Cedar - model PERM yang boleh dikonfigurasi berbanding bahasa dasar Cedar, pengesahan dan analisis, sokongan bahasa, penyimpanan dasar, dan bila hendak memilih setiap satunya.
+
+## **About & More**
+
+- [Pengguna](https://casbin.apache.org/ms/docs/adopters/): Syarikat dan projek sumber terbuka yang menggunakan Apache Casbin untuk pengesahan, sama ada secara langsung dalam kod mereka atau melalui plugin atau kebergantungan.
+- [Menyumbang](https://casbin.apache.org/ms/docs/contributing/): Cara menyumbang kepada Apache Casbin - pustaka teras dan port bahasa, penyesuai, middleware, laman web dan terjemahan - dan cara untuk bermula.
+- [**Privacy Policy**](https://casbin.apache.org/ms/docs/privacy-policy/): Dasar privasi untuk laman web Apache Casbin dan perkhidmatan log masuk: maklumat apa yang dikumpul, bagaimana ia digunakan, disimpan dan dikongsi.
+- [Terma Perkhidmatan](https://casbin.apache.org/ms/docs/terms-of-service/): Terma perkhidmatan untuk menggunakan laman web Apache Casbin.
+
+## More
+
+- [Muat turun](https://casbin.apache.org/ms/docs/download/): Muat turun dan sahkan keluaran Apache Casbin
+
+## Optional
+
+- [Source code](https://github.com/apache/casbin): Go implementation and examples (Apache-2.0)
+- [Online editor](https://editor.casbin.org): Write and test a model and policy in the browser

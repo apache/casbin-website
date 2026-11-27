@@ -1,0 +1,130 @@
+# Apache Casbin
+
+> Apache Casbin (Incubating) is an open-source authorization library that supports access control models like ACL, RBAC, ABAC, ReBAC, PBAC, BLP, Biba and more. A model file (PERM: policy, effect, request, matchers) and policy rules decide every request, and the same model works in Go, Java, Node.js, Python, .NET, PHP, Rust, C++ and other languages.
+
+## **Basics**
+
+- [Gambaran Umum](https://casbin.apache.org/id/docs/overview/): Apache Casbin adalah pustaka otorisasi sumber terbuka untuk Go, Java, Node.js, Python, .NET, PHP, Rust, dan C++ yang mendukung ACL, RBAC, ABAC, ReBAC, dan lainnya.
+- [Memulai](https://casbin.apache.org/id/docs/get-started/): Instal Casbin untuk Go, Java, Node.js, PHP, Python, .NET, C++ atau Rust, buat enforcer dari model dan policy, dan jalankan pemeriksaan otorisasi pertama Anda.
+- [Cara Kerja](https://casbin.apache.org/id/docs/how-it-works/): Cara kerja Casbin - metamodel PERM (Policy, Effect, Request, Matchers) dan file model CONF yang memungkinkan Anda beralih antara model ACL, RBAC, ABAC, dan kustom.
+- [Tutorials](https://casbin.apache.org/id/docs/tutorials/): Makalah, video, dan tutorial komunitas Casbin untuk Go, Java, Node.js, Python, PHP, .NET, dan bahasa lainnya, ditambah artikel tentang pemodelan dengan PERM.
+
+## **Guides**
+
+- [Tutorial RBAC Golang: Kontrol Akses Berbasis Peran di Gin](https://casbin.apache.org/id/docs/go-rbac-tutorial/): Tutorial langkah demi langkah RBAC di Go - tambahkan kontrol akses berbasis peran ke API REST Gin dengan Casbin, termasuk model, kebijakan, middleware, dan manajemen peran runtime.
+- [Tutorial RBAC Node.js: Kontrol Akses Berbasis Peran di Express](https://casbin.apache.org/id/docs/nodejs-rbac-tutorial/): Tutorial langkah demi langkah RBAC Node.js - tambahkan kontrol akses berbasis peran ke REST API Express dengan Casbin, termasuk model, kebijakan, middleware, dan manajemen peran saat runtime.
+- [Tutorial RBAC Python: Kontrol Akses Berbasis Peran di FastAPI](https://casbin.apache.org/id/docs/python-rbac-tutorial/): Tutorial RBAC Python langkah demi langkah - tambahkan kontrol akses berbasis peran ke REST API FastAPI dengan PyCasbin, termasuk model, kebijakan, dependensi, dan manajemen peran saat runtime.
+- [Spring Boot RBAC Tutorial: Role-Based Access Control with jCasbin](https://casbin.apache.org/id/docs/java-rbac-tutorial/): Tutorial RBAC Java langkah demi langkah - tambahkan role-based access control ke API REST Spring Boot dengan jCasbin, termasuk model, policy, interceptor, dan manajemen peran runtime.
+- [Tutorial NestJS RBAC: Kontrol Akses Berbasis Peran dengan Guards](https://casbin.apache.org/id/docs/nestjs-rbac-tutorial/): Tutorial NestJS RBAC: kontrol akses berbasis peran dengan pewarisan peran untuk API NestJS, menggunakan node-casbin, guard global, dan decorator izin.
+- [RBAC di Rust dengan Axum](https://casbin.apache.org/id/docs/rust-rbac-tutorial/): Tutorial RBAC Rust: kontrol akses berbasis peran untuk REST API Axum dengan casbin-rs, termasuk model, kebijakan, middleware, dan perubahan peran saat runtime.
+- [Otorisasi gRPC di Go](https://casbin.apache.org/id/docs/grpc-rbac-tutorial/): Kontrol akses berbasis peran untuk layanan gRPC Go dengan Casbin: interceptor unary dan stream yang memeriksa peran pemanggil terhadap nama metode lengkap.
+- [ABAC dalam Go](https://casbin.apache.org/id/docs/go-abac-tutorial/): Tutorial ABAC Go: kontrol akses berbasis atribut untuk API net/http dengan Casbin, menggunakan owner, department, dan status untuk menentukan siapa yang dapat membaca, mengedit, dan menerbitkan.
+- [ABAC di Node.js dengan Express](https://casbin.apache.org/id/docs/nodejs-abac-tutorial/): Tutorial ABAC Node.js: kontrol akses berbasis atribut untuk API Express dengan node-casbin, menggunakan owner, department, dan status untuk menentukan siapa yang dapat mengedit.
+- [ABAC di Python dengan Flask](https://casbin.apache.org/id/docs/flask-abac-tutorial/): Tutorial ABAC Python: kontrol akses berbasis atribut untuk API Flask dengan PyCasbin, menggunakan pemilik, departemen, dan status untuk menentukan siapa yang dapat membaca dan mengedit.
+- [Otorisasi untuk Agen AI dan Alat MCP](https://casbin.apache.org/id/docs/ai-agent-authorization/): Kontrol alat mana yang boleh dipanggil oleh agen AI dengan Casbin: izin per agen, batas argumen, aturan penolakan (deny), dan tidak ada akses lebih banyak daripada penggunanya. Dengan contoh MCP.
+
+## **Access Control Models**
+
+- [RBAC vs ABAC vs ACL vs ReBAC: Memilih Model Kontrol Akses](https://casbin.apache.org/id/docs/access-control-models/): Perbandingan ACL, RBAC, ABAC, ReBAC, dan PBAC dalam satu contoh: apa yang menjadi dasar keputusan masing-masing, kelebihan, kekurangan, kapan harus memilihnya, dan cara menggabungkan RBAC dengan ABAC.
+- [Model yang Didukung](https://casbin.apache.org/id/docs/supported-models/): Model kontrol akses yang didukung oleh **Casbin** - **ACL**, **RBAC**, **RBAC with domains**, **ABAC**, **ReBAC**, **PBAC**, **BLP**, **Biba**, **LBAC**, **OrBAC**, **UCON**, **RESTful**, **IP match**, **deny-override** dan **priority**.
+- [Sintaks **Model**](https://casbin.apache.org/id/docs/syntax-for-models/): Referensi sintaks model Casbin - definisi request, policy, role, dan effect serta matcher dalam file CONF, beserta operator dan contohnya.
+- [Effector](https://casbin.apache.org/id/docs/effector/): Antarmuka Effector Casbin menggabungkan efek dari semua aturan kebijakan yang cocok menjadi satu keputusan, untuk allow-override, deny-override, prioritas, dan efek kustom.
+- [**Functions**](https://casbin.apache.org/id/docs/function/): Fungsi matcher bawaan Casbin - keyMatch, keyMatch2-5, regexMatch, ipMatch, globMatch dan ekstraksi kunci - serta cara mendaftarkan fungsi kustom Anda sendiri.
+- [Gambaran Umum RBAC](https://casbin.apache.org/id/docs/rbac-overview/): Gambaran umum kontrol akses berbasis peran (RBAC) di Casbin - RBAC dasar, peran resource, domain (multi-tenancy), pencocokan pola dan peran kondisional.
+- [Apa itu RBAC? Role-Based Access Control dengan Contoh](https://casbin.apache.org/id/docs/rbac/): RBAC memberikan izin kepada peran alih-alih pengguna. Apa arti kontrol akses berbasis peran, sebuah contoh, RBAC96, RBAC vs ABAC, dan cara mengimplementasikannya dengan Casbin.
+- [RBAC with Pattern](https://casbin.apache.org/id/docs/rbac-with-pattern/): Gunakan wildcard dan pola dalam penugasan peran dan domain Casbin dengan AddNamedMatchingFunc dan AddNamedDomainMatchingFunc.
+- [RBAC dengan Domain](https://casbin.apache.org/id/docs/rbac-with-domains/): RBAC multi-tenant dengan Casbin - berikan peran berbeda kepada pengguna yang sama di domain atau tenant yang berbeda dengan definisi peran tiga argumen.
+- [RBAC dengan Kondisi](https://casbin.apache.org/id/docs/rbac-with-conditions/): Lampirkan kondisi pada penugasan peran Casbin dengan role manager kondisional, misalnya peran yang hanya valid dalam jendela waktu tertentu.
+- [**RBAC vs. RBAC96**](https://casbin.apache.org/id/docs/rbac-96/): Bagaimana **Casbin RBAC** berkaitan dengan standar **RBAC96** - pengguna dan peran, hierarki peran, sesi dan batasan, serta apa yang ditambahkan oleh **Casbin** dengan domain dan izin fleksibel.
+- [Apa itu ReBAC? Relationship-Based Access Control dengan Contoh](https://casbin.apache.org/id/docs/rebac/): Penjelasan tentang relationship-based access control (ReBAC), hubungannya dengan Google Zanzibar, perbedaannya dengan RBAC dan ABAC, serta cara memodelkan hubungan pengguna-sumber daya di Casbin.
+- [Apa itu ABAC? Attribute-Based Access Control dengan Contoh](https://casbin.apache.org/id/docs/abac/): Penjelasan tentang attribute-based access control (ABAC), perbedaannya dengan RBAC, dan cara menulis aturan ABAC di Casbin: bandingkan atribut pengguna, sumber daya, dan lingkungan di matcher atau simpan kondisi sebagai kebijakan.
+- [Apa itu PBAC? Policy-Based Access Control di Casbin](https://casbin.apache.org/id/docs/pbac/): Penjelasan tentang policy-based access control (PBAC), perbedaannya dengan ABAC dan RBAC, serta cara menyimpan ekspresi aturan sebagai kebijakan di Casbin dan mengevaluasinya saat runtime menggunakan eval().
+- [Ikhtisar MAC](https://casbin.apache.org/id/docs/mac-overview/): Kontrol akses wajib (MAC) dalam Casbin - model berbasis label seperti Bell-LaPadula, Biba, dan LBAC yang tidak dapat ditimpa oleh pengguna.
+- [BLP](https://casbin.apache.org/id/docs/blp/): Implementasikan model kerahasiaan Bell-LaPadula (BLP) di Casbin - tingkat keamanan untuk subjek dan objek, dengan aturan tidak boleh baca ke atas dan tidak boleh tulis ke bawah.
+- [Model Integritas Biba: No Read Down, No Write Up](https://casbin.apache.org/id/docs/biba/): Implementasikan model integritas Biba di Casbin - level integritas untuk subjek dan objek, dengan aturan no read down dan no write up.
+- [Apa itu LBAC? Kontrol Akses Berbasis Kisi dalam Casbin](https://casbin.apache.org/id/docs/lbac/): Penjelasan tentang kontrol akses berbasis kisi (LBAC), cara menggabungkan tingkat kerahasiaan dan integritas, serta cara menegakkan keduanya dalam satu model Casbin.
+- [OrBAC](https://casbin.apache.org/id/docs/orbac/): Implementasikan akses kontrol berbasis organisasi (OrBAC) di Casbin - peran, aktivitas, dan tampilan dipetakan ke pengguna, tindakan, dan objek konkret per organisasi.
+- [Model Prioritas](https://casbin.apache.org/id/docs/priority-model/): Selesaikan aturan yang bertentangan dengan model prioritas Casbin - prioritas implisit berdasarkan urutan kebijakan, bidang prioritas eksplisit, dan prioritas berbasis hierarki peran.
+- [Apa itu Usage Control (UCON)? Otorisasi Berkelanjutan](https://casbin.apache.org/id/docs/ucon/): Apa itu usage control (UCON): otorisasi, kewajiban, dan kondisi yang diperiksa secara berkelanjutan selama penggunaan, dengan atribut yang dapat berubah, dan cara mengimplementasikannya dengan Casbin.
+- [Super Administrator dalam Casbin: Melewati Pemeriksaan Kebijakan](https://casbin.apache.org/id/docs/superadmin/): Apa itu super administrator (root) dalam **Casbin**, cara menambahkannya ke **matcher**, dan bagaimana pola yang sama bekerja dengan **RBAC**, **ABAC**, dan **RBAC with domains**.
+
+## **Storage**
+
+- [Penyimpanan Model](https://casbin.apache.org/id/docs/model-storage/): Muat model Casbin dari file CONF, dari string, atau dari kode. Model mendefinisikan logika kontrol akses Anda dan bersifat hanya-baca saat runtime.
+- [Policy Storage](https://casbin.apache.org/id/docs/policy-storage/): Simpan aturan policy Casbin dalam file CSV, database, atau backend lain melalui adapter, dan muat atau simpan melalui API adapter.
+- [Memuat Subset Kebijakan](https://casbin.apache.org/id/docs/policy-subset-loading/): Muat hanya subset dari aturan kebijakan Casbin dengan adapter terfilter dan LoadFilteredPolicy(), untuk menghemat memori pada deployment besar atau multi-tenant.
+
+## Studi Kasus
+
+- [Izin Data](https://casbin.apache.org/id/docs/data-permissions/): Izin tingkat data dengan Casbin - kueri peran dan izin implisit melalui hierarki RBAC, dan saring kumpulan data dengan BatchEnforce().
+- [Nested Organizations](https://casbin.apache.org/id/docs/nested-organizations/): Modelkan organisasi bertingkat di Casbin - berikan peran pada suatu unit dan wariskan ke seluruh subtree menggunakan jalur domain dan fungsi pencocokan turunan (descendant matching function).
+- [**List Filtering**](https://casbin.apache.org/id/docs/list-filtering/): Filter daftar dan hasil pencarian dengan Casbin - BatchEnforce, izin implisit per unit, tabel izin yang dimaterialisasi, dan Postgres RLS, ditambah kesenjangan perencana kueri.
+- [**Menu Permissions**](https://casbin.apache.org/id/docs/menu-permissions/): Kontrol akses berbasis menu dengan jCasbin dan Spring Boot - petakan peran ke menu dan submenu serta tampilkan setiap item menu hanya kepada pengguna yang memiliki hak akses.
+
+## **Plugins**
+
+- [Plugin Overview](https://casbin.apache.org/id/docs/plugins-overview/): Ikhtisar plugin Casbin - adapter, watcher, dispatcher, role manager, dan middleware yang menghubungkan Casbin ke database, message bus, dan framework web.
+- [Enforcers](https://casbin.apache.org/id/docs/enforcers/): Enforcer adalah struktur utama dalam Casbin yang berfungsi sebagai antarmuka bagi pengguna untuk melakukan operasi pada aturan kebijakan dan model.
+- [Adapters](https://casbin.apache.org/id/docs/adapters/): Adapter Casbin memuat dan menyimpan aturan kebijakan di MySQL, PostgreSQL, MongoDB, Redis, file, dan puluhan penyimpanan lainnya. Temukan adapter untuk bahasa dan database Anda.
+- [Watchers](https://casbin.apache.org/id/docs/watchers/): Casbin watchers menjaga sinkronisasi kebijakan di antara beberapa instance enforcer melalui etcd, Redis, Kafka, NATS, dan bus pesan lainnya.
+- [Dispatcher](https://casbin.apache.org/id/docs/dispatchers/): Dispatcher Casbin menyebarkan perubahan kebijakan inkremental ke setiap enforcer dalam klaster menggunakan protokol konsistensi seperti Raft, tanpa mengubah API Casbin.
+- [Role Managers](https://casbin.apache.org/id/docs/role-managers/): Role manager Casbin menyelesaikan hierarki peran RBAC, baik dari kebijakan di memori maupun dari sumber eksternal seperti LDAP, Okta, Auth0, dan Azure AD.
+- [Middleware](https://casbin.apache.org/id/docs/middlewares/): Middleware otorisasi Casbin untuk framework web dan API gateway - Gin, Echo, Express, Koa, NestJS, Django, Flask, FastAPI, Spring Boot, Laravel, dan lainnya.
+- [Otorisasi Kong](https://casbin.apache.org/id/docs/kong-authz/): kong-authz adalah plugin Kong API Gateway yang mengotorisasi permintaan dengan lua-casbin. Instal, konfigurasikan model dan kebijakan, serta lindungi rute Kong Anda.
+- [GraphQL Middleware](https://casbin.apache.org/id/docs/graphql-middlewares/): Tambahkan otorisasi ke API GraphQL dengan Casbin - tegakkan akses pada tipe, kolom, dan operasi di resolver, dengan middleware untuk server GraphQL populer.
+- [**Cloud Native**](https://casbin.apache.org/id/docs/cloud-native/): Gunakan **Casbin** untuk otorisasi dalam tumpukan cloud-native: proyek-proyek yang mengintegrasikan **Casbin** dengan Envoy, Istio, Traefik, KubeSphere, dan infrastruktur lainnya.
+
+## API
+
+- [API Overview](https://casbin.apache.org/id/docs/api-overview/): Ringkasan API utama Casbin - Enforce, BatchEnforce, EnforceEx, Management API, dan RBAC API - dengan contoh menggunakan model RBAC dan kebijakan CSV.
+- [API Manajemen](https://casbin.apache.org/id/docs/management-api/): Referensi API Manajemen Casbin - mengambil, menambah, menghapus, memperbarui, dan memfilter aturan kebijakan serta penugasan peran saat runtime, dengan contoh untuk setiap bahasa.
+- [API RBAC](https://casbin.apache.org/id/docs/rbac-api/): API yang lebih ramah untuk RBAC. API ini adalah subset dari Management API. Pengguna RBAC dapat menggunakan API ini untuk menyederhanakan kode
+- [API RBAC dengan Domain](https://casbin.apache.org/id/docs/rbac-with-domains-api/): API yang lebih mudah digunakan untuk RBAC dengan domain. API ini merupakan subset dari Management API. Pengguna RBAC dapat menggunakan API ini untuk menyederhanakan kode mereka.
+- [API RBAC dengan Kondisi](https://casbin.apache.org/id/docs/rbac-with-conditions-api/): Referensi API untuk Casbin RBAC with conditions - daftarkan fungsi kondisi pada tautan user-role dan teruskan parameter ke dalamnya.
+- [Role Manager API](https://casbin.apache.org/id/docs/rolemanager-api/): API RoleManager menyediakan antarmuka untuk mendefinisikan operasi guna mengelola peran. Penambahan fungsi pencocokan ke RoleManager memungkinkan penggunaan wildcard pada nama peran dan domain.
+
+## **Advanced Usage**
+
+- [Deployment Produksi](https://casbin.apache.org/id/docs/production-deployment/): Jalankan Casbin di produksi - satu enforcer per proses, thread safety dengan SyncedEnforcer, caching keputusan, menjaga replika tetap sinkron dengan watchers, dan menulis kebijakan di dalam transaksi database.
+- [Multithreading](https://casbin.apache.org/id/docs/multi-threading/): Gunakan Casbin dengan aman dalam kode multi-threaded menggunakan enforcer tersinkronisasi (SyncedEnforcer) di Go, Java, C++, dan bahasa lainnya.
+- [**Benchmarks**](https://casbin.apache.org/id/docs/benchmark/): Benchmark enforcement Casbin - waktu dan memori per panggilan Enforce() untuk model ACL, RBAC, ABAC, RESTful, dan lainnya, dari beberapa aturan hingga 110.000 aturan kebijakan.
+- [Optimasi Performa](https://casbin.apache.org/id/docs/performance/): Optimalkan Casbin pada skala besar - tangani volume permintaan tinggi dengan enforcer yang disinkronkan dan sharding, serta kurangi memori dengan pemuatan kebijakan terfilter.
+- [**Kubernetes Admission Webhook**](https://casbin.apache.org/id/docs/k8s-gatekeeper/): Casbin K8s-Gatekeeper adalah admission webhook Kubernetes yang mengizinkan atau menolak operasi pada resource Kubernetes apa pun menggunakan model dan kebijakan Casbin deklaratif.
+- [Envoy (Otorisasi Service Mesh)](https://casbin.apache.org/id/docs/envoy/): Otorisasi lalu lintas service mesh dengan Casbin melalui otorisasi eksternal Envoy - envoy-authz menegakkan kebijakan RBAC dan ABAC untuk Envoy dan Istio.
+
+## **Management**
+
+- [**Admin Portal**](https://casbin.apache.org/id/docs/admin-portal/): Kelola model dan kebijakan Casbin dalam UI web. Casdoor dan portal admin lainnya menyediakan editor model, editor kebijakan, dan manajemen izin di atas Casbin.
+- [**Casbin Service**](https://casbin.apache.org/id/docs/service/): Jalankan **Casbin** sebagai layanan otorisasi jarak jauh melalui gRPC atau HTTP dengan **Casbin Server** dan proyek lainnya, alih-alih mengintegrasikan pustaka secara langsung.
+- [**Alat Baris Perintah**](https://casbin.apache.org/id/docs/command-line-tools/): Alat baris perintah **Casbin** untuk Go, Java, Node.js, Python, .NET, dan Rust - muat model dan kebijakan, jalankan pemeriksaan enforce, dan kelola kebijakan dari shell Anda.
+- [Logging & Penanganan Error](https://casbin.apache.org/id/docs/log-error/): Aktifkan dan sesuaikan logging di Casbin untuk permintaan, pemuatan model, dan perubahan kebijakan, serta tangani error yang dikembalikan oleh enforcer.
+- [Integrasi Frontend](https://casbin.apache.org/id/docs/frontend/): Casbin.js adalah addon Casbin yang memfasilitasi manajemen kontrol akses Anda dalam aplikasi frontend
+
+## **Editors & Tools**
+
+- [**Online Editor**](https://casbin.apache.org/id/docs/online-editor/): Tulis dan uji model serta kebijakan Casbin di browser menggunakan **online editor** - penyorotan sintaks, penyelesaian otomatis, bantuan AI, dan hasil enforce instan.
+- [**IDE Plugins**](https://casbin.apache.org/id/docs/ide-plugins/): Plugin Casbin untuk JetBrains IDEs dan Visual Studio Code - dukungan pengeditan dan penyorotan sintaks untuk file model dan policy.
+
+## **Comparisons**
+
+- [Perbandingan Casbin dengan Alternatif Lainnya](https://casbin.apache.org/id/docs/comparison/): Bagaimana Apache Casbin dibandingkan dengan OpenFGA, Open Policy Agent (OPA), CASL, dan Cedar - pustaka atau layanan, bahasa kebijakan, model kontrol akses, dukungan bahasa, dan kapan harus memilih masing-masing.
+- [Casbin vs. OpenFGA](https://casbin.apache.org/id/docs/casbin-vs-openfga/): Perbandingan Apache Casbin dan OpenFGA - pustaka tertanam versus layanan bergaya Zanzibar, pemodelan RBAC dan ReBAC, penyimpanan, karakteristik kinerja, dan kapan memilih masing-masing.
+- [Casbin vs. Open Policy Agent (OPA)](https://casbin.apache.org/id/docs/casbin-vs-opa/): Perbandingan antara Apache Casbin dan Open Policy Agent - model dan data kebijakan versus Rego, pustaka tertanam versus agen kebijakan, manajemen kebijakan saat runtime, dukungan bahasa, dan kapan memilih masing-masing.
+- [Casbin vs. CASL](https://casbin.apache.org/id/docs/casbin-vs-casl/): Perbandingan Apache Casbin dan CASL untuk aplikasi JavaScript dan TypeScript - rules as data versus abilities in code, penggunaan frontend dan backend, layanan multi-bahasa, dan kapan harus memilih masing-masing.
+- [Casbin vs. Cedar](https://casbin.apache.org/id/docs/casbin-vs-cedar/): Perbandingan Apache Casbin dan Cedar - model PERM yang dapat dikonfigurasi versus bahasa kebijakan Cedar, validasi dan analisis, dukungan bahasa, penyimpanan kebijakan, dan kapan memilih masing-masing.
+
+## **About & More**
+
+- [Pengguna](https://casbin.apache.org/id/docs/adopters/): Perusahaan dan proyek open-source yang menggunakan Apache Casbin untuk otorisasi, baik secara langsung dalam kode mereka maupun melalui plugin atau dependensi.
+- [Kontribusi](https://casbin.apache.org/id/docs/contributing/): Cara berkontribusi pada Apache Casbin - pustaka inti dan port bahasa, adapter, middleware, situs web dan terjemahan - serta cara memulai.
+- [Kebijakan Privasi](https://casbin.apache.org/id/docs/privacy-policy/): Kebijakan privasi untuk situs web Apache Casbin dan layanan masuk: informasi apa yang dikumpulkan, bagaimana digunakan, disimpan, dan dibagikan.
+- [Ketentuan Layanan](https://casbin.apache.org/id/docs/terms-of-service/): Ketentuan layanan untuk penggunaan situs web Apache Casbin.
+
+## More
+
+- [Unduh](https://casbin.apache.org/id/docs/download/): Unduh dan verifikasi rilis Apache Casbin
+
+## Optional
+
+- [Source code](https://github.com/apache/casbin): Go implementation and examples (Apache-2.0)
+- [Online editor](https://editor.casbin.org): Write and test a model and policy in the browser

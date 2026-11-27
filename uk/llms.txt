@@ -1,0 +1,130 @@
+# Apache Casbin
+
+> Apache Casbin (Incubating) is an open-source authorization library that supports access control models like ACL, RBAC, ABAC, ReBAC, PBAC, BLP, Biba and more. A model file (PERM: policy, effect, request, matchers) and policy rules decide every request, and the same model works in Go, Java, Node.js, Python, .NET, PHP, Rust, C++ and other languages.
+
+## **Basics**
+
+- [Огляд](https://casbin.apache.org/uk/docs/overview/): Apache Casbin — це бібліотека авторизації з відкритим кодом для Go, Java, Node.js, Python, .NET, PHP, Rust і C++, яка підтримує ACL, RBAC, ABAC, ReBAC та інші моделі.
+- [Розпочати](https://casbin.apache.org/uk/docs/get-started/): Встановіть Casbin для Go, Java, Node.js, PHP, Python, .NET, C++ або Rust, створіть ендфорсер з моделі та політики і виконайте першу перевірку авторизації.
+- [Як це працює](https://casbin.apache.org/uk/docs/how-it-works/): Як працює Casbin — метамодел PERM (Policy, Effect, Request, Matchers) та конфігураційні файли CONF, які дозволяють перемикатися між моделями ACL, RBAC, ABAC та власними моделями.
+- [Посібники](https://casbin.apache.org/uk/docs/tutorials/): Статті Casbin, відео та спільнотні навчальні посібники для Go, Java, Node.js, Python, PHP, .NET та інших мов, а також статті про моделювання за допомогою PERM.
+
+## **Guides**
+
+- [Навчальний посібник Golang RBAC: Role-Based Access Control у Gin](https://casbin.apache.org/uk/docs/go-rbac-tutorial/): Покроковий навчальний посібник з Go RBAC — додайте контроль доступу на основі ролей до REST API на Gin з Casbin, включаючи модель, політику, проміжне ПЗ та керування ролями під час виконання.
+- [Посібник Node.js RBAC: контроль доступу на основі ролей в Express](https://casbin.apache.org/uk/docs/nodejs-rbac-tutorial/): Покроковий посібник Node.js RBAC — додайте контроль доступу на основі ролей до REST API Express за допомогою Casbin, включаючи модель, політику, проміжне ПЗ (middleware) та управління ролями під час виконання.
+- [Посібник Python RBAC: контроль доступу на основі ролей у FastAPI](https://casbin.apache.org/uk/docs/python-rbac-tutorial/): Покроковий посібник Python RBAC — додайте контроль доступу на основі ролей до REST API FastAPI за допомогою PyCasbin, включаючи модель, політику, залежність (dependency) та управління ролями під час виконання.
+- [Посібник Spring Boot RBAC: контроль доступу на основі ролей з jCasbin](https://casbin.apache.org/uk/docs/java-rbac-tutorial/): Покроковий посібник RBAC у Java - додайте контроль доступу на основі ролей до REST API на Spring Boot з jCasbin, включаючи модель, політику, перехоплювач та керування ролями під час виконання.
+- [Посібник NestJS RBAC: Контроль доступу на основі ролей за допомогою Guard](https://casbin.apache.org/uk/docs/nestjs-rbac-tutorial/): Посібник NestJS RBAC: контроль доступу на основі ролей зі спадкуванням ролей для API NestJS, використовуючи node-casbin, глобальний guard та декоратор дозволів.
+- [RBAC у Rust з Axum](https://casbin.apache.org/uk/docs/rust-rbac-tutorial/): Навчальний посібник з RBAC на Rust: контроль доступу на основі ролей для REST API на Axum з casbin-rs, включаючи модель, політику, middleware та зміну ролей під час виконання.
+- [Авторизація gRPC у Go](https://casbin.apache.org/uk/docs/grpc-rbac-tutorial/): Контроль доступу на основі ролей для сервісу Go gRPC з Casbin: перехоплювачі (interceptors) дляUnary та stream викликів, які звіряють роль викликача з повною назвою методу.
+- [ABAC у Go](https://casbin.apache.org/uk/docs/go-abac-tutorial/): Навчальний посібник із ABAC у Go: контроль доступу на основі атрибутів для API net/http з Casbin, де власник, відділ і статус визначають, хто може читати, редагувати та публікувати.
+- [ABAC у Node.js із Express](https://casbin.apache.org/uk/docs/nodejs-abac-tutorial/): Туторіал ABAC для Node.js: контроль доступу на основі атрибутів для API Express із node-casbin, використовуючи власника, відділ і статус для визначення того, хто може редагувати.
+- [ABAC у Python із Flask](https://casbin.apache.org/uk/docs/flask-abac-tutorial/): Python ABAC tutorial: attribute-based access control for a Flask API with PyCasbin, using owner, department and status to decide who can read and edit.
+- [Авторизація для AI-агентів та інструментів MCP](https://casbin.apache.org/uk/docs/ai-agent-authorization/): Керуйте тим, які інструменти може викликати AI-агент, за допомогою Casbin: права доступу для кожного агента, обмеження аргументів, правила заборони та рівень доступу не вищий, ніж у користувача. З прикладом використання MCP.
+
+## **Access Control Models**
+
+- [RBAC vs ABAC vs ACL vs ReBAC: Вибір моделі контролю доступу](https://casbin.apache.org/uk/docs/access-control-models/): Порівняння ACL, RBAC, ABAC, ReBAC та PBAC на одному прикладі: що саме визначає кожна модель, її переваги, недоліки, коли її обирати та як поєднати RBAC з ABAC.
+- [Підтримувані моделі](https://casbin.apache.org/uk/docs/supported-models/): Моделі контролю доступу, які підтримує Casbin: ACL, RBAC, RBAC з доменами, ABAC, ReBAC, PBAC, BLP, Biba, LBAC, OrBAC, UCON, RESTful, IP match, deny-override та priority.
+- [Синтаксис **Model**](https://casbin.apache.org/uk/docs/syntax-for-models/): Довідка з синтаксису моделі Casbin — визначення запитів, політик, ролей та ефектів і відповідники (matchers) у CONF-файлах, з операторами та прикладами.
+- [**Effector**](https://casbin.apache.org/uk/docs/effector/): Інтерфейс Effector у Casbin поєднує ефекти всіх відповідних правил політики в єдине рішення для allow-override, deny-override, priority та custom effects.
+- [Функції](https://casbin.apache.org/uk/docs/function/): Вбудовані функції зіставлення **Casbin** — keyMatch, keyMatch2-5, regexMatch, ipMatch, globMatch та витяг ключів — і як зареєструвати власні спеціальні функції.
+- [Огляд RBAC](https://casbin.apache.org/uk/docs/rbac-overview/): Огляд контролю доступу на основі ролей (RBAC) у Casbin — базовий RBAC, ролі ресурсів, домени (багатокористувацькість), зіставлення за шаблоном та умовні ролі.
+- [Що таке RBAC? Role-Based Access Control із прикладами](https://casbin.apache.org/uk/docs/rbac/): RBAC надає дозволи ролям замість користувачів. Що означає контроль доступу на основі ролей, приклад, RBAC96, порівняння RBAC та ABAC, а також як реалізувати це за допомогою Casbin.
+- [RBAC with Pattern](https://casbin.apache.org/uk/docs/rbac-with-pattern/): Використовуйте шаблони заміни та патерни в призначеннях ролей та доменах Casbin за допомогою AddNamedMatchingFunc та AddNamedDomainMatchingFunc.
+- [**RBAC with Domains**](https://casbin.apache.org/uk/docs/rbac-with-domains/): Багатокористувацький RBAC з Casbin - надайте одному й тому ж користувачеві різні ролі в різних доменах або орендарях за допомогою триаргументного визначення ролі.
+- [RBAC з умовами](https://casbin.apache.org/uk/docs/rbac-with-conditions/): Прикріплюйте умови до призначень ролей Casbin за допомогою умовного менеджера ролей, наприклад, ролі, які дійсні лише в межах часового вікна.
+- [**RBAC vs. RBAC96**](https://casbin.apache.org/uk/docs/rbac-96/): Як **Casbin RBAC** пов'язаний зі стандартом **RBAC96**: користувачі та ролі, ієрархії ролей, сесії та обмеження, а також те, що додає Casbin завдяки доменам і гнучким дозволам.
+- [Що таке ReBAC? Контроль доступу на основі зв'язків із прикладами](https://casbin.apache.org/uk/docs/rebac/): Що таке контроль доступу на основі зв'язків (ReBAC), як він пов'язаний із Google Zanzibar, чим відрізняється від RBAC та ABAC, і як моделювати зв'язки між користувачем і ресурсом у Casbin.
+- [Що таке ABAC? Attribute-Based Access Control з прикладами](https://casbin.apache.org/uk/docs/abac/): Що таке контроль доступу на основі атрибутів (ABAC), чим він відрізняється від RBAC і як писати правила ABAC у Casbin: порівнюйте атрибути користувача, ресурсу та середовища в метчі або зберігайте умови як політики.
+- [Що таке PBAC? Контроль доступу на основі політик у Casbin](https://casbin.apache.org/uk/docs/pbac/): Що таке контроль доступу на основі політик (PBAC), чим він відрізняється від ABAC і RBAC, а також як зберігати вирази правил як політику в Casbin та оцінювати їх під час виконання за допомогою eval().
+- [Огляд MAC](https://casbin.apache.org/uk/docs/mac-overview/): Обов’язковий контроль доступу (MAC) у Casbin — моделі на основі міток, такі як Bell-LaPadula, Biba та LBAC, які користувачі не можуть перевизначити.
+- [BLP](https://casbin.apache.org/uk/docs/blp/): Реалізуйте модель конфіденційності Bell-LaPadula (BLP) у Casbin - рівні безпеки для суб'єктів та об'єктів із правилами "no read up" та "no write down".
+- [Модель цілісності Biba: No Read Down, No Write Up](https://casbin.apache.org/uk/docs/biba/): Реалізуйте модель цілісності Biba в Casbin — рівні цілісності для суб'єктів і об'єктів із правилами no read down та no write up.
+- [Що таке LBAC? Lattice-Based Access Control у Casbin](https://casbin.apache.org/uk/docs/lbac/): Що таке lattice-based access control (LBAC), як воно поєднує рівні конфіденційності та цілісності, і як забезпечити обидва в одній моделі Casbin.
+- [OrBAC](https://casbin.apache.org/uk/docs/orbac/): Реалізуйте організаційно-базований контроль доступу (OrBAC) у Casbin — ролі, дії та подання зіставляються з конкретними користувачами, діями та об'єктами в межах організації.
+- [Модель пріоритетів](https://casbin.apache.org/uk/docs/priority-model/): Вирішуйте конфліктні правила за допомогою моделі пріоритетів Casbin — неявний пріоритет за порядком політик, явний пріоритет через поля та пріоритет на основі ієрархії ролей.
+- [Що таке Usage Control (UCON)? Безперервна авторизація](https://casbin.apache.org/uk/docs/ucon/): Що таке usage control (UCON): авторизації, обов'язки та умови, які перевіряються безперервно під час використання, із мінливими атрибутами, і як реалізувати це за допомогою Casbin.
+- [Суперадміністратор у Casbin: обхід перевірки політик](https://casbin.apache.org/uk/docs/superadmin/): Що таке суперадміністратор (root) у Casbin, як додати його до matcher, і як той самий шаблон працює з RBAC, ABAC та RBAC з доменами.
+
+## Зберігання
+
+- [**Model Storage**](https://casbin.apache.org/uk/docs/model-storage/): Завантажте модель Casbin з CONF-файлу, з рядка або з коду. Моделі визначають вашу логіку контролю доступу і є доступними лише для читання під час виконання.
+- [Сховище політик](https://casbin.apache.org/uk/docs/policy-storage/): Зберігайте правила політики Casbin у CSV-файлі, базі даних або будь-якому іншому бекенді через адаптери, а завантажуйте або зберігайте їх через API адаптера.
+- [Завантаження підмножин політик](https://casbin.apache.org/uk/docs/policy-subset-loading/): Load only a subset of Casbin policy rules with filtered adapters and LoadFilteredPolicy(), to save memory in large or multi-tenant deployments.
+
+## Випадки використання
+
+- [**Data Permissions**](https://casbin.apache.org/uk/docs/data-permissions/): Data-level permissions with Casbin - query implicit roles and permissions through the RBAC hierarchy, and filter data sets with BatchEnforce().
+- [**Nested Organizations**](https://casbin.apache.org/uk/docs/nested-organizations/): Модель вкладених організацій у Casbin - надайте роль на рівні підрозділу та успадковуйте її через все піддерево за допомогою шляхів домену та функції відповідності нащадків.
+- [List Filtering](https://casbin.apache.org/uk/docs/list-filtering/): Фільтрація списків і результатів пошуку за допомогою Casbin - BatchEnforce, неявні дозволи для кожної одиниці, матеріалізована таблиця дозволів та Postgres RLS, а також проблема відсутності планувальника запитів.
+- [Menu Permissions](https://casbin.apache.org/uk/docs/menu-permissions/): Контроль доступу на основі меню з jCasbin та Spring Boot — зіставте ролі з меню та підменю, щоб кожен користувач бачив лише ті пункти меню, до яких має доступ.
+
+## **Plugins**
+
+- [Огляд плагінів](https://casbin.apache.org/uk/docs/plugins-overview/): Огляд плагінів Casbin - адаптери, спостерігачі (watchers), диспетчери, менеджери ролей та проміжне ПЗ (middleware), що інтегрують Casbin з базами даних, шини повідомлень та веб-фреймворки.
+- [Енфорсери](https://casbin.apache.org/uk/docs/enforcers/): Enforcer — це основна структура в Casbin, яка діє як інтерфейс для користувачів, щоб виконувати операції над правилами політики та моделями.
+- [Адаптери](https://casbin.apache.org/uk/docs/adapters/): Адаптери Casbin завантажують та зберігають правила політик у MySQL, PostgreSQL, MongoDB, Redis, файлах та десятках інших сховищ. Знайдіть адаптер для вашої мови та бази даних.
+- [Watchers](https://casbin.apache.org/uk/docs/watchers/): Casbin watchers синхронізують політику між кількома екземплярами ефорсера через etcd, Redis, Kafka, NATS та інші шини повідомлень.
+- [**Dispatchers**](https://casbin.apache.org/uk/docs/dispatchers/): Диспетчеризатори Casbin поширюють інкрементальні зміни політик на кожен ефорсер у кластері, використовуючи протокол узгодженості, такий як Raft, без зміни API Casbin.
+- [Role Managers](https://casbin.apache.org/uk/docs/role-managers/): Менеджери ролей Casbin вирішують ієрархію ролей RBAC, або з політики в пам'яті, або із зовнішніх джерел, таких як LDAP, Okta, Auth0 та Azure AD.
+- [Middleware](https://casbin.apache.org/uk/docs/middlewares/): Middleware для авторизації Casbin для веб-фреймворків та API-шлюзів — Gin, Echo, Express, Koa, NestJS, Django, Flask, FastAPI, Spring Boot, Laravel та інші.
+- [**Kong Authorization**](https://casbin.apache.org/uk/docs/kong-authz/): kong-authz — це плагін Kong API Gateway, який авторизує запити за допомогою lua-casbin. Встановіть його, налаштуйте модель та політику й захистіть маршрути Kong.
+- [GraphQL Middleware](https://casbin.apache.org/uk/docs/graphql-middlewares/): Додайте авторизацію до GraphQL API за допомогою Casbin - забезпечуйте контроль доступу до типів, полів та операцій у резольверах, використовуючи middleware для популярних серверів GraphQL.
+- [**Cloud Native**](https://casbin.apache.org/uk/docs/cloud-native/): Використовуйте Casbin для авторизації в cloud-native стеках: проєкти, які інтегрують Casbin з Envoy, Istio, Traefik, KubeSphere та іншою інфраструктурою.
+
+## API
+
+- [Огляд API](https://casbin.apache.org/uk/docs/api-overview/): Огляд основних API Casbin - Enforce, BatchEnforce, EnforceEx, Management API та RBAC API - з прикладами використання моделі RBAC та політики CSV.
+- [API керування](https://casbin.apache.org/uk/docs/management-api/): Довідка API керування Casbin — отримання, додавання, видалення, оновлення та фільтрація правил політики та призначень ролей під час виконання, з прикладами для кожної мови.
+- [API RBAC](https://casbin.apache.org/uk/docs/rbac-api/): Більш зручний API для RBAC. Цей API є підмножиною Management API. Користувачі RBAC можуть використовувати цей API для спрощення коду
+- [**RBAC with Domains API**](https://casbin.apache.org/uk/docs/rbac-with-domains-api/): Більш зручний API для RBAC з доменами. Цей API є підмножиною Management API. Користувачі RBAC можуть використовувати цей API для спрощення коду.
+- [**RBAC with Conditions API**](https://casbin.apache.org/uk/docs/rbac-with-conditions-api/): Довідка API для Casbin RBAC з умовами - реєстрація функцій умов на зв'язках користувач-роль та передача параметрів до них.
+- [Role Manager API](https://casbin.apache.org/uk/docs/rolemanager-api/): API **RoleManager** надає інтерфейс для визначення операцій з управління ролями. Додавання функції зіставлення до **RoleManager** дозволяє використовувати символи підстановки в іменах ролей та доменів.
+
+## Розширене використання
+
+- [**Розгортання у виробничому середовищі**](https://casbin.apache.org/uk/docs/production-deployment/): Запуск Casbin у виробництві - один enforcer на процес, потокова безпека за допомогою SyncedEnforcer, кешування рішень, синхронізація реплік за допомогою watcher'ів та запис політики всередині транзакцій бази даних.
+- [**Multithreading**](https://casbin.apache.org/uk/docs/multi-threading/): Безпечно використовуйте Casbin у багатопоточному коді за допомогою синхронізованого ендфорсера (SyncedEnforcer) у Go, Java, C++ та інших мовах.
+- [Бенчмарки](https://casbin.apache.org/uk/docs/benchmark/): Бенчмарки енфорсменту Casbin - час та пам'ять на виклик Enforce() для моделей ACL, RBAC, ABAC, RESTful та інших, від кількох правил до 110 000 правил політики.
+- [Оптимізація продуктивності](https://casbin.apache.org/uk/docs/performance/): Оптимізуйте Casbin у масштабі — обробляйте великий обсяг запитів за допомогою синхронізованих enforcers та шардування, а також зменшуйте використання пам'яті завдяки вибірковому завантаженню політик.
+- [Kubernetes Admission Webhook](https://casbin.apache.org/uk/docs/k8s-gatekeeper/): **Casbin K8s-Gatekeeper** — це admission webhook для Kubernetes, який дозволяє або відхиляє операції з будь-якими ресурсами Kubernetes за допомогою декларативних моделей і політик Casbin.
+- [Envoy (Авторизація в Service Mesh)](https://casbin.apache.org/uk/docs/envoy/): Авторизуйте трафік service mesh за допомогою Casbin через зовнішню авторизацію Envoy — envoy-authz застосовує політики RBAC та ABAC для Envoy та Istio.
+
+## **Management**
+
+- [**Admin Portal**](https://casbin.apache.org/uk/docs/admin-portal/): Керуйте моделями та політиками Casbin через веб-інтерфейс. **Casdoor** та інші адміністративні портали пропонують редактори моделей, редактори політик та керування правами доступу на основі Casbin.
+- [Casbin Service](https://casbin.apache.org/uk/docs/service/): Запустіть Casbin як віддалений сервіс авторизації через gRPC або HTTP за допомогою Casbin Server та інших проєктів, замість вбудовування бібліотеки.
+- [**Command-line Tools**](https://casbin.apache.org/uk/docs/command-line-tools/): Інструменти командного рядка Casbin для Go, Java, Node.js, Python, .NET та Rust — завантажуйте модель і політику, виконуйте перевірки enforce та керуйте політикою з вашого шелла.
+- [Logging & Error Handling](https://casbin.apache.org/uk/docs/log-error/): Увімкніть і налаштуйте логування в Casbin для запитів, завантаження моделі та змін політик, а також обробляйте помилки, що повертаються ефорсером.
+- [Інтеграція з фронтендом](https://casbin.apache.org/uk/docs/frontend/): Casbin.js — це аддон Casbin, який полегшує управління контролем доступу у фронтенд-додатках
+
+## **Editors & Tools**
+
+- [Онлайн-редактор](https://casbin.apache.org/uk/docs/online-editor/): Пишіть і тестуйте моделі та політики Casbin у браузері за допомогою онлайн-редактора — підсвічування синтаксису, автодоповнення, допомога ШІ та миттєві результати ефорсингу.
+- [Плагіни для IDE](https://casbin.apache.org/uk/docs/ide-plugins/): Плагіни Casbin для середовищ JetBrains IDE та Visual Studio Code — підсвічування синтаксису та підтримка редагування для файлів моделей та політик.
+
+## Порівняння
+
+- [Casbin vs. Alternatives](https://casbin.apache.org/uk/docs/comparison/): Як Apache Casbin порівнюється з OpenFGA, Open Policy Agent (OPA), CASL та Cedar — бібліотека чи сервіс, мова політик, моделі контролю доступу, підтримка мов програмування та коли варто обрати кожен із них.
+- [Порівняння Casbin та OpenFGA](https://casbin.apache.org/uk/docs/casbin-vs-openfga/): Порівняння Apache Casbin та OpenFGA: вбудована бібліотека проти сервісу у стилі Zanzibar, моделювання RBAC та ReBAC, зберігання, характеристики продуктивності та критерії вибору.
+- [Порівняння Casbin та Open Policy Agent (OPA)](https://casbin.apache.org/uk/docs/casbin-vs-opa/): Порівняння Apache Casbin та Open Policy Agent: модель і дані політики проти Rego, вбудована бібліотека проти агента політик, управління політиками під час виконання, підтримка мов та критерії вибору.
+- [Casbin vs. CASL](https://casbin.apache.org/uk/docs/casbin-vs-casl/): Порівняння Apache Casbin та CASL для додатків на JavaScript і TypeScript: правила як дані проти можливостей у коді, використання на фронтенді та бекенді, багатомовні сервіси та критерії вибору.
+- [Casbin проти Cedar](https://casbin.apache.org/uk/docs/casbin-vs-cedar/): Порівняння Apache Casbin та Cedar: конфігурована модель PERM проти мови політик Cedar, валідація та аналіз, підтримка мов, зберігання політик та коли обирати кожну з них.
+
+## **About & More**
+
+- [Користувачі](https://casbin.apache.org/uk/docs/adopters/): Компанії та проєкти з відкритим кодом, які використовують Apache Casbin для авторизації, безпосередньо в своєму коді або через плагін чи залежність.
+- [Contributing](https://casbin.apache.org/uk/docs/contributing/): Як робити внесок у Apache Casbin — основні бібліотеки та порти на мови програмування, адаптери, проміжне ПЗ, вебсайт і переклади — і як почати.
+- [Політика конфіденційності](https://casbin.apache.org/uk/docs/privacy-policy/): Політика конфіденційності для сайту Apache Casbin та служб входу: яка інформація збирається, як вона використовується, зберігається та передається.
+- [Умови використання](https://casbin.apache.org/uk/docs/terms-of-service/): Умови використання вебсайту Apache Casbin.
+
+## More
+
+- [**Download**](https://casbin.apache.org/uk/docs/download/): Завантаження та верифікація релізів Apache Casbin
+
+## Optional
+
+- [Source code](https://github.com/apache/casbin): Go implementation and examples (Apache-2.0)
+- [Online editor](https://editor.casbin.org): Write and test a model and policy in the browser

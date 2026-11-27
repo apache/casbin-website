@@ -1,0 +1,130 @@
+# Apache Casbin
+
+> Apache Casbin (Incubating) is an open-source authorization library that supports access control models like ACL, RBAC, ABAC, ReBAC, PBAC, BLP, Biba and more. A model file (PERM: policy, effect, request, matchers) and policy rules decide every request, and the same model works in Go, Java, Node.js, Python, .NET, PHP, Rust, C++ and other languages.
+
+## Basics
+
+- [Aperçu](https://casbin.apache.org/fr/docs/overview/): Apache Casbin est une bibliothèque d'autorisation open source pour Go, Java, Node.js, Python, .NET, PHP, Rust et C++ qui prend en charge ACL, RBAC, ABAC, ReBAC et plus encore.
+- [Commencer](https://casbin.apache.org/fr/docs/get-started/): Installez Casbin pour Go, Java, Node.js, PHP, Python, .NET, C++ ou Rust, créez un enforcer à partir d'un modèle et d'une politique, et effectuez votre première vérification d'autorisation.
+- [Fonctionnement](https://casbin.apache.org/fr/docs/how-it-works/): Comment fonctionne Casbin - le méta-modèle PERM (Policy, Effect, Request, Matchers) et les fichiers de modèle CONF qui permettent de basculer entre les modèles ACL, RBAC, ABAC et personnalisés.
+- [Tutoriels](https://casbin.apache.org/fr/docs/tutorials/): Articles, vidéos et tutoriels communautaires Casbin pour Go, Java, Node.js, Python, PHP, .NET et d'autres langages, ainsi que des articles sur la modélisation avec PERM.
+
+## Guides
+
+- [Golang RBAC Tutorial: Role-Based Access Control in Gin](https://casbin.apache.org/fr/docs/go-rbac-tutorial/): Tutoriel Go RBAC étape par étape - ajoutez le contrôle d'accès basé sur les rôles à une API REST Gin avec Casbin, incluant le model, la policy, le middleware et la gestion des rôles à l'exécution.
+- [Tutoriel RBAC Node.js : Contrôle d'accès basé sur les rôles dans Express](https://casbin.apache.org/fr/docs/nodejs-rbac-tutorial/): Tutoriel RBAC Node.js étape par étape - ajoutez le contrôle d'accès basé sur les rôles à une API REST Express avec Casbin, y compris le modèle, la politique, le middleware et la gestion des rôles à l'exécution.
+- [Tutoriel RBAC Python : Contrôle d'accès basé sur les rôles dans FastAPI](https://casbin.apache.org/fr/docs/python-rbac-tutorial/): Tutoriel RBAC Python étape par étape - ajoutez le contrôle d'accès basé sur les rôles à une API REST FastAPI avec PyCasbin, y compris le modèle, la politique, la dépendance et la gestion des rôles à l'exécution.
+- [Tutoriel RBAC Spring Boot : Contrôle d'accès basé sur les rôles avec jCasbin](https://casbin.apache.org/fr/docs/java-rbac-tutorial/): Tutoriel pas à pas RBAC en Java - Ajoutez un contrôle d'accès basé sur les rôles à une API REST Spring Boot avec jCasbin, incluant le model, la politique, l'interceptor et la gestion des rôles à l'exécution.
+- [Tutoriel NestJS RBAC : Contrôle d'accès basé sur les rôles avec Guards](https://casbin.apache.org/fr/docs/nestjs-rbac-tutorial/): Tutoriel NestJS RBAC : contrôle d'accès basé sur les rôles avec héritage de rôles pour une API NestJS, utilisant node-casbin, un guard global et un décorateur de permission.
+- [RBAC en Rust avec Axum](https://casbin.apache.org/fr/docs/rust-rbac-tutorial/): Tutoriel RBAC en Rust : contrôle d'accès basé sur les rôles pour une API REST Axum avec casbin-rs, incluant le modèle, la politique, le middleware et la modification des rôles à l'exécution.
+- [gRPC Authorization in Go](https://casbin.apache.org/fr/docs/grpc-rbac-tutorial/): Contrôle d'accès basé sur les rôles pour un service gRPC Go avec Casbin : intercepteurs unary et stream qui vérifient le rôle de l'appelant par rapport au nom complet de la méthode.
+- [ABAC in Go](https://casbin.apache.org/fr/docs/go-abac-tutorial/): Tutoriel ABAC en Go : contrôle d'accès basé sur les attributs pour une API net/http avec Casbin, utilisant le propriétaire, le département et le statut pour décider qui peut lire, modifier et publier.
+- [ABAC in Node.js with Express](https://casbin.apache.org/fr/docs/nodejs-abac-tutorial/): Tutoriel ABAC Node.js : contrôle d'accès basé sur les attributs pour une API Express avec node-casbin, utilisant owner, department et status pour décider qui peut modifier.
+- [ABAC en Python avec Flask](https://casbin.apache.org/fr/docs/flask-abac-tutorial/): Tutoriel ABAC pour Python : contrôle d'accès basé sur les attributs pour une API Flask avec PyCasbin, utilisant le propriétaire, le département et le statut pour décider qui peut lire et modifier.
+- [Autorisation pour les agents IA et les outils MCP](https://casbin.apache.org/fr/docs/ai-agent-authorization/): Contrôlez quels outils un agent IA peut appeler avec Casbin : permissions par agent, limites sur les arguments, règles de refus, et pas plus d'accès que son utilisateur. Avec un exemple MCP.
+
+## Access Control Models
+
+- [RBAC vs ABAC vs ACL vs ReBAC : Choisir un modèle de contrôle d'accès](https://casbin.apache.org/fr/docs/access-control-models/): Comparaison de ACL, RBAC, ABAC, ReBAC et PBAC sur un même exemple : ce que chacun décide, ses points forts, ses faiblesses, quand le choisir et comment combiner RBAC avec ABAC.
+- [Modèles pris en charge](https://casbin.apache.org/fr/docs/supported-models/): Modèles de contrôle d'accès pris en charge par Casbin - ACL, RBAC, RBAC avec domaines, ABAC, ReBAC, PBAC, BLP, Biba, LBAC, OrBAC, UCON, RESTful, IP match, deny-override et priority.
+- [Syntaxe du modèle](https://casbin.apache.org/fr/docs/syntax-for-models/): Référence de la syntaxe des modèles Casbin - définitions de requête, de politique, de rôle et d'effet ainsi que les correspondances dans les fichiers CONF, avec opérateurs et exemples.
+- [**Effector**](https://casbin.apache.org/fr/docs/effector/): L'interface Effector de Casbin combine les effets de toutes les règles de politique correspondantes en une seule décision, pour les effets allow-override, deny-override, priority et personnalisés.
+- [Fonctions](https://casbin.apache.org/fr/docs/function/): Les fonctions de correspondance Casbin intégrées - keyMatch, keyMatch2-5, regexMatch, ipMatch, globMatch et extraction de clés - et comment enregistrer vos propres fonctions personnalisées.
+- [RBAC Overview](https://casbin.apache.org/fr/docs/rbac-overview/): Présentation du contrôle d'accès basé sur les rôles (RBAC) dans Casbin - RBAC de base, rôles de ressources, domaines (multi-tenancy), correspondance de motifs et rôles conditionnels.
+- [Qu'est-ce que le RBAC ? Contrôle d'accès basé sur les rôles avec exemples](https://casbin.apache.org/fr/docs/rbac/): Le RBAC accorde des permissions aux rôles plutôt qu'aux utilisateurs. Ce que signifie le contrôle d'accès basé sur les rôles, un exemple, RBAC96, RBAC vs ABAC, et comment l'implémenter avec Casbin.
+- [RBAC avec Pattern](https://casbin.apache.org/fr/docs/rbac-with-pattern/): Utilisez des caractères génériques et des motifs dans les attributions de rôles et les domaines Casbin avec AddNamedMatchingFunc et AddNamedDomainMatchingFunc.
+- [RBAC avec Domaines](https://casbin.apache.org/fr/docs/rbac-with-domains/): RBAC multi-locataire avec Casbin - attribuez à un même utilisateur différents rôles dans différents domaines ou locataires grâce à une définition de rôle à trois arguments.
+- [RBAC with Conditions](https://casbin.apache.org/fr/docs/rbac-with-conditions/): Attachez des conditions aux affectations de rôles Casbin avec le gestionnaire de rôles conditionnel, par exemple des rôles valides uniquement dans une fenêtre temporelle.
+- [**RBAC vs. RBAC96**](https://casbin.apache.org/fr/docs/rbac-96/): Comment le **RBAC** de Casbin se rapporte à la norme **RBAC96** : utilisateurs et rôles, hiérarchies de rôles, sessions et contraintes, ainsi que ce que Casbin ajoute avec les domaines et les permissions flexibles.
+- [Qu'est-ce que ReBAC ? Contrôle d'accès basé sur les relations avec exemples](https://casbin.apache.org/fr/docs/rebac/): Ce qu'est le contrôle d'accès basé sur les relations (ReBAC), comment il se rapporte à Google Zanzibar, comment il diffère du RBAC et de l'ABAC, et comment modéliser les relations utilisateur-ressource dans Casbin.
+- [Qu'est-ce que l'ABAC ? Contrôle d'accès basé sur les attributs avec exemples](https://casbin.apache.org/fr/docs/abac/): Ce qu'est le contrôle d'accès basé sur les attributs (ABAC), comment il diffère du RBAC, et comment écrire des règles ABAC dans Casbin : comparer les attributs utilisateur, ressource et environnement dans le matcher ou stocker les conditions comme politique.
+- [Qu'est-ce que le PBAC ? Contrôle d'accès basé sur la politique dans Casbin](https://casbin.apache.org/fr/docs/pbac/): Définition du contrôle d'accès basé sur la politique (PBAC), ses différences avec ABAC et RBAC, et la manière de stocker les expressions de règle comme politique dans Casbin et de les évaluer à l'exécution avec eval().
+- [Présentation du MAC](https://casbin.apache.org/fr/docs/mac-overview/): Contrôle d'accès obligatoire (MAC) dans Casbin - modèles basés sur des étiquettes tels que Bell-LaPadula, Biba et LBAC que les utilisateurs ne peuvent pas outrepasser.
+- [BLP](https://casbin.apache.org/fr/docs/blp/): Implémentez le modèle de confidentialité Bell-LaPadula (BLP) dans Casbin - niveaux de sécurité pour les sujets et les objets, avec les règles no read up et no write down.
+- [Modèle d'intégrité Biba : Pas de lecture descendante, pas d'écriture ascendante](https://casbin.apache.org/fr/docs/biba/): Implémentez le modèle d'intégrité Biba dans Casbin - niveaux d'intégrité pour les sujets et les objets, avec les règles de non-lecture descendante et de non-écriture ascendante.
+- [Qu'est-ce que LBAC ? Contrôle d'accès basé sur les réseaux dans Casbin](https://casbin.apache.org/fr/docs/lbac/): Ce qu'est le contrôle d'accès basé sur les réseaux (LBAC), comment il combine les niveaux de confidentialité et d'intégrité, et comment appliquer les deux dans un seul modèle Casbin.
+- [OrBAC](https://casbin.apache.org/fr/docs/orbac/): Implémentez le contrôle d'accès basé sur l'organisation (OrBAC) dans Casbin - rôles, activités et vues mappés aux utilisateurs, actions et objets concrets par organisation.
+- [Modèle de priorité](https://casbin.apache.org/fr/docs/priority-model/): Résolvez les conflits entre les règles avec le modèle de priorité Casbin - priorité implicite par ordre de politique, champs de priorité explicites, et priorité basée sur la hiérarchie des rôles.
+- [Qu'est-ce que le contrôle d'utilisation (UCON) ? Autorisation continue](https://casbin.apache.org/fr/docs/ucon/): Ce qu'est le contrôle d'utilisation (UCON) : autorisations, obligations et conditions vérifiées en continu pendant l'utilisation, avec des attributs mutables, et comment le mettre en œuvre avec Casbin.
+- [Super Administrateur dans Casbin : Contournement des vérifications de politique](https://casbin.apache.org/fr/docs/superadmin/): Ce qu'est un super administrateur (root) dans Casbin, comment l'ajouter au matcher, et comment ce même modèle fonctionne avec RBAC, ABAC et RBAC avec domaines.
+
+## Stockage
+
+- [**Model Storage**](https://casbin.apache.org/fr/docs/model-storage/): Chargez un modèle Casbin depuis un fichier CONF, une chaîne de caractères ou du code. Les modèles définissent votre logique de contrôle d'accès et sont en lecture seule à l'exécution.
+- [Stockage de la politique](https://casbin.apache.org/fr/docs/policy-storage/): Stockez les règles de politique Casbin dans un fichier CSV, une base de données ou tout autre backend via des adaptateurs, et chargez-les ou sauvegardez-les via l'API de l'adaptateur.
+- [Chargement de sous-ensembles de politiques](https://casbin.apache.org/fr/docs/policy-subset-loading/): Chargez uniquement un sous-ensemble des règles de politique Casbin avec des adaptateurs filtrés et LoadFilteredPolicy(), pour économiser de la mémoire dans les déploiements volumineux ou multi-locataires.
+
+## Cas d'utilisation
+
+- [**Data Permissions**](https://casbin.apache.org/fr/docs/data-permissions/): Autorisations au niveau des données avec Casbin - interrogez les rôles et permissions implicites via la hiérarchie RBAC, et filtrez les jeux de données avec BatchEnforce().
+- [**Nested Organizations**](https://casbin.apache.org/fr/docs/nested-organizations/): Modélisez des organisations imbriquées dans Casbin - accordez un rôle à une unité et héritez-le à travers tout le sous-arbre avec des chemins de domaine et une fonction de correspondance descendant.
+- [Filtrage de liste](https://casbin.apache.org/fr/docs/list-filtering/): Filtrez les listes et les résultats de recherche avec Casbin - BatchEnforce, permissions implicites par unité, table de permissions matérialisée et RLS Postgres, ainsi que l'écart avec le planificateur de requêtes.
+- [**Menu Permissions**](https://casbin.apache.org/fr/docs/menu-permissions/): Contrôle d'accès basé sur les menus avec jCasbin et Spring Boot - associez les rôles aux menus et sous-menus, et affichez à chaque utilisateur uniquement les éléments de menu auxquels il peut accéder.
+
+## Plugins
+
+- [Vue d'ensemble des plugins](https://casbin.apache.org/fr/docs/plugins-overview/): Vue d'ensemble des plugins Casbin - adaptateurs, watchers, dispatchers, gestionnaires de rôles et middlewares qui connectent Casbin aux bases de données, bus de messages et frameworks web.
+- [Agents](https://casbin.apache.org/fr/docs/enforcers/): L'Enforcer est la structure principale dans Casbin qui sert d'interface permettant aux utilisateurs d'effectuer des opérations sur les règles de politique et les modèles.
+- [Adaptateurs](https://casbin.apache.org/fr/docs/adapters/): Les adaptateurs Casbin chargent et sauvegardent les règles de politique dans MySQL, PostgreSQL, MongoDB, Redis, des fichiers et des dizaines d'autres magasins. Trouvez l'adaptateur pour votre langage et votre base de données.
+- [Watchers](https://casbin.apache.org/fr/docs/watchers/): Les watchers Casbin maintiennent la politique synchronisée entre plusieurs instances d'enforceur via etcd, Redis, Kafka, NATS et autres bus de messages.
+- [**Dispatchers**](https://casbin.apache.org/fr/docs/dispatchers/): Les dispatchers Casbin propagent les modifications incrémentales de la politique à chaque enforceur dans un cluster en utilisant un protocole de cohérence tel que Raft, sans modifier l'API Casbin.
+- [Gestionnaires de Rôles](https://casbin.apache.org/fr/docs/role-managers/): Les gestionnaires de rôles Casbin résolvent la hiérarchie des rôles RBAC, soit à partir des politiques en mémoire, soit à partir de sources externes telles que LDAP, Okta, Auth0 et Azure AD.
+- [Middleware](https://casbin.apache.org/fr/docs/middlewares/): Middleware de contrôle d'accès Casbin pour les frameworks web et les passerelles API - Gin, Echo, Express, Koa, NestJS, Django, Flask, FastAPI, Spring Boot, Laravel et plus encore.
+- [**Kong Authorization**](https://casbin.apache.org/fr/docs/kong-authz/): kong-authz est un plugin Kong API Gateway qui autorise les requêtes avec lua-casbin. Installez-le, configurez un modèle et une politique, et protégez vos routes Kong.
+- [Middleware GraphQL](https://casbin.apache.org/fr/docs/graphql-middlewares/): Ajoutez de l'autorisation aux API GraphQL avec Casbin - appliquez le contrôle d'accès sur les types, les champs et les opérations dans les résolveurs, avec des middlewares pour les serveurs GraphQL populaires.
+- [**Cloud Native**](https://casbin.apache.org/fr/docs/cloud-native/): Utilisez Casbin pour l'autorisation dans les stacks cloud-native : projets intégrant Casbin avec Envoy, Istio, Traefik, KubeSphere et autres infrastructures.
+
+## API
+
+- [API Overview](https://casbin.apache.org/fr/docs/api-overview/): Aperçu des principales API Casbin - Enforce, BatchEnforce, EnforceEx, l'API de gestion et l'API RBAC - avec des exemples utilisant un modèle RBAC et une politique CSV.
+- [API de gestion](https://casbin.apache.org/fr/docs/management-api/): Référence de l'API de gestion Casbin - obtenir, ajouter, supprimer, mettre à jour et filtrer les règles de politique et les affectations de rôles à l'exécution, avec des exemples pour chaque langage.
+- [API RBAC](https://casbin.apache.org/fr/docs/rbac-api/): Une API plus conviviale pour le RBAC. Cette API est un sous-ensemble de l'API Management. Les utilisateurs du RBAC peuvent utiliser cette API pour simplifier leur code
+- [API RBAC avec Domaines](https://casbin.apache.org/fr/docs/rbac-with-domains-api/): Une API plus conviviale pour le RBAC avec domaines. Cette API est un sous-ensemble de l'API **Management**. Les utilisateurs du RBAC peuvent utiliser cette API pour simplifier leur code.
+- [API RBAC avec Conditions](https://casbin.apache.org/fr/docs/rbac-with-conditions-api/): Référence API pour Casbin RBAC avec conditions - enregistrez des fonctions de condition sur les liens utilisateur-rôle et passez-leur des paramètres.
+- [API du Role Manager](https://casbin.apache.org/fr/docs/rolemanager-api/): L'API **RoleManager** fournit une interface pour définir les opérations de gestion des rôles. L'ajout d'une fonction de correspondance au **RoleManager** permet l'utilisation de caractères génériques dans les noms de rôles et de domaines.
+
+## Utilisation avancée
+
+- [Production Deployment](https://casbin.apache.org/fr/docs/production-deployment/): Exécuter Casbin en production - un enforceur par processus, sécurité des threads avec SyncedEnforcer, mise en cache des décisions, synchronisation des répliques via les watchers, et écriture de la politique dans des transactions de base de données.
+- [**Multithreading**](https://casbin.apache.org/fr/docs/multi-threading/): Utilisez Casbin en toute sécurité dans du code multi-threadé avec l'enforcer synchronisé (SyncedEnforcer) en Go, Java, C++ et autres langages.
+- [**Benchmarks**](https://casbin.apache.org/fr/docs/benchmark/): Benchmarks d'application de la politique Casbin - temps et mémoire par appel Enforce() pour les modèles ACL, RBAC, ABAC, RESTful et autres, de quelques règles jusqu'à 110 000 règles de politique.
+- [Optimisation des performances](https://casbin.apache.org/fr/docs/performance/): Optimisez Casbin à grande échelle - gérez un volume élevé de requêtes avec des enforceurs synchronisés et le sharding, et réduisez la mémoire grâce au chargement filtré des politiques.
+- [Webhook d'admission Kubernetes](https://casbin.apache.org/fr/docs/k8s-gatekeeper/): Casbin K8s-Gatekeeper est un webhook d'admission Kubernetes qui autorise ou refuse les opérations sur n'importe quelle ressource Kubernetes en utilisant des modèles et politiques Casbin déclaratifs.
+- [Envoy (Autorisation Service Mesh)](https://casbin.apache.org/fr/docs/envoy/): Autorisez le trafic service mesh avec Casbin via l'autorisation externe Envoy - envoy-authz applique les politiques RBAC et ABAC pour Envoy et Istio.
+
+## Management
+
+- [**Admin Portal**](https://casbin.apache.org/fr/docs/admin-portal/): Gérez les modèles et les politiques Casbin dans une interface web. **Casdoor** et d'autres portails d'administration fournissent des éditeurs de modèles, des éditeurs de politiques et une gestion des permissions par-dessus Casbin.
+- [Casbin Service](https://casbin.apache.org/fr/docs/service/): Exécutez Casbin comme service d'autorisation distant via gRPC ou HTTP avec Casbin Server et d'autres projets, au lieu d'intégrer la bibliothèque.
+- [**Command-line Tools**](https://casbin.apache.org/fr/docs/command-line-tools/): Outils en ligne de commande Casbin pour Go, Java, Node.js, Python, .NET et Rust - chargez un modèle et une politique, exécutez des vérifications d'application et gérez la politique depuis votre shell.
+- [Journalisation & Gestion des erreurs](https://casbin.apache.org/fr/docs/log-error/): Activez et personnalisez la journalisation dans Casbin pour les requêtes, le chargement du modèle et les modifications de politique, et gérez les erreurs renvoyées par l'enforcer.
+- [Intégration Frontend](https://casbin.apache.org/fr/docs/frontend/): Casbin.js est un addon Casbin qui facilite la gestion du contrôle d'accès dans l'application frontend
+
+## Editors & Tools
+
+- [Éditeur en ligne](https://casbin.apache.org/fr/docs/online-editor/): Rédigez et testez les modèles et politiques Casbin dans le navigateur grâce à l'éditeur en ligne - coloration syntaxique, autocomplétion, assistance IA et résultats d'enforcement instantanés.
+- [Plugins IDE](https://casbin.apache.org/fr/docs/ide-plugins/): Plugins Casbin pour les IDE JetBrains et Visual Studio Code - coloration syntaxique et prise en charge de l'édition pour les fichiers de modèle et de politique.
+
+## Comparaisons
+
+- [Casbin vs. Alternatives](https://casbin.apache.org/fr/docs/comparison/): Comment Apache Casbin se compare à OpenFGA, Open Policy Agent (OPA), CASL et Cedar - bibliothèque ou service, langage de politique, modèles de contrôle d'accès, prise en charge des langages et quand choisir chacun.
+- [Casbin vs. OpenFGA](https://casbin.apache.org/fr/docs/casbin-vs-openfga/): Comparaison entre Apache Casbin et OpenFGA - bibliothèque intégrée versus service de type Zanzibar, modélisation RBAC et ReBAC, stockage, caractéristiques de performance, et quand choisir chacun.
+- [Casbin vs. Open Policy Agent (OPA)](https://casbin.apache.org/fr/docs/casbin-vs-opa/): Comparaison entre Apache Casbin et Open Policy Agent - modèle et données de politique versus Rego, bibliothèque intégrée versus agent de politique, gestion des politiques à l'exécution, prise en charge des langages, et quand choisir chacun.
+- [Casbin vs. CASL](https://casbin.apache.org/fr/docs/casbin-vs-casl/): Comparaison entre Apache Casbin et CASL pour les applications JavaScript et TypeScript - règles en tant que données versus capacités dans le code, utilisation frontend et backend, services multi-langages, et quand choisir l'un ou l'autre.
+- [Casbin vs. Cedar](https://casbin.apache.org/fr/docs/casbin-vs-cedar/): Comparaison entre Apache Casbin et Cedar - modèle PERM configurable versus le langage de politique Cedar, validation et analyse, support des langages, stockage des politiques, et quand choisir l'un ou l'autre.
+
+## About & More
+
+- [Adopters](https://casbin.apache.org/fr/docs/adopters/): Entreprises et projets open-source qui utilisent Apache Casbin pour l'autorisation, soit directement dans leur code, soit via un plugin ou une dépendance.
+- [Contribuer](https://casbin.apache.org/fr/docs/contributing/): Comment contribuer à Apache Casbin - bibliothèques principales et ports de langages, adaptateurs, middleware, le site web et les traductions - et comment commencer.
+- [Politique de confidentialité](https://casbin.apache.org/fr/docs/privacy-policy/): Politique de confidentialité pour le site web Apache Casbin et les services de connexion : quelles informations sont collectées, comment elles sont utilisées, stockées et partagées.
+- [Conditions d'utilisation](https://casbin.apache.org/fr/docs/terms-of-service/): Conditions d'utilisation pour l'accès au site web Apache Casbin.
+
+## More
+
+- [**Download**](https://casbin.apache.org/fr/docs/download/): Télécharger et vérifier les versions d'Apache Casbin
+
+## Optional
+
+- [Source code](https://github.com/apache/casbin): Go implementation and examples (Apache-2.0)
+- [Online editor](https://editor.casbin.org): Write and test a model and policy in the browser

@@ -1,0 +1,130 @@
+# Apache Casbin
+
+> Apache Casbin (Incubating) is an open-source authorization library that supports access control models like ACL, RBAC, ABAC, ReBAC, PBAC, BLP, Biba and more. A model file (PERM: policy, effect, request, matchers) and policy rules decide every request, and the same model works in Go, Java, Node.js, Python, .NET, PHP, Rust, C++ and other languages.
+
+## **Basics**
+
+- [概要](https://casbin.apache.org/ja/docs/overview/): Apache Casbin は、Go、Java、Node.js、Python、.NET、PHP、Rust、C++ 向けのオープンソース認可ライブラリであり、ACL、RBAC、ABAC、ReBAC などに対応しています。
+- [はじめに](https://casbin.apache.org/ja/docs/get-started/): Go、Java、Node.js、PHP、Python、.NET、C++、Rust 向けの Casbin をインストールし、モデルとポリシーから Enforcer を作成して、最初の認可チェックを実行します。
+- [仕組み](https://casbin.apache.org/ja/docs/how-it-works/): Casbin の仕組み - **PERM** メタモデル (Policy, Effect, Request, Matchers) と、ACL、RBAC、ABAC、カスタムモデル間を切り替えられる CONF モデルファイルについて。
+- [チュートリアル](https://casbin.apache.org/ja/docs/tutorials/): Go、Java、Node.js、Python、PHP、.NET などの言語向けの **Casbin** ペーパー、動画、コミュニティチュートリアル、および PERM を用いたモデリングに関する記事。
+
+## **Guides**
+
+- [Golang RBAC Tutorial: Role-Based Access Control in Gin](https://casbin.apache.org/ja/docs/go-rbac-tutorial/): ステップバイステップの Go RBAC チュートリアル - Casbin を使って Gin REST API にロールベースのアクセス制御を追加します。モデル、ポリシー、ミドルウェア、ランタイムでのロール管理を含みます。
+- [Node.js RBAC チュートリアル: Express におけるロールベースのアクセス制御](https://casbin.apache.org/ja/docs/nodejs-rbac-tutorial/): ステップバイステップの Node.js RBAC チュートリアル - Casbin を使って Express REST API にロールベースのアクセス制御を追加します。モデル、ポリシー、ミドルウェア、および実行時ロール管理を含みます。
+- [Python RBAC チュートリアル: FastAPI におけるロールベースのアクセス制御](https://casbin.apache.org/ja/docs/python-rbac-tutorial/): ステップバイステップの Python RBAC チュートリアル - PyCasbin を使って FastAPI REST API にロールベースのアクセス制御を追加します。モデル、ポリシー、依存性注入、および実行時ロール管理を含みます。
+- [Spring Boot RBAC チュートリアル: jCasbin を使ったロールベースアクセス制御](https://casbin.apache.org/ja/docs/java-rbac-tutorial/): ステップバイステップの Java RBAC チュートリアル - jCasbin を使って Spring Boot REST API にロールベースアクセス制御を追加する方法。モデル、ポリシー、インターセプター、ランタイムロール管理を含みます。
+- [NestJS RBAC チュートリアル: Guards を使ったロールベースアクセス制御](https://casbin.apache.org/ja/docs/nestjs-rbac-tutorial/): node-casbin、グローバルガード、権限デコレーターを使用した NestJS API における、ロール継承を含むロールベースアクセス制御のチュートリアル。
+- [Axum を使った Rust での RBAC](https://casbin.apache.org/ja/docs/rust-rbac-tutorial/): Rust RBAC チュートリアル: casbin-rs を使用した Axum REST API のロールベースアクセス制御。モデル、ポリシー、ミドルウェア、ランタイムでのロール変更を含みます。
+- [gRPC Authorization in Go](https://casbin.apache.org/ja/docs/grpc-rbac-tutorial/): Casbin を使用した Go gRPC サービスのためのロールベースのアクセス制御: 呼び出し元のロールをフルメソッド名に対してチェックする、unary および stream インターセプター。
+- [Go での ABAC](https://casbin.apache.org/ja/docs/go-abac-tutorial/): Go ABAC チュートリアル: Casbin を使用した net/http API のための属性ベースアクセス制御。所有者、部門、ステータスを用いて、閲覧、編集、公開ができる人を判断します。
+- [Express を使った Node.js での ABAC](https://casbin.apache.org/ja/docs/nodejs-abac-tutorial/): Node.js ABAC チュートリアル: node-casbin を使用した Express API 向けの属性ベースアクセス制御 (ABAC)。所有者、部門、ステータスを用いて誰が編集できるかを決定します。
+- [FlaskでPythonによるABAC](https://casbin.apache.org/ja/docs/flask-abac-tutorial/): PythonでのABACチュートリアル: PyCasbinを使用して、所有者、部門、ステータスに基づいて読み取りと編集の権限を判断するFlask API向け属性ベースアクセス制御。
+- [Authorization for AI Agents and MCP Tools](https://casbin.apache.org/ja/docs/ai-agent-authorization/): Casbin を使用して、AI エージェントが呼び出せるツールを制御します：エージェントごとの権限、引数の制限、拒否ルール、およびユーザー以上のアクセス許可を与えない仕組みについて説明します。MCP の例も含まれています。
+
+## **Access Control Models**
+
+- [RBAC vs ABAC vs ACL vs ReBAC: アクセス制御モデルの選択](https://casbin.apache.org/ja/docs/access-control-models/): ACL、RBAC、ABAC、ReBAC、PBACを1つの例で比較。各モデルが何を基準に判断するか、強み、弱み、選択すべきタイミング、そしてRBACとABACの組み合わせ方を解説します。
+- [**Supported Models**](https://casbin.apache.org/ja/docs/supported-models/): Casbin がサポートするアクセス制御モデル - ACL、RBAC、ドメイン付き RBAC、ABAC、ReBAC、PBAC、BLP、Biba、LBAC、OrBAC、UCON、RESTful、IP マッチ、deny-override および priority。
+- [**Model** Syntax](https://casbin.apache.org/ja/docs/syntax-for-models/): Casbin **Model** の構文リファレンス - CONF ファイルにおける request、policy、role、effect の定義と matchers、演算子および例。
+- [Effector](https://casbin.apache.org/ja/docs/effector/): Casbin の Effector インターフェースは、allow-override、deny-override、priority、カスタム効果などのすべての一致するポリシールールの効果を単一の判断に結合します。
+- [関数](https://casbin.apache.org/ja/docs/function/): keyMatch、keyMatch2-5、regexMatch、ipMatch、globMatch、キー抽出などの組み込み Casbin マッチャー関数、およびカスタム関数の登録方法について説明します。
+- [RBAC 概要](https://casbin.apache.org/ja/docs/rbac-overview/): Casbin におけるロールベースアクセス制御 (RBAC) の概要 - 基本 RBAC、リソースロール、ドメイン（マルチテナンシー）、パターンマッチング、条件付きロール。
+- [RBACとは？ロールベースアクセス制御と例](https://casbin.apache.org/ja/docs/rbac/): RBACはユーザーではなくロールに権限を付与します。ロールベースアクセス制御の意味、例、RBAC96、RBAC対ABAC、そしてCasbinでの実装方法について説明します。
+- [RBAC with Pattern](https://casbin.apache.org/ja/docs/rbac-with-pattern/): AddNamedMatchingFunc と AddNamedDomainMatchingFunc を使用して、Casbin のロール割り当てとドメインでワイルドカードやパターンを使用します。
+- [RBAC with Domains](https://casbin.apache.org/ja/docs/rbac-with-domains/): Casbin によるマルチテナント RBAC - 3 つの引数を持つロール定義を使用して、同じユーザーが異なるドメインやテナントで異なるロールを持つようにします。
+- [条件付き RBAC](https://casbin.apache.org/ja/docs/rbac-with-conditions/): 条件付きロールマネージャーを使用して Casbin のロール割り当てに条件を添付します。例えば、特定の時間ウィンドウ内でのみ有効なロールなどです。
+- [**RBAC vs. RBAC96**](https://casbin.apache.org/ja/docs/rbac-96/): Casbin の **RBAC** と **RBAC96** 標準との関係 - ユーザーとロール、ロール階層、セッションと制約、そしてドメインや柔軟な権限管理など Casbin が追加する機能について解説します。
+- [ReBAC とは？関係ベースアクセス制御と例](https://casbin.apache.org/ja/docs/rebac/): 関係ベースアクセス制御 (ReBAC) とは何か、Google Zanzibar との関係、RBAC および ABAC との違い、そして Casbin でユーザー-リソース関係をモデル化する方法について説明します。
+- [ABAC とは何か？属性ベースアクセス制御の例付き解説](https://casbin.apache.org/ja/docs/abac/): 属性ベースアクセス制御 (ABAC) とは何か、RBAC との違い、および Casbin で ABAC ルールを記述する方法について、ユーザー、リソース、環境の属性をマッチャーで比較するか、条件をポリシーとして保存する方法を解説します。
+- [PBAC とは何ですか？Casbin におけるポリシーベースアクセス制御](https://casbin.apache.org/ja/docs/pbac/): ポリシーベースアクセス制御 (PBAC) とは何か、それが ABAC や RBAC とどう異なるか、そしてルール式を Casbin のポリシーとして保存し、実行時に eval() で評価する方法について説明します。
+- [MAC 概要](https://casbin.apache.org/ja/docs/mac-overview/): Casbin における必須アクセス制御 (MAC) - Bell-LaPadula、Biba、LBAC など、ユーザーが上書きできないラベルベースのモデル。
+- [BLP](https://casbin.apache.org/ja/docs/blp/): CasbinでBell-LaPadula (BLP) 機密性モデルを実装 - 主体とオブジェクトのセキュリティレベルを用い、no read up および no write down ルールを適用します。
+- [Biba Integrity Model: No Read Down, No Write Up](https://casbin.apache.org/ja/docs/biba/): Casbin で Biba 完全性モデルを実装します。主体と客体に完全性レベルを設定し、「No Read Down」（下位読み取り禁止）および「No Write Up」（上位書き込み禁止）のルールを適用します。
+- [LBAC とは何か? Casbin における格子ベースアクセス制御](https://casbin.apache.org/ja/docs/lbac/): 格子ベースアクセス制御 (LBAC) の概要、機密性と整合性レベルの組み合わせ方法、および Casbin モデルでの両方の実装方法について説明します。
+- [**OrBAC**](https://casbin.apache.org/ja/docs/orbac/): Casbin で組織ベースのアクセス制御 (OrBAC) を実装します。役割、アクティビティ、ビューを、組織ごとに具体的なユーザー、アクション、オブジェクトにマッピングします。
+- [Priority Model](https://casbin.apache.org/ja/docs/priority-model/): Casbin の優先度モデルを使用して競合するルールを解決します - ポリシー順序による暗黙的な優先度、明示的な優先度フィールド、およびロール階層に基づく優先度。
+- [Usage Control (UCON) とは何か? 継続的な認可](https://casbin.apache.org/ja/docs/ucon/): Usage Control (UCON) とは何か: 使用時に継続的にチェックされる認可、義務、条件、および可変属性について、そして Casbin での実装方法について説明します。
+- [Casbin におけるスーパー管理者: ポリシーチェックのバイパス](https://casbin.apache.org/ja/docs/superadmin/): Casbin におけるスーパー管理者 (root) の定義、マッチャーへの追加方法、および RBAC、ABAC、ドメイン付き RBAC で同じパターンが機能する方法について説明します。
+
+## ストレージ
+
+- [**Model Storage**](https://casbin.apache.org/ja/docs/model-storage/): CONF ファイル、文字列、またはコードから Casbin モデルをロードします。モデルはアクセス制御ロジックを定義し、実行時には読み取り専用です。
+- [Policy Storage](https://casbin.apache.org/ja/docs/policy-storage/): adapters を通じて CSV ファイル、データベース、その他のバックエンドに Casbin ポリシールールを保存し、adapter API を通じてそれらをロードまたは保存します。
+- [Loading Policy Subsets](https://casbin.apache.org/ja/docs/policy-subset-loading/): フィルター付きアダプターと LoadFilteredPolicy() を使用して Casbin ポリシールールのサブセットのみを読み込み、大規模またはマルチテナント環境でのメモリを節約します。
+
+## ユースケース
+
+- [Data Permissions](https://casbin.apache.org/ja/docs/data-permissions/): Casbinによるデータレベルの権限管理 - RBAC階層を通じて暗黙的なロールと権限をクエリし、BatchEnforce()を使用してデータセットをフィルタリングします。
+- [ネストされた組織](https://casbin.apache.org/ja/docs/nested-organizations/): Casbin でネストされた組織をモデル化 - ドメインパスと子孫一致関数を使用して、あるユニットでロールを付与し、サブツリー全体で継承します。
+- [リストフィルタリング](https://casbin.apache.org/ja/docs/list-filtering/): Casbin でリストおよび検索結果をフィルタリングする方法 - BatchEnforce、ユニットごとの暗黙的な権限、マテリアライズされた権限テーブル、Postgres RLS、そしてクエリプランナーのギャップについて。
+- [**Menu Permissions**](https://casbin.apache.org/ja/docs/menu-permissions/): **jCasbin** と **Spring Boot** を使用したメニューベースのアクセス制御 - ロールをメニューおよびサブメニューにマッピングし、各ユーザーがアクセス可能なメニュー項目のみを表示します。
+
+## **Plugins**
+
+- [Plugin Overview](https://casbin.apache.org/ja/docs/plugins-overview/): Casbin プラグインの概要 - データベース、メッセージバス、Web フレームワークへの接続を提供する adapters、watchers、dispatchers、role managers、middleware。
+- [エンフォーサー](https://casbin.apache.org/ja/docs/enforcers/): Enforcer は Casbin の主要な構造体であり、ユーザーがポリシールールやモデルに対して操作を実行するためのインターフェースとして機能します。
+- [アダプター](https://casbin.apache.org/ja/docs/adapters/): Casbin adapters は、MySQL、PostgreSQL、MongoDB、Redis、ファイルなど数十種類のストアでポリシールールを読み書きします。あなたの言語とデータベースに対応する adapter を見つけてください。
+- [Watchers](https://casbin.apache.org/ja/docs/watchers/): Casbin watchers は etcd、Redis、Kafka、NATS およびその他のメッセージバスを通じて、複数のエンフォーサーインスタンス間でポリシーを同期します。
+- [Dispatchers](https://casbin.apache.org/ja/docs/dispatchers/): Casbin dispatchersは、Raftなどの整合性プロトコルを使用して、Casbin APIを変更することなく、増分ポリシー変更をクラスタ内のすべてのエンフォーサーに伝播します。
+- [Role Managers](https://casbin.apache.org/ja/docs/role-managers/): Casbin ロールマネージャーは、メモリ内のポリシーまたは LDAP、Okta、Auth0、Azure AD などの外部ソースから RBAC ロール階層を解決します。
+- [Middleware](https://casbin.apache.org/ja/docs/middlewares/): Web フレームワークや API ゲートウェイ向けの Casbin 認可ミドルウェア - Gin, Echo, Express, Koa, NestJS, Django, Flask, FastAPI, Spring Boot, Laravel などに対応。
+- [**Kong Authorization**](https://casbin.apache.org/ja/docs/kong-authz/): **kong-authz** は、lua-casbin を使用してリクエストを認可する Kong API Gateway プラグインです。インストールし、モデルとポリシーを設定して、Kong ルートを保護します。
+- [GraphQL Middleware](https://casbin.apache.org/ja/docs/graphql-middlewares/): Casbin を使用して GraphQL API に認可を追加します - レゾルバ内の型、フィールド、操作に対するアクセスを強制し、人気のある GraphQL サーバー向けのミドルウェアを提供します。
+- [**Cloud Native**](https://casbin.apache.org/ja/docs/cloud-native/): クラウドネイティブスタックでの認可に Casbin を使用します：Envoy、Istio、Traefik、KubeSphere などのインフラストラクチャと Casbin を統合したプロジェクトを紹介します。
+
+## API
+
+- [API概要](https://casbin.apache.org/ja/docs/api-overview/): Enforce、BatchEnforce、EnforceEx、Management API、および RBAC API といった主要な Casbin APIs の概要を、RBAC モデルと CSV ポリシーを使用した例とともに紹介します。
+- [Management API](https://casbin.apache.org/ja/docs/management-api/): Casbin Management API リファレンス - ポリシールールとロール割り当ての取得、追加、削除、更新、フィルタリングを実行時に行い、各言語の例を提供します。
+- [RBAC API](https://casbin.apache.org/ja/docs/rbac-api/): RBAC のためのより使いやすい API。この API は Management API のサブセットです。RBAC ユーザーはこの API を使用してコードを簡素化できます。
+- [RBAC with Domains API](https://casbin.apache.org/ja/docs/rbac-with-domains-api/): RBAC with domains のためのよりユーザーフレンドリーな API。この API は Management API のサブセットです。RBAC ユーザーはこの API を使用してコードを簡素化できます。
+- [RBAC with Conditions API](https://casbin.apache.org/ja/docs/rbac-with-conditions-api/): Casbin RBAC with conditions の API リファレンス - ユーザー-ロールリンクに条件関数を登録し、それらにパラメータを渡します。
+- [Role Manager API](https://casbin.apache.org/ja/docs/rolemanager-api/): RoleManager API は、ロールの管理操作を定義するためのインターフェースを提供します。RoleManager にマッチング関数を追加することで、ロール名やドメイン名でのワイルドカードの使用が可能になります。
+
+## 高度な使い方
+
+- [Production Deployment](https://casbin.apache.org/ja/docs/production-deployment/): 本番環境での Casbin の実行 - プロセスごとに1つの enforcer、SyncedEnforcer によるスレッドセーフティ、意思決定キャッシュ、watchers によるレプリカの同期、データベーストランザクション内でのポリシー書き込み。
+- [マルチスレッド](https://casbin.apache.org/ja/docs/multi-threading/): Go、Java、C++ などの言語で同期 Enforcer (SyncedEnforcer) を使用して、マルチスレッドコードで Casbin を安全に利用します。
+- [**Benchmarks**](https://casbin.apache.org/ja/docs/benchmark/): Casbin enforcement benchmarks - time and memory per Enforce() call for ACL, RBAC, ABAC, RESTful and other models, from a few rules up to 110,000 policy rules.
+- [パフォーマンス最適化](https://casbin.apache.org/ja/docs/performance/): 大規模での Casbin の最適化 - 同期 enforcer とシャーディングを使用して高リクエストボリュームを処理し、フィルタリングされたポリシー読み込みによりメモリを削減します。
+- [Kubernetes Admission Webhook](https://casbin.apache.org/ja/docs/k8s-gatekeeper/): Casbin K8s-Gatekeeperは、宣言的なCasbinモデルとポリシーを使用して、任意のKubernetesリソースに対する操作を許可または拒否するKubernetes admission webhookです。
+- [Envoy (Service Mesh Authorization)](https://casbin.apache.org/ja/docs/envoy/): Casbin を通じて Envoy external authorization でサービスメッシュトラフィックを認可 - envoy-authz は Envoy および Istio 用の RBAC および ABAC ポリシーを適用します。
+
+## **Management**
+
+- [Admin Portal](https://casbin.apache.org/ja/docs/admin-portal/): Web UI で Casbin のモデルとポリシーを管理します。Casdoor やその他の admin portal は、Casbin の上にモデルエディタ、ポリシーエディタ、権限管理を提供します。
+- [**Casbin Service**](https://casbin.apache.org/ja/docs/service/): ライブラリを組み込む代わりに、**Casbin Server** やその他のプロジェクトを使用して、gRPC または HTTP 経由でリモート認可サービスとして Casbin を実行します。
+- [**Command-line Tools**](https://casbin.apache.org/ja/docs/command-line-tools/): Go、Java、Node.js、Python、.NET、Rust 向けの Casbin コマンドラインツール - シェルからモデルとポリシーを読み込み、enforce チェックを実行し、ポリシーを管理します。
+- [Logging & Error Handling](https://casbin.apache.org/ja/docs/log-error/): Casbin でリクエスト、モデル読み込み、ポリシー変更のロギングを有効化およびカスタマイズし、エンフォーサーから返されるエラーを処理します。
+- [Frontend Integration](https://casbin.apache.org/ja/docs/frontend/): Casbin.js は、フロントエンドアプリケーションでのアクセス制御管理を容易にする Casbin アドオンです
+
+## **Editors & Tools**
+
+- [**Online Editor**](https://casbin.apache.org/ja/docs/online-editor/): オンラインエディターを使用して、ブラウザで Casbin のモデルとポリシーを作成・テストできます。構文ハイライト、補完、AI 支援、即時の enforce 結果を提供します。
+- [IDE プラグイン](https://casbin.apache.org/ja/docs/ide-plugins/): JetBrains IDE および Visual Studio Code 用の Casbin プラグイン - モデルファイルとポリシーファイルに対する構文ハイライトおよび編集サポートを提供します。
+
+## Comparisons
+
+- [Casbin vs. Alternatives](https://casbin.apache.org/ja/docs/comparison/): Apache Casbin と OpenFGA、Open Policy Agent (OPA)、CASL、Cedar の比較 - ライブラリまたはサービス、ポリシー言語、アクセス制御モデル、言語サポート、そしてそれぞれの選択タイミングについて。
+- [Casbin と OpenFGA の比較](https://casbin.apache.org/ja/docs/casbin-vs-openfga/): Apache Casbin と OpenFGA の比較 - 埋め込みライブラリ対 Zanzibar スタイルのサービス、RBAC と ReBAC のモデリング、ストレージ、パフォーマンス特性、それぞれを選ぶべきタイミングについて。
+- [Casbin と Open Policy Agent (OPA) の比較](https://casbin.apache.org/ja/docs/casbin-vs-opa/): Apache Casbin と Open Policy Agent の比較 - モデルおよびポリシーデータ対 Rego、埋め込みライブラリ対ポリシーエージェント、ランタイムでのポリシー管理、言語サポート、それぞれを選ぶべきタイミングについて。
+- [Casbin vs. CASL](https://casbin.apache.org/ja/docs/casbin-vs-casl/): JavaScript および TypeScript アプリケーション向けの Apache Casbin と CASL の比較 - データとしてのルール対コード内の能力、フロントエンドとバックエンドの使用、多言語サービス、そしてそれぞれの選択基準。
+- [Casbin vs. Cedar](https://casbin.apache.org/ja/docs/casbin-vs-cedar/): Apache Casbin と Cedar の比較 - 設定可能な PERM モデル対 Cedar ポリシー言語、検証と分析、言語サポート、ポリシーストレージ、およびそれぞれの選択基準について。
+
+## **About & More**
+
+- [採用企業](https://casbin.apache.org/ja/docs/adopters/): Apache Casbinを認可に使用している企業およびオープンソースプロジェクト。コード内で直接使用されているか、プラグインや依存関係を通じて使用されています。
+- [コントリビューション](https://casbin.apache.org/ja/docs/contributing/): Apache Casbin への貢献方法 - コアライブラリと各言語ポート、アダプター、ミドルウェア、Web サイトおよび翻訳 - そして始めるための手順。
+- [プライバシーポリシー](https://casbin.apache.org/ja/docs/privacy-policy/): Apache Casbin ウェブサイトおよびサインインサービスのプライバシーポリシー: 収集される情報、その使用方法、保存方法、共有方法について。
+- [**Terms of Service**](https://casbin.apache.org/ja/docs/terms-of-service/): Apache Casbin ウェブサイトの利用に関する利用規約。
+
+## More
+
+- [Download](https://casbin.apache.org/ja/docs/download/): Apache Casbinリリースのダウンロードと検証
+
+## Optional
+
+- [Source code](https://github.com/apache/casbin): Go implementation and examples (Apache-2.0)
+- [Online editor](https://editor.casbin.org): Write and test a model and policy in the browser

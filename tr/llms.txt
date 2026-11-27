@@ -1,0 +1,130 @@
+# Apache Casbin
+
+> Apache Casbin (Incubating) is an open-source authorization library that supports access control models like ACL, RBAC, ABAC, ReBAC, PBAC, BLP, Biba and more. A model file (PERM: policy, effect, request, matchers) and policy rules decide every request, and the same model works in Go, Java, Node.js, Python, .NET, PHP, Rust, C++ and other languages.
+
+## **Temel Bilgiler**
+
+- [Overview](https://casbin.apache.org/tr/docs/overview/): Apache Casbin, ACL, RBAC, ABAC, ReBAC ve daha fazlasını destekleyen Go, Java, Node.js, Python, .NET, PHP, Rust ve C++ için açık kaynaklı bir yetkilendirme kütüphanesidir.
+- [Başlangıç](https://casbin.apache.org/tr/docs/get-started/): Go, Java, Node.js, PHP, Python, .NET, C++ veya Rust için Casbin'i yükleyin, bir model ve politikadan enforcer oluşturun ve ilk yetkilendirme kontrolünü çalıştırın.
+- [Nasıl Çalışır](https://casbin.apache.org/tr/docs/how-it-works/): **Casbin**'in nasıl çalıştığı - ACL, RBAC, ABAC ve özel modeller arasında geçiş yapmanızı sağlayan PERM metamodeli (Policy, Effect, Request, Matchers) ve CONF model dosyaları.
+- [Öğreticiler](https://casbin.apache.org/tr/docs/tutorials/): Go, Java, Node.js, Python, PHP, .NET ve diğer diller için Casbin makaleleri, videoları ve topluluk öğreticileri, ayrıca PERM ile modelleme üzerine makaleler.
+
+## **Kılavuzlar**
+
+- [Golang RBAC Eğitimi: Gin'de Rol Tabanlı Erişim Kontrolü](https://casbin.apache.org/tr/docs/go-rbac-tutorial/): Adım adım Go RBAC eğitimi - Casbin ile bir Gin REST API'sine rol tabanlı erişim kontrolü ekleyin; model, politika, middleware ve çalışma zamanı rol yönetimi dahil.
+- [Node.js RBAC Eğitimi: Express'te Rol Tabanlı Erişim Kontrolü](https://casbin.apache.org/tr/docs/nodejs-rbac-tutorial/): Adım adım Node.js RBAC eğitimi - Casbin ile bir Express REST API'ye rol tabanlı erişim kontrolü ekleyin; model, politika, middleware ve çalışma zamanı rol yönetimi dahil.
+- [Python RBAC Eğitimi: FastAPI'de Rol Tabanlı Erişim Kontrolü](https://casbin.apache.org/tr/docs/python-rbac-tutorial/): Adım adım Python RBAC eğitimi - PyCasbin kullanarak FastAPI REST API'sine rol tabanlı erişim kontrolü ekleyin; model, politika, bağımlılık ve çalışma zamanı rol yönetimi dahil.
+- [Spring Boot RBAC Eğitimi: jCasbin ile Rol Tabanlı Erişim Kontrolü](https://casbin.apache.org/tr/docs/java-rbac-tutorial/): Adım adım Java RBAC eğitimi - model, politika, interceptor ve çalışma zamanı rol yönetimi dahil olmak üzere jCasbin ile Spring Boot REST API'sine rol tabanlı erişim kontrolü ekleyin.
+- [NestJS RBAC Eğitimi: Guards ile Rol Tabanlı Erişim Kontrolü](https://casbin.apache.org/tr/docs/nestjs-rbac-tutorial/): NestJS RBAC eğitimi: node-casbin, global bir guard ve bir permission decorator kullanarak rol devralma özelliğine sahip NestJS API'si için rol tabanlı erişim kontrolü.
+- [Axum ile Rust'ta RBAC](https://casbin.apache.org/tr/docs/rust-rbac-tutorial/): Rust RBAC eğitimi: casbin-rs kullanarak Axum REST API'si için rol tabanlı erişim kontrolü; model, politika, ara yazılım ve çalışma zamanı rol değişiklikleri dahil.
+- [Go'da gRPC Yetkilendirme](https://casbin.apache.org/tr/docs/grpc-rbac-tutorial/): Casbin ile Go gRPC servisi için rol tabanlı erişim kontrolü: arayanın rolünü tam yöntem adına karşı kontrol eden unary ve stream interceptor'ları.
+- [Go'da ABAC](https://casbin.apache.org/tr/docs/go-abac-tutorial/): Go ABAC eğitimi: Casbin ile net/http API'si için nitelik tabanlı erişim kontrolü; okuma, düzenleme ve yayınlama yetkilerini belirlemek için sahip, departman ve durum kullanılır.
+- [Express ile Node.js'te ABAC](https://casbin.apache.org/tr/docs/nodejs-abac-tutorial/): Node.js ABAC eğitimi: node-casbin kullanarak sahip, departman ve durum gibi niteliklerle kimin düzenleme yapabileceğine karar veren Express API için nitelik tabanlı erişim kontrolü.
+- [Python'da ABAC ve Flask ile Uygulama](https://casbin.apache.org/tr/docs/flask-abac-tutorial/): Python ABAC eğitimi: PyCasbin kullanarak bir Flask API için nitelik tabanlı erişim kontrolü; okuma ve düzenleme işlemleri için sahip, departman ve durum bilgilerini kullanır.
+- [AI Ajanları ve MCP Araçları İçin Yetkilendirme](https://casbin.apache.org/tr/docs/ai-agent-authorization/): Casbin ile bir AI ajanının hangi araçları çağırabileceğini kontrol edin: ajan başına izinler, argüman sınırları, reddetme kuralları ve kullanıcısından daha fazla erişim verilmemesi. Bir MCP örneği ile.
+
+## **Erişim Kontrol Modelleri**
+
+- [RBAC vs ABAC vs ACL vs ReBAC: Bir Erişim Kontrol Modeli Seçimi](https://casbin.apache.org/tr/docs/access-control-models/): ACL, RBAC, ABAC, ReBAC ve PBAC tek bir örnekte karşılaştırılıyor: Her biri neye karar verir, güçlü yönleri, zayıf yönleri, ne zaman tercih edilmeli ve RBAC ile ABAC nasıl birleştirilir.
+- [Desteklenen Modeller](https://casbin.apache.org/tr/docs/supported-models/): Casbin tarafından desteklenen erişim kontrol modelleri - ACL, RBAC, domain'li RBAC, ABAC, ReBAC, PBAC, BLP, Biba, LBAC, OrBAC, UCON, RESTful, IP eşleştirme, deny-override ve öncelik.
+- [Model Sözdizimi](https://casbin.apache.org/tr/docs/syntax-for-models/): Casbin model sözdizimi referansı - CONF dosyalarında istek, politika, rol ve etki tanımları ile eşleştiriciler, operatörler ve örneklerle birlikte.
+- [Effector](https://casbin.apache.org/tr/docs/effector/): Casbin **Effector** arayüzü, eşleşen tüm politika kurallarının etkilerini allow-override, deny-override, priority ve özel efektler için tek bir kararda birleştirir.
+- [**Functions**](https://casbin.apache.org/tr/docs/function/): Yerleşik Casbin matcher fonksiyonları - keyMatch, keyMatch2-5, regexMatch, ipMatch, globMatch ve anahtar çıkarımı - ve nasıl kendi özel fonksiyonlarınızı kaydedeceğiniz.
+- [RBAC Genel Bakış](https://casbin.apache.org/tr/docs/rbac-overview/): Casbin'de rol tabanlı erişim kontrolünün (RBAC) genel bakışı - temel RBAC, kaynak rolleri, alanlar (çok kiracılılık), desen eşleştirme ve koşullu roller.
+- [RBAC nedir? Rol Tabanlı Erişim Kontrolü ve Örnekler](https://casbin.apache.org/tr/docs/rbac/): RBAC izinleri doğrudan kullanıcılara değil, rollere verir. Rol tabanlı erişim kontrolünün anlamı, bir örnek, RBAC96, RBAC vs ABAC ve bunun Casbin ile nasıl uygulanacağı.
+- [Desenli RBAC](https://casbin.apache.org/tr/docs/rbac-with-pattern/): Casbin rol atamalarında ve domain'lerde AddNamedMatchingFunc ve AddNamedDomainMatchingFunc kullanarak joker karakterleri ve desenleri kullanın.
+- [Domain'li RBAC](https://casbin.apache.org/tr/docs/rbac-with-domains/): Casbin ile çok kiracılı RBAC - üç argümanlı rol tanımıyla aynı kullanıcıya farklı domain'lerde veya kiracılarda farklı roller verin.
+- [Koşullu RBAC](https://casbin.apache.org/tr/docs/rbac-with-conditions/): Koşullu rol yöneticisi ile Casbin rol atamalarına koşullar ekleyin, örneğin yalnızca belirli bir zaman aralığında geçerli olan roller.
+- [RBAC vs. RBAC96](https://casbin.apache.org/tr/docs/rbac-96/): Casbin **RBAC**'nin RBAC96 standardıyla ilişkisi - kullanıcılar ve roller, rol hiyerarşileri, oturumlar ve kısıtlamalar ile Casbin'in alanlar (domains) ve esnek izinlerle neler eklediği.
+- [ReBAC Nedir? İlişki Tabanlı Erişim Kontrolü ve Örnekler](https://casbin.apache.org/tr/docs/rebac/): İlişki tabanlı erişim kontrolünün (ReBAC) ne olduğu, Google Zanzibar ile ilişkisi, RBAC ve ABAC'tan farkları ve Casbin'de kullanıcı-kaynak ilişkilerinin nasıl modelleneceği.
+- [ABAC Nedir? Örneklerle Nitelik Tabanlı Erişim Kontrolü](https://casbin.apache.org/tr/docs/abac/): Nitelik tabanlı erişim kontrolünün (ABAC) ne olduğu, RBAC'den nasıl farklı olduğu ve Casbin'de ABAC kurallarının nasıl yazılacağı: Eşleştiricide kullanıcı, kaynak ve ortam niteliklerini karşılaştırın veya koşulları politikada saklayın.
+- [PBAC Nedir? Casbin'de Politika Tabanlı Erişim Kontrolü](https://casbin.apache.org/tr/docs/pbac/): Politika tabanlı erişim kontrolünün (PBAC) ne olduğu, ABAC ve RBAC'tan nasıl farklılaştığı ve kural ifadelerinin Casbin'de politika olarak nasıl saklanıp çalışma zamanında eval() ile nasıl değerlendirildiği.
+- [MAC Genel Bakış](https://casbin.apache.org/tr/docs/mac-overview/): Casbin'de zorunlu erişim kontrolü (MAC) - kullanıcıların geçersiz kılamadığı Bell-LaPadula, Biba ve LBAC gibi etiket tabanlı modeller.
+- [BLP](https://casbin.apache.org/tr/docs/blp/): Casbin'de Bell-LaPadula (BLP) gizlilik modelini uygulayın - özneler ve nesneler için güvenlik seviyeleri, "no read up" ve "no write down" kuralları ile.
+- [**Biba** Bütünlük Modeli: Aşağı Okuma Yok, Yukarı Yazma Yok](https://casbin.apache.org/tr/docs/biba/): Casbin'de **Biba** bütünlük modelini uygulayın - özneler ve nesneler için bütünlük seviyeleri, aşağı okuma yok ve yukarı yazma yok kurallarıyla.
+- [LBAC Nedir? Casbin'de Kafes Tabanlı Erişim Kontrolü](https://casbin.apache.org/tr/docs/lbac/): Kafes tabanlı erişim kontrolünün (LBAC) ne olduğu, gizlilik ve bütünlük seviyelerini nasıl birleştirdiği ve her ikisinin tek bir Casbin modelinde nasıl uygulanacağı.
+- [OrBAC](https://casbin.apache.org/tr/docs/orbac/): Casbin'de organizasyon tabanlı erişim kontrolünü (OrBAC) uygulayın - roller, etkinlikler ve görünümler, her organizasyon için somut kullanıcılara, eylemlere ve nesnelere eşlenir.
+- [Öncelik Modeli](https://casbin.apache.org/tr/docs/priority-model/): Casbin öncelik modeli ile çakışan kuralları çözün - politika sırasına göre örtük öncelik, açık öncelik alanları ve rol hiyerarşisine dayalı öncelik.
+- [Kullanım Kontrolü (UCON) Nedir? Sürekli Yetkilendirme](https://casbin.apache.org/tr/docs/ucon/): Kullanım kontrolünün (UCON) ne olduğu: kullanım sırasında sürekli olarak kontrol edilen yetkilendirmeler, yükümlülükler ve koşullar, değişken nitelikler ve bunun Casbin ile nasıl uygulanacağı.
+- [Casbin'de Süper Yönetici: Politika Kontrollerini Atlama](https://casbin.apache.org/tr/docs/superadmin/): Casbin'de süper yöneticinin (root) ne olduğu, eşleştiriciye nasıl ekleneceği ve aynı desenin RBAC, ABAC ve domain'li RBAC ile nasıl çalıştığı.
+
+## **Depolama**
+
+- [**Model Storage**](https://casbin.apache.org/tr/docs/model-storage/): Casbin modelini bir CONF dosyasından, bir string'den veya koddan yükleyin. Modeller erişim kontrol mantığınızı tanımlar ve çalışma zamanında salt okunur olarak kabul edilir.
+- [Politika Depolama](https://casbin.apache.org/tr/docs/policy-storage/): Casbin politika kurallarını adaptörler aracılığıyla CSV dosyasında, veritabanında veya başka herhangi bir arka uçta saklayın ve adaptör API'si üzerinden yükleyin veya kaydedin.
+- [Politika Alt Kümelerini Yükleme](https://casbin.apache.org/tr/docs/policy-subset-loading/): Filtrelenmiş adapter'lar ve LoadFilteredPolicy() kullanarak yalnızca Casbin politika kurallarının bir alt kümesini yükleyin; büyük veya çok kiracılı dağıtımlarda bellekten tasarruf edin.
+
+## Kullanım Alanları
+
+- [Veri İzinleri](https://casbin.apache.org/tr/docs/data-permissions/): Casbin ile veri düzeyinde izinler - RBAC hiyerarşisi üzerinden örtük rolleri ve izinleri sorgulayın, BatchEnforce() ile veri setlerini filtreleyin.
+- [**Nested Organizations**](https://casbin.apache.org/tr/docs/nested-organizations/): Casbin'de iç içe geçmiş organizasyonları modelleyin - bir birimde rol atayın ve alan yolları ve bir alt öğe eşleştirme fonksiyonuyla tüm alt ağaçtan devralın.
+- [**Liste Filtreleme**](https://casbin.apache.org/tr/docs/list-filtering/): Casbin ile liste ve arama sonuçlarını filtreleme - **BatchEnforce**, birim başına örtük izinler, malzemeleştirilmiş bir izin tablosu ve Postgres RLS, ayrıca sorgu planlayıcı eksikliği.
+- [Menu Permissions](https://casbin.apache.org/tr/docs/menu-permissions/): jCasbin ve Spring Boot ile menü tabanlı erişim kontrolü - rolleri menülere ve alt menülere eşleyin ve her kullanıcıya yalnızca erişebileceği menü öğelerini gösterin.
+
+## **Eklentiler**
+
+- [Eklenti Genel Bakışı](https://casbin.apache.org/tr/docs/plugins-overview/): Casbin eklentilerinin genel bakışı - Casbin'i veritabanlarına, mesajlaşma sistemlerine ve web çerçevelerine bağlayan adaptörler, gözlemciler (watchers), dağıtıcılar (dispatchers), rol yöneticileri ve ara katman yazılımları (middleware).
+- [Zorlayıcılar](https://casbin.apache.org/tr/docs/enforcers/): Enforcer, kullanıcıların politika kuralları ve modeller üzerinde işlem yapması için arayüz görevi gören Casbin'deki ana yapıdır.
+- [Adaptörler](https://casbin.apache.org/tr/docs/adapters/): Casbin adaptörleri, politika kurallarını MySQL, PostgreSQL, MongoDB, Redis, dosyalar ve onlarca diğer depoda yükler ve kaydeder. Dilinize ve veritabanınıza uygun adaptörü bulun.
+- [Watchers](https://casbin.apache.org/tr/docs/watchers/): Casbin **watchers**, politikayı etcd, Redis, Kafka, NATS ve diğer mesajlaşma veriyolları üzerinden birden fazla zorlayıcı örneği arasında senkronize tutar.
+- [Dağıtıcılar](https://casbin.apache.org/tr/docs/dispatchers/): Casbin dağıtıcıları, Raft gibi bir tutarlılık protokolünü kullanarak artımlı politika değişikliklerini kümedeki her bir uygulayıcıya iletir, Casbin API'sini değiştirmeden.
+- [Role Managers](https://casbin.apache.org/tr/docs/role-managers/): Casbin rol yöneticileri, RBAC rol hiyerarşisini çözer; bu hiyerarşi bellekteki politikadan veya LDAP, Okta, Auth0 ve Azure AD gibi harici kaynaklardan alınabilir.
+- [Middleware](https://casbin.apache.org/tr/docs/middlewares/): Web çerçeveleri ve API ağ geçitleri için Casbin yetkilendirme middleware'i - Gin, Echo, Express, Koa, NestJS, Django, Flask, FastAPI, Spring Boot, Laravel ve daha fazlası.
+- [Kong Yetkilendirme](https://casbin.apache.org/tr/docs/kong-authz/): kong-authz, istekleri lua-casbin ile yetkilendiren bir Kong API Gateway eklentisidir. Kurulum yapın, bir model ve politika yapılandırın ve Kong rotalarınızı koruyun.
+- [**GraphQL Middleware**](https://casbin.apache.org/tr/docs/graphql-middlewares/): **Casbin** ile **GraphQL** API'lerine yetkilendirme ekleyin - resolver'larda türler, alanlar ve işlemler üzerinde erişim kısıtlaması uygulayın; popüler **GraphQL** sunucuları için middleware desteğiyle.
+- [Cloud Native](https://casbin.apache.org/tr/docs/cloud-native/): Bulut-native yığınlarda yetkilendirme için Casbin'i kullanın: Casbin'i Envoy, Istio, Traefik, KubeSphere ve diğer altyapılarla entegre eden projeler.
+
+## API
+
+- [API Genel Bakışı](https://casbin.apache.org/tr/docs/api-overview/): Enforce, BatchEnforce, EnforceEx, Yönetim API'si ve RBAC API'si dahil olmak üzere temel Casbin API'lerinin genel bakışı - bir RBAC modeli ve CSV politikası kullanılarak örneklerle.
+- [Yönetim API'si](https://casbin.apache.org/tr/docs/management-api/): Casbin Yönetim API referansı - çalışma zamanında politika kurallarını ve rol atamalarını alma, ekleme, kaldırma, güncelleme ve filtreleme işlemleri, her dil için örneklerle.
+- [RBAC API](https://casbin.apache.org/tr/docs/rbac-api/): RBAC için daha kullanıcı dostu bir API. Bu API, Management API'nin bir alt kümesidir. RBAC kullanıcıları, kodu basitleştirmek için bu API'yi kullanabilir.
+- [Domain'li RBAC API](https://casbin.apache.org/tr/docs/rbac-with-domains-api/): Domain'li RBAC için daha kullanıcı dostu bir API. Bu API, Yönetim API'sinin bir alt kümesidir. RBAC kullanıcıları kodlarını basitleştirmek için bu API'yi kullanabilir.
+- [Koşullu RBAC API](https://casbin.apache.org/tr/docs/rbac-with-conditions-api/): Casbin koşullu RBAC için API referansı - kullanıcı-rol bağlantılarında koşul fonksiyonlarını kaydedin ve bunlara parametreler geçirin.
+- [Role Manager API](https://casbin.apache.org/tr/docs/rolemanager-api/): RoleManager API, rolleri yönetmek için operasyonları tanımlamaya yönelik bir arayüz sağlar. RoleManager'a bir eşleştirme fonksiyonunun eklenmesi, rol adlarında ve domain'lerde joker karakter kullanılmasına olanak tanır.
+
+## Gelişmiş Kullanım
+
+- [Production Deployment](https://casbin.apache.org/tr/docs/production-deployment/): Casbin'i production ortamında çalıştırın - işlem başına bir enforcer, SyncedEnforcer ile thread güvenliği, karar önbelleğe alma, watcher'lar ile replikaların senkronize tutulması ve veritabanı transaction'ları içinde politika yazma.
+- [**Multithreading**](https://casbin.apache.org/tr/docs/multi-threading/): Go, Java, C++ ve diğer dillerdeki senkronize enforcer (SyncedEnforcer) ile çok iş parçacıklı kodlarda Casbin'i güvenle kullanın.
+- [Benchmarks](https://casbin.apache.org/tr/docs/benchmark/): Casbin uygulama (enforcement) benchmarkları - ACL, RBAC, ABAC, RESTful ve diğer modeller için birkaç kuralla başlayıp 110.000 politika kuralına kadar Enforce() çağrısı başına süre ve bellek kullanımı.
+- [Performans Optimizasyonu](https://casbin.apache.org/tr/docs/performance/): Büyük ölçekli Casbin'i optimize edin - senkronize edilmiş enforcer'lar ve parçalama (sharding) ile yüksek istek hacmini yönetin ve filtrelenmiş politika yükleme ile belleği azaltın.
+- [Kubernetes Admission Webhook](https://casbin.apache.org/tr/docs/k8s-gatekeeper/): Casbin K8s-Gatekeeper, Kubernetes kaynakları üzerindeki işlemlere izin veren veya reddeden, bildirimsel Casbin modellerini ve politikalarını kullanan bir Kubernetes admission webhook'idur.
+- [Envoy (Servis Ağ Yetkilendirmesi)](https://casbin.apache.org/tr/docs/envoy/): envoy-authz aracılığıyla Envoy harici yetkilendirme kullanarak servis ağı trafiğini Casbin ile yetkilendirin - envoy-authz, Envoy ve Istio için RBAC ve ABAC politikalarını uygular.
+
+## **Yönetim**
+
+- [Yönetim Portalı](https://casbin.apache.org/tr/docs/admin-portal/): Web arayüzünde Casbin modellerini ve politikalarını yönetin. Casdoor ve diğer yönetim portalları, Casbin üzerinde model düzenleyiciler, politika düzenleyiciler ve izin yönetimi sunar.
+- [Casbin Service](https://casbin.apache.org/tr/docs/service/): Kütüphaneyi gömülü olarak kullanmak yerine, Casbin Server ve diğer projelerle gRPC veya HTTP üzerinden uzaktan yetkilendirme hizmeti olarak Casbin'i çalıştırın.
+- [Komut Satırı Araçları](https://casbin.apache.org/tr/docs/command-line-tools/): Go, Java, Node.js, Python, .NET ve Rust için Casbin komut satırı araçları - model ve politikayı yükleyin, enforce kontrolleri çalıştırın ve politikayı shell üzerinden yönetin.
+- [Logging & Error Handling](https://casbin.apache.org/tr/docs/log-error/): Casbin'de istekler, model yükleme ve politika değişiklikleri için loglamayı etkinleştirin ve özelleştirin, enforcer tarafından döndürülen hataları ele alın.
+- [Ön Uç Entegrasyonu](https://casbin.apache.org/tr/docs/frontend/): Casbin.js, ön uç uygulamasında erişim kontrolü yönetiminizi kolaylaştıran bir Casbin eklentisidir
+
+## **Editörler & Araçlar**
+
+- [Online Editör](https://casbin.apache.org/tr/docs/online-editor/): Online editör ile tarayıcıda Casbin modellerini ve politikalarını yazıp test edin - sözdizimi vurgulama, tamamlama, yapay zeka desteği ve anlık enforce sonuçları.
+- [IDE Eklentileri](https://casbin.apache.org/tr/docs/ide-plugins/): JetBrains IDE'leri ve Visual Studio Code için Casbin eklentileri - model ve politika dosyaları için sözdizimi vurgulama ve düzenleme desteği.
+
+## **Karşılaştırmalar**
+
+- [Casbin vs. Alternatifler](https://casbin.apache.org/tr/docs/comparison/): Apache Casbin'in OpenFGA, Open Policy Agent (OPA), CASL ve Cedar ile karşılaştırılması - kütüphane veya servis, politika dili, erişim kontrol modelleri, dil desteği ve hangisinin ne zaman seçileceği.
+- [Casbin vs. OpenFGA](https://casbin.apache.org/tr/docs/casbin-vs-openfga/): Apache Casbin ve OpenFGA karşılaştırması - gömülü kütüphane ile Zanzibar tarzı servis, RBAC ve ReBAC modelleme, depolama, performans özellikleri ve hangisinin ne zaman seçileceği.
+- [Casbin vs. Open Policy Agent (OPA)](https://casbin.apache.org/tr/docs/casbin-vs-opa/): Apache Casbin ve Open Policy Agent karşılaştırması - model ve politika verisi ile Rego, gömülü kütüphane ile politika ajanı, çalışma zamanı politika yönetimi, dil desteği ve hangisinin ne zaman seçileceği.
+- [Casbin vs. CASL](https://casbin.apache.org/tr/docs/casbin-vs-casl/): JavaScript ve TypeScript uygulamaları için Apache Casbin ve CASL karşılaştırması - kodda yeteneklere karşı veri olarak kurallar, ön uç ve arka uç kullanımı, çok dilli hizmetler ve her birinin ne zaman tercih edileceği.
+- [Casbin vs. Cedar](https://casbin.apache.org/tr/docs/casbin-vs-cedar/): Apache Casbin ve Cedar karşılaştırması - yapılandırılabilir PERM modeline karşı Cedar politika dili, doğrulama ve analiz, dil desteği, politika depolama ve hangisinin ne zaman seçileceği.
+
+## **Hakkında & Daha Fazlası**
+
+- [Kullanıcılar](https://casbin.apache.org/tr/docs/adopters/): Yetkilendirme için Apache Casbin'i doğrudan kodlarında veya bir eklenti ya da bağımlılık aracılığıyla kullanan şirketler ve açık kaynak projeleri.
+- [Katkıda Bulunma](https://casbin.apache.org/tr/docs/contributing/): Apache Casbin'e nasıl katkıda bulunulacağı - çekirdek kütüphaneler ve dil portları, adaptörler, middleware, web sitesi ve çeviriler - ve nasıl başlanacağı.
+- [Gizlilik Politikası](https://casbin.apache.org/tr/docs/privacy-policy/): Apache Casbin web sitesi ve oturum açma hizmetleri için gizlilik politikası: hangi bilgilerin toplandığı, nasıl kullanıldığı, saklandığı ve paylaşıldığı.
+- [Kullanım Koşulları](https://casbin.apache.org/tr/docs/terms-of-service/): Apache Casbin web sitesini kullanmaya ilişkin kullanım koşulları.
+
+## More
+
+- [İndirme](https://casbin.apache.org/tr/docs/download/): Apache Casbin sürümlerini indirin ve doğrulayın
+
+## Optional
+
+- [Source code](https://github.com/apache/casbin): Go implementation and examples (Apache-2.0)
+- [Online editor](https://editor.casbin.org): Write and test a model and policy in the browser
