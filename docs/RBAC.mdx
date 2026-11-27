@@ -49,7 +49,17 @@ g, bob, viewer
 
 alice may edit and read articles (`editor` inherits `viewer`); bob may only read them.
 
-**RBAC vs ABAC:** RBAC is easy to audit but cannot say "only their own records" without creating a role per record. [ABAC](/docs/abac) adds conditions on attributes such as the owner or the time of day, and most applications combine both. [Choosing an access control model](/docs/access-control-models) compares ACL, RBAC, ABAC and ReBAC on one example.
+### RBAC vs ABAC
+
+| | RBAC | ABAC |
+|---|---|---|
+| Decision based on | Roles assigned to the user | Attributes of the user, the resource and the environment |
+| Answers well | "What can an editor do?" | "May this user edit this document?" |
+| Auditing | Easy: a role lists its permissions and holders | Harder: rules must be evaluated per user |
+| Typical use | Features, menus and admin areas | Record-level rules such as owner, department or time |
+| In Casbin | `g` rules and role inheritance | Matcher expressions over struct fields, or `eval()` policy |
+
+RBAC is easy to audit but cannot say "only their own records" without creating a role per record. [ABAC](/docs/abac) adds conditions on attributes such as the owner or the time of day, and most applications combine both. [Choosing an access control model](/docs/access-control-models) compares ACL, RBAC, ABAC and ReBAC on one example.
 
 **Tutorials:** add RBAC to a web API in [Go with Gin](/docs/go-rbac-tutorial), [Node.js with Express](/docs/nodejs-rbac-tutorial), [NestJS](/docs/nestjs-rbac-tutorial), [Python with FastAPI](/docs/python-rbac-tutorial), [Java with Spring Boot](/docs/java-rbac-tutorial), [Rust](/docs/rust-rbac-tutorial) or [gRPC](/docs/grpc-rbac-tutorial). You can also try the RBAC examples in the [online editor](/docs/online-editor).
 
